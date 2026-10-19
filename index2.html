@@ -1,0 +1,1455 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Didakťáky.app — 10× Apple Kinetic Studio Suite (540f / 60fps)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pure-black: #000000;
+            --pure-white: #FFFFFF;
+            --apple-charcoal: #1D1D1F;
+            --apple-grey: #86868B;
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: geometricPrecision;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #050505;
+            color: #FFFFFF;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .font-mono-tech {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .apple-display {
+            letter-spacing: -0.05em;
+            line-height: 1.06;
+            font-weight: 700;
+            font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+        }
+
+        .apple-tagline {
+            letter-spacing: -0.025em;
+            line-height: 1.25;
+            font-weight: 500;
+            font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+        }
+
+        #viewport {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background-color: #050505;
+        }
+
+        #composition {
+            position: relative;
+            overflow: hidden;
+            transform-origin: center center;
+            background-color: #000000;
+            box-shadow: 0 40px 120px rgba(0, 0, 0, 0.95), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            will-change: transform;
+        }
+
+        body.clean-mode #viewport {
+            background-color: #000000;
+            cursor: none;
+        }
+
+        body.clean-mode #composition {
+            box-shadow: none;
+        }
+
+        .line-mask {
+            overflow: hidden;
+            display: inline-flex;
+            align-items: baseline;
+            vertical-align: bottom;
+            padding-bottom: 0.09em;
+            margin-bottom: -0.09em;
+            padding-left: 0.04em;
+            padding-right: 0.04em;
+        }
+
+        .word-node {
+            display: inline-block;
+            will-change: transform, opacity, filter, color;
+        }
+
+        input[type="range"].mono-scrubber {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.16);
+            border-radius: 999px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        input[type="range"].mono-scrubber::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            background: #FFFFFF;
+            border: 2px solid #000000;
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            transition: transform 0.15s ease;
+        }
+
+        input[type="range"].mono-scrubber::-webkit-slider-thumb:hover {
+            transform: scale(1.25);
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="viewport">
+        <div id="composition">
+
+            <!-- ======================================================== -->
+            <!-- DYNAMIC ENGINE STAGE (SCENES 1 & 2 — 10 UNIQUE ENGINES)  -->
+            <!-- ======================================================== -->
+            <div id="custom-stage" class="absolute inset-0 z-10 overflow-hidden" style="opacity:1; visibility:visible;">
+                <!-- Populated dynamically with bespoke DOM & SVG rigs per video (01–10) -->
+            </div>
+
+            <!-- ======================================================== -->
+            <!-- SCENE 3: 100% EXACT OFFICIAL LOGO FINALE FROM REFERENCE  -->
+            <!-- ======================================================== -->
+            <div id="scene-3" class="absolute inset-0 flex items-center justify-center bg-white text-[#1D1D1F] z-30" style="opacity:0; visibility:hidden;">
+                <div id="s3-rig" class="flex flex-col items-center justify-center will-change-transform">
+                    <div class="flex items-center justify-center">
+                        <div id="s3-icon-wrap" class="relative shrink-0 will-change-transform" style="width: 152px; height: 152px;">
+                            <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full overflow-visible">
+                                <rect width="100" height="100" rx="24" fill="#000000" />
+                                <path id="s3-svg-d" fill-rule="evenodd" clip-rule="evenodd" d="M25 24H44C58 24 66 33.5 66 49C66 64.5 58 74 44 74H25V24ZM37.5 35.5H43C50.5 35.5 54.5 41 54.5 49C54.5 57 50.5 62.5 43 62.5H37.5V35.5Z" fill="#FFFFFF" style="transform-origin: 45px 49px;" />
+                                <circle id="s3-svg-dot" cx="74" cy="69" r="5.2" fill="#FFFFFF" style="transform-origin: 74px 69px;" />
+                            </svg>
+                        </div>
+                        <div id="s3-text-slot" class="overflow-hidden flex items-center will-change-transform" style="width: 0px; opacity: 0;">
+                            <div id="s3-text-inner" class="pl-[0.22em] pr-[0.08em] py-[0.12em] whitespace-nowrap flex items-baseline tracking-[-0.04em] leading-none">
+                                <span id="s3-wordmark" class="font-bold text-[#1D1D1F] inline-flex"></span>
+                                <span id="s3-dot-app" class="font-normal text-[#86868B] inline-block will-change-transform">.app</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="line-mask mt-10">
+                        <div id="s3-tagline" class="apple-tagline text-[#86868B] will-change-transform" style="opacity: 0;">Cermat nanečisto. V&nbsp;tvém mobilu.</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- TOP BAR: 10 APPLE KINETIC CONCEPTS SELECTOR -->
+    <div id="top-concept-bar" class="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[96vw] max-w-5xl bg-[#0D0D0F]/90 backdrop-blur-2xl border border-white/15 rounded-2xl px-3.5 py-2.5 shadow-2xl transition-all duration-300">
+        <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5" id="concept-buttons-container">
+                <!-- Populated by JS: 01 to 10 -->
+            </div>
+            <button onclick="toggleSequenceAll()" id="btn-seq-mode" class="shrink-0 px-3 py-1.5 rounded-lg border border-white/15 hover:border-white/40 font-mono-tech text-[11px] text-[#86868B] hover:text-white transition-colors" title="Automaticky přepínat všech 10 spotů za sebou">
+                Auto-Play 10×: OFF
+            </button>
+        </div>
+    </div>
+
+    <!-- BOTTOM HUD BAR -->
+    <div id="hud-bar" class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-[96vw] max-w-4xl bg-[#0D0D0F]/90 backdrop-blur-2xl border border-white/15 rounded-2xl px-5 py-3 shadow-2xl transition-all duration-300">
+        <div class="flex flex-col gap-2">
+            <div class="flex items-center justify-between text-[11px] font-mono-tech text-[#86868B] flex-wrap gap-2">
+                <div class="flex items-center gap-2 flex-wrap">
+                    <div class="flex items-center gap-2 pr-2 mr-1 border-r border-white/10">
+                        <svg viewBox="0 0 100 100" fill="none" class="w-5 h-5 rounded-[5px] ring-1 ring-white/15 shrink-0">
+                            <rect width="100" height="100" rx="24" fill="#000000" />
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M25 24H44C58 24 66 33.5 66 49C66 64.5 58 74 44 74H25V24ZM37.5 35.5H43C50.5 35.5 54.5 41 54.5 49C54.5 57 50.5 62.5 43 62.5H37.5V35.5Z" fill="#FFFFFF" />
+                            <circle cx="74" cy="69" r="5.2" fill="#FFFFFF" />
+                        </svg>
+                        <span class="font-sans text-xs tracking-tight"><strong class="font-bold text-white">Didakťáky</strong><span class="font-normal text-[#86868B]">.app</span></span>
+                        <span id="hud-concept-title" class="text-[11px] text-white/60 font-mono-tech pl-1">— 01 Kapsa</span>
+                    </div>
+                    <button id="jump-1" onclick="jumpToScene(1)" class="px-2.5 py-1 rounded-md bg-white text-black font-medium transition-colors">01 Hook</button>
+                    <button id="jump-2" onclick="jumpToScene(2)" class="px-2.5 py-1 rounded-md border border-white/10 hover:border-white/40 text-white transition-colors">02 Hodnota</button>
+                    <button id="jump-3" onclick="jumpToScene(3)" class="px-2.5 py-1 rounded-md border border-white/10 hover:border-white/40 text-white transition-colors">03 Logo</button>
+                </div>
+                <div class="flex items-center gap-2 shrink-0">
+                    <span id="hud-frame" class="text-white font-medium">000 / 540f</span>
+                    <span class="text-white/20">|</span>
+                    <span id="hud-time" class="text-[#86868B]">0.00s / 9.00s</span>
+                </div>
+            </div>
+            <input id="scrubber" type="range" min="0" max="540" value="0" step="1" class="mono-scrubber" oninput="onScrub(this.value)">
+        </div>
+
+        <div class="flex items-center justify-between mt-2.5 pt-2 border-t border-white/10 text-xs flex-wrap gap-2">
+            <div class="flex items-center gap-1.5">
+                <button onclick="togglePlay()" class="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center hover:opacity-90 transition-opacity">
+                    <svg id="icon-play" class="w-3.5 h-3.5 fill-current hidden ml-0.5" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    <svg id="icon-pause" class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+                </button>
+                <button onclick="restartVideo()" class="px-2.5 py-1.5 rounded-md border border-white/10 hover:border-white/30 font-mono-tech text-[11px] text-white/90 transition-colors">Restart</button>
+                <button onclick="stepFrame(-1)" class="px-2.5 py-1.5 rounded-md border border-white/10 hover:border-white/30 font-mono-tech text-[11px] text-white/80 transition-colors">-1f</button>
+                <button onclick="stepFrame(1)" class="px-2.5 py-1.5 rounded-md border border-white/10 hover:border-white/30 font-mono-tech text-[11px] text-white/80 transition-colors">+1f</button>
+            </div>
+            <div class="flex items-center border border-white/15 rounded-md overflow-hidden font-mono-tech text-[11px]">
+                <button id="asp-16-9" onclick="setAspect('16:9')" class="px-2.5 py-1 bg-white text-black font-medium transition-colors">16:9</button>
+                <button id="asp-9-16" onclick="setAspect('9:16')" class="px-2.5 py-1 text-[#86868B] hover:text-white transition-colors">9:16</button>
+                <button id="asp-1-1" onclick="setAspect('1:1')" class="px-2.5 py-1 text-[#86868B] hover:text-white transition-colors">1:1</button>
+                <button id="asp-ipad" onclick="setAspect('ipad')" class="px-2.5 py-1 text-[#86868B] hover:text-white transition-colors" title="iPad (2360 × 1640)">iPad (2360×1640)</button>
+                <button id="asp-fit" onclick="setAspect('fit')" class="px-2.5 py-1 text-[#86868B] hover:text-white transition-colors" title="Fit to Screen (přizpůsobit obrazovce)">Fit to Screen</button>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="hidden sm:inline-block font-mono-tech text-[10px] text-[#86868B]">Klávesy [1–0] = Animace | [Space] = Play | [F] = Fullscreen</span>
+                <button onclick="toggleCleanMode()" class="px-3 py-1.5 rounded-md border border-white/15 hover:border-white/30 text-white font-mono-tech text-[11px] transition-colors">Clean [C / F]</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="clean-toast" class="fixed top-6 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 transition-opacity duration-300 bg-black/90 border border-white/20 text-white px-4 py-1.5 rounded-full text-xs font-mono-tech">
+        CLEAN FULLSCREEN AKTIVNÍ — [Mezerník] = Play/Pause | [1–0] = Animace | [C / F / Esc] = Lišta
+    </div>
+
+    <script>
+        const FPS = 60;
+        const TOTAL_FRAMES = 540;
+
+        let currentFrame = 0;
+        let isPlaying = true;
+        let aspect = '16:9';
+        let lastTimestamp = 0;
+        let targetTextSlotWidth = 860;
+        let activeConceptIndex = 0;
+        let autoSequenceAll = false;
+
+        let currentDim = { w: 1920, h: 1080 };
+
+        const DIMENSIONS = {
+            '16:9': { w: 1920, h: 1080 },
+            '9:16': { w: 1080, h: 1920 },
+            '1:1':  { w: 1440, h: 1440 },
+            'ipad': { w: 2360, h: 1640 }
+        };
+
+        // ============================================================================
+        // 10 COMPLETELY DIFFERENT MOTION GRAPHICS VIDEOS (UNIQUE ENGINES & TIMELINES)
+        // ============================================================================
+        const CONCEPTS = [
+            { id: "01", name: "Kapsa & Cena",      cut1: 180, cut2: 350, tagline: "Cermat nanečisto. V\u00A0tvém mobilu." },
+            { id: "02", name: "358 Úloh (Čítač)",  cut1: 175, cut2: 350, tagline: "358 otázek. 26 testů. V\u00A0kapse." },
+            { id: "03", name: "5 Funkcí (Buben)",  cut1: 235, cut2: 336, tagline: "Vše v\u00A0jedné aplikaci. V\u00A0tvém mobilu." },
+            { id: "04", name: "Matika × Čeština",  cut1: 190, cut2: 350, tagline: "Matematika i\u00A0čeština. V\u00A0jedné aplikaci." },
+            { id: "05", name: "Časomíra 130m",     cut1: 180, cut2: 350, tagline: "Věrná simulace Cermat zkoušky." },
+            { id: "06", name: "16 Okruhů (Mřížka)",cut1: 190, cut2: 355, tagline: "16 tematických okruhů přehledně." },
+            { id: "07", name: "3D Flashcards",     cut1: 180, cut2: 350, tagline: "Chytré kartičky vždy po ruce." },
+            { id: "08", name: "Konec PDF (Škrt)",  cut1: 185, cut2: 350, tagline: "Moderní příprava bez papírů." },
+            { id: "09", name: "Růst pokroku %",    cut1: 195, cut2: 355, tagline: "Sleduj svůj pokrok každý den." },
+            { id: "10", name: "Rychlý Střih",      cut1: 170, cut2: 345, tagline: "Tvůj klíč k\u00A0přijetí na střední." }
+        ];
+
+        // Prepare Scene 3 Official Wordmark Spans
+        const WORDMARK_TEXT = "Didakťáky";
+        const wordmarkEl = document.getElementById('s3-wordmark');
+        const wordmarkChars = [];
+
+        WORDMARK_TEXT.split('').forEach((ch) => {
+            const span = document.createElement('span');
+            span.textContent = ch;
+            span.className = 'inline-block will-change-transform';
+            wordmarkEl.appendChild(span);
+            wordmarkChars.push(span);
+        });
+
+        function clamp01(t) { return Math.max(0, Math.min(1, t)); }
+        function progress(frame, startF, endF) {
+            if (endF <= startF) return frame >= endF ? 1 : 0;
+            return clamp01((frame - startF) / (endF - startF));
+        }
+        function easeOutQuart(t) { const x = clamp01(t); return 1 - Math.pow(1 - x, 4); }
+        function easeInQuart(t) { const x = clamp01(t); return x * x * x * x; }
+        function easeInOutCubic(t) {
+            const x = clamp01(t);
+            return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+        }
+        function easeInOutQuint(t) {
+            const x = clamp01(t);
+            return x < 0.5 ? 16 * x * x * x * x * x : 1 - Math.pow(-2 * x + 2, 5) / 2;
+        }
+        function springApple(t) {
+            const x = clamp01(t);
+            if (x === 0 || x === 1) return x;
+            return 1 - Math.exp(-6.5 * x) * Math.cos(4.2 * x);
+        }
+        function springDotPop(t) {
+            const x = clamp01(t);
+            if (x === 0 || x === 1) return x;
+            return 1 - Math.exp(-5.2 * x) * Math.cos(7.5 * x);
+        }
+        function lerp(a, b, t) { return a + (b - a) * t; }
+        function lerpRGB(r1, g1, b1, r2, g2, b2, t) {
+            const p = clamp01(t);
+            return `rgb(${Math.round(lerp(r1, r2, p))}, ${Math.round(lerp(g1, g2, p))}, ${Math.round(lerp(b1, b2, p))})`;
+        }
+
+        // ============================================================================
+        // BESPOKE DOM BUILDER FOR EACH OF THE 10 VIDEOS
+        // ============================================================================
+        function buildConceptDOM(index) {
+            const c = CONCEPTS[index];
+            const stage = document.getElementById('custom-stage');
+
+            document.getElementById('s3-tagline').textContent = c.tagline;
+            document.getElementById('hud-concept-title').textContent = `— ${c.id} ${c.name}`;
+
+            if (index === 0) {
+                // VIDEO 01: Original Inline Phone Capsule + Inverted Pill Wipe
+                stage.innerHTML = `
+                    <div id="v1-s1" class="absolute inset-0 flex items-center justify-center bg-black text-white">
+                        <div id="v1-s1-rig" class="flex flex-col items-center justify-center text-center will-change-transform">
+                            <div class="v1-h1 apple-display flex items-baseline justify-center gap-x-[0.27em] whitespace-nowrap">
+                                <span class="line-mask"><span id="v1-w1" class="word-node">Celé</span></span>
+                                <span class="line-mask"><span id="v1-w2" class="word-node">přijímačky</span></span>
+                            </div>
+                            <div class="v1-h1 apple-display flex items-center justify-center whitespace-nowrap mt-[0.06em]">
+                                <span class="line-mask"><span id="v1-w3" class="word-node">v</span></span>
+                                <div id="v1-slot" class="inline-flex items-center justify-center relative mx-[0.06em]" style="width: 28px; height: 1.02em;">
+                                    <div id="v1-capsule" class="relative flex flex-col items-center justify-start border-[2.5px] border-white rounded-[12px] pt-[0.065em] box-border will-change-transform" style="width: 0.52em; height: 0.96em; opacity: 0;">
+                                        <div id="v1-island" class="w-[36%] h-[3px] bg-white rounded-full will-change-transform"></div>
+                                    </div>
+                                </div>
+                                <span class="line-mask"><span id="v1-w4" class="word-node">kapse.</span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="v1-s2" class="absolute inset-0 flex items-center justify-center bg-white text-black" style="opacity:0; visibility:hidden;">
+                        <div id="v1-s2-rig" class="flex flex-col items-center justify-center text-center will-change-transform px-8">
+                            <div class="v1-h2 apple-display flex items-baseline justify-center gap-x-[0.26em] whitespace-nowrap">
+                                <span class="line-mask"><span id="v1-s2-w1" class="word-node">Příprava</span></span>
+                                <span class="line-mask"><span id="v1-s2-w2" class="word-node">na</span></span>
+                                <span class="line-mask"><span id="v1-s2-w3" class="word-node">přijímačky</span></span>
+                            </div>
+                            <div class="v1-h2 apple-display flex items-center justify-center gap-x-[0.26em] whitespace-nowrap mt-[0.1em]">
+                                <span class="line-mask"><span id="v1-s2-w4" class="word-node">za</span></span>
+                                <span class="line-mask"><span id="v1-s2-w5" class="word-node">cenu</span></span>
+                                <span class="inline-grid place-items-center align-middle relative">
+                                    <span id="v1-pill-base" class="col-start-1 row-start-1 inline-flex items-center justify-center px-[0.42em] pt-[0.12em] pb-[0.16em] leading-none rounded-full will-change-transform">jedné&nbsp;hodiny</span>
+                                    <span id="v1-pill-inv" class="col-start-1 row-start-1 inline-flex items-center justify-center px-[0.42em] pt-[0.12em] pb-[0.16em] leading-none rounded-full bg-black text-white pointer-events-none will-change-transform" style="clip-path: inset(0 100% 0 0 round 999px);">jedné&nbsp;hodiny</span>
+                                </span>
+                            </div>
+                            <div class="v1-h2 apple-display flex items-baseline justify-center whitespace-nowrap mt-[0.1em]">
+                                <span class="line-mask"><span id="v1-s2-w6" class="word-node">doučování.</span></span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (index === 1) {
+                // VIDEO 02: Giant Kinetic Odometer (000 -> 358) + Horizontal Split Bars
+                stage.innerHTML = `
+                    <div id="v2-s1" class="absolute inset-0 flex flex-col items-center justify-center bg-black text-white">
+                        <div id="v2-tag" class="font-mono-tech text-sm tracking-[0.35em] text-[#86868B] uppercase mb-6 will-change-transform">DATABÁZE CERMAT ÚLOH</div>
+                        <div id="v2-num-wrap" class="flex items-baseline justify-center apple-display will-change-transform">
+                            <span id="v2-counter" class="font-mono-tech font-bold tracking-tighter text-white">000</span>
+                        </div>
+                        <div class="line-mask mt-4">
+                            <div id="v2-sub" class="apple-display text-[#86868B] will-change-transform">řešených otázek.</div>
+                        </div>
+                        <div id="v2-curtain" class="absolute inset-x-0 bottom-0 bg-white will-change-transform" style="height: 0%;"></div>
+                    </div>
+                    <div id="v2-s2" class="absolute inset-0 flex items-center justify-center bg-white text-black" style="opacity:0; visibility:hidden;">
+                        <div id="v2-s2-rig" class="w-full max-w-6xl px-16 flex flex-col gap-12 will-change-transform">
+                            <div class="flex items-baseline justify-between border-b-2 border-black/10 pb-8">
+                                <span id="v2-row1-l" class="v2-h2 apple-display text-black will-change-transform">26 ostrých testů.</span>
+                                <span id="v2-row1-r" class="font-mono-tech text-4xl font-bold text-[#86868B] will-change-transform">100% Cermat</span>
+                            </div>
+                            <div class="flex items-baseline justify-between border-b-2 border-black/10 pb-8">
+                                <span id="v2-row2-l" class="v2-h2 apple-display text-black will-change-transform">Postupy krok za krokem.</span>
+                                <span id="v2-row2-r" class="px-6 py-2 rounded-full bg-black text-white font-mono-tech text-3xl font-bold will-change-transform">Okamžitě</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (index === 2) {
+                // VIDEO 03: 5-Feature Vertical Drum + Squircle Convergence
+                stage.innerHTML = `
+                    <div id="v3-s1" class="absolute inset-0 flex items-center justify-center bg-black text-white">
+                        <div id="v3-rig" class="relative w-full h-full flex items-center justify-center will-change-transform">
+                            <div id="v3-r0" class="v3-row absolute flex items-center justify-center whitespace-nowrap apple-display will-change-transform"><span class="line-mask"><span class="inline-flex gap-x-[0.26em]"><span id="v3-w0-0" class="word-node">Diagnostické</span><span id="v3-w0-1" class="word-node">testy.</span></span></span></div>
+                            <div id="v3-r1" class="v3-row absolute flex items-center justify-center whitespace-nowrap apple-display will-change-transform"><span class="line-mask"><span class="inline-flex gap-x-[0.26em]"><span id="v3-w1-0" class="word-node">Přijímačky</span><span id="v3-w1-1" class="word-node">nanečisto.</span></span></span></div>
+                            <div id="v3-r2" class="v3-row absolute flex items-center justify-center whitespace-nowrap apple-display will-change-transform"><span class="line-mask"><span class="inline-flex gap-x-[0.26em]"><span id="v3-w2-0" class="word-node">16</span><span id="v3-w2-1" class="word-node">okruhů.</span></span></span></div>
+                            <div id="v3-r3" class="v3-row absolute flex items-center justify-center whitespace-nowrap apple-display will-change-transform"><span class="line-mask"><span class="inline-flex gap-x-[0.26em]"><span id="v3-w3-0" class="word-node">Chytré</span><span id="v3-w3-1" class="word-node">flashcards.</span></span></span></div>
+                            <div id="v3-r4" class="v3-row absolute flex items-center justify-center whitespace-nowrap apple-display will-change-transform"><span class="line-mask"><span class="inline-flex gap-x-[0.26em]"><span id="v3-w4-0" class="word-node">Týdenní</span><span id="v3-w4-1" class="word-node">reporty.</span></span></span></div>
+                            <div id="v3-portal" class="absolute bg-white pointer-events-none will-change-transform" style="width: 152px; height: 152px; border-radius: 36px; opacity: 0; transform: scale(0);"></div>
+                        </div>
+                    </div>
+                `;
+            } else if (index === 3) {
+                // VIDEO 04: Apple Minimalist Split-Screen Duality (Matematika 50b + Český jazyk 50b = 100 bodů)
+                stage.innerHTML = `
+                    <div id="v4-s1" class="absolute inset-0 flex overflow-hidden bg-black">
+                        <!-- Left Half: Matematika (Pure Black) -->
+                        <div id="v4-left" class="relative w-1/2 h-full bg-black text-white flex flex-col items-center justify-center will-change-transform px-8">
+                            <div id="v4-m-rig" class="flex flex-col items-center justify-center text-center will-change-transform">
+                                <span id="v4-m-meta" class="font-mono-tech text-xs tracking-[0.28em] text-[#86868B] uppercase mb-5 will-change-transform">70 MINUT • CERMAT</span>
+                                <div class="line-mask">
+                                    <span id="v4-m-title" class="v4-h1 apple-display word-node text-white">Matematika.</span>
+                                </div>
+                                <div class="line-mask mt-4">
+                                    <div id="v4-m-pts-wrap" class="apple-tagline text-4xl font-semibold text-[#86868B] will-change-transform">
+                                        <span id="v4-m-num" class="text-white font-bold font-mono-tech">0</span>&nbsp;bodů
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Half: Český jazyk (Pure White) -->
+                        <div id="v4-right" class="relative w-1/2 h-full bg-white text-[#1D1D1F] flex flex-col items-center justify-center will-change-transform px-8">
+                            <div id="v4-c-rig" class="flex flex-col items-center justify-center text-center will-change-transform">
+                                <span id="v4-c-meta" class="font-mono-tech text-xs tracking-[0.28em] text-[#86868B] uppercase mb-5 will-change-transform">60 MINUT • CERMAT</span>
+                                <div class="line-mask">
+                                    <span id="v4-c-title" class="v4-h1 apple-display word-node text-[#1D1D1F]">Čeština.</span>
+                                </div>
+                                <div class="line-mask mt-4">
+                                    <div id="v4-c-pts-wrap" class="apple-tagline text-4xl font-semibold text-[#86868B] will-change-transform">
+                                        <span id="v4-c-num" class="text-[#1D1D1F] font-bold font-mono-tech">0</span>&nbsp;bodů
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Precision Central Axis & Fusion Badge -->
+                        <div id="v4-divider" class="absolute left-1/2 top-0 bottom-0 w-[1.5px] -translate-x-1/2 bg-white/25 pointer-events-none will-change-transform"></div>
+                        <div id="v4-plus-badge" class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full bg-white text-black border border-black/15 shadow-2xl flex items-center justify-center font-mono-tech text-3xl font-bold pointer-events-none will-change-transform" style="opacity:0; transform: translate(-50%, -50%) scale(0);">
+                            <span id="v4-plus-symbol" class="will-change-transform">+</span>
+                        </div>
+                    </div>
+
+                    <!-- Act 2: Unified 100 Points + Apple Inverted Pill Wipe -->
+                    <div id="v4-s2" class="absolute inset-0 flex items-center justify-center bg-white text-[#1D1D1F]" style="opacity:0; visibility:hidden;">
+                        <div id="v4-s2-rig" class="flex flex-col items-center justify-center text-center will-change-transform px-8">
+                            <div class="v4-h2 apple-display flex items-baseline justify-center gap-x-[0.26em] whitespace-nowrap">
+                                <span class="line-mask"><span id="v4-s2-w1" class="word-node">100</span></span>
+                                <span class="line-mask"><span id="v4-s2-w2" class="word-node">bodů</span></span>
+                                <span class="line-mask"><span id="v4-s2-w3" class="word-node">ve&nbsp;hře.</span></span>
+                            </div>
+                            <div class="v4-h2 apple-display flex items-center justify-center gap-x-[0.26em] whitespace-nowrap mt-[0.1em]">
+                                <span class="line-mask"><span id="v4-s2-w4" class="word-node">Dva</span></span>
+                                <span class="line-mask"><span id="v4-s2-w5" class="word-node">předměty,</span></span>
+                                <span class="inline-grid place-items-center align-middle relative">
+                                    <span id="v4-pill-base" class="col-start-1 row-start-1 inline-flex items-center justify-center px-[0.42em] pt-[0.12em] pb-[0.16em] leading-none rounded-full will-change-transform">jedna&nbsp;aplikace</span>
+                                    <span id="v4-pill-inv" class="col-start-1 row-start-1 inline-flex items-center justify-center px-[0.42em] pt-[0.12em] pb-[0.16em] leading-none rounded-full bg-black text-white pointer-events-none will-change-transform" style="clip-path: inset(0 100% 0 0 round 999px);">jedna&nbsp;aplikace</span>
+                                </span>
+                            </div>
+                            <div class="v4-h2 apple-display flex items-baseline justify-center gap-x-[0.26em] whitespace-nowrap mt-[0.1em]">
+                                <span class="line-mask"><span id="v4-s2-w6" class="word-node">bez</span></span>
+                                <span class="line-mask"><span id="v4-s2-w7" class="word-node">stresu.</span></span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (index === 4) {
+                // VIDEO 05: Radial SVG Chrono Ring (70 min + 60 min)
+                stage.innerHTML = `
+                    <div id="v5-s1" class="absolute inset-0 flex items-center justify-center bg-black text-white">
+                        <div id="v5-rig" class="relative flex items-center justify-center will-change-transform">
+                            <svg class="w-[540px] h-[540px] -rotate-90" viewBox="0 0 200 200">
+                                <circle cx="100" cy="100" r="86" stroke="rgba(255,255,255,0.12)" stroke-width="6" fill="none"/>
+                                <circle id="v5-ring" cx="100" cy="100" r="86" stroke="#FFFFFF" stroke-width="6" fill="none" stroke-linecap="round" stroke-dasharray="540.35" stroke-dashoffset="540.35"/>
+                            </svg>
+                            <div class="absolute flex flex-col items-center justify-center text-center">
+                                <span class="font-mono-tech text-xs tracking-[0.3em] text-[#86868B] uppercase mb-2">OSTRÁ ČASOMÍRA</span>
+                                <div id="v5-time" class="font-mono-tech text-8xl font-bold text-white tracking-tight">00:00</div>
+                                <div id="v5-label" class="apple-tagline text-2xl text-[#86868B] mt-2">reálný Cermat limit</div>
+                            </div>
+                            <div id="v5-iris" class="absolute rounded-full bg-white pointer-events-none will-change-transform" style="width:120px; height:120px; transform:scale(0); opacity:0;"></div>
+                        </div>
+                    </div>
+                    <div id="v5-s2" class="absolute inset-0 flex items-center justify-center bg-white text-black" style="opacity:0; visibility:hidden;">
+                        <div id="v5-s2-rig" class="flex flex-col items-center justify-center text-center will-change-transform px-8">
+                            <div id="v5-s2-l1" class="v5-h2 apple-display text-[#86868B] will-change-transform">70 minut matematika.</div>
+                            <div id="v5-s2-l2" class="v5-h2 apple-display text-[#86868B] mt-2 will-change-transform">60 minut čeština.</div>
+                            <div id="v5-s2-l3" class="v5-h2 apple-display text-black mt-6 px-10 py-3 rounded-full border-4 border-black will-change-transform">Trénuj pod reálným tlakem.</div>
+                        </div>
+                    </div>
+                `;
+            } else if (index === 5) {
+                // VIDEO 06: 4x4 Bento Matrix (16 Okruhů)
+                let cellsHtml = '';
+                const topics = ["Zlomky", "Rovnice", "Geometrie", "Procenta", "Slovní úlohy", "Grafy", "Pravopis", "Větný rozbor", "Tvarosloví", "Porozumění", "Sloh", "Literatura", "Funkce", "Úhly", "Soustavy", "Lexikologie"];
+                for (let i = 0; i < 16; i++) {
+                    cellsHtml += `
+                        <div id="v6-cell-${i}" class="v6-cell rounded-2xl border border-white/15 bg-[#121214] p-4 flex flex-col justify-between will-change-transform" style="opacity:0;">
+                            <span class="font-mono-tech text-xs text-[#86868B]">${String(i + 1).padStart(2, '0')}</span>
+                            <span class="font-bold text-lg text-white tracking-tight truncate">${topics[i]}</span>
+                        </div>
+                    `;
+                }
+                stage.innerHTML = `
+                    <div id="v6-s1" class="absolute inset-0 flex flex-col items-center justify-center bg-black text-white px-12">
+                        <div id="v6-grid" class="grid grid-cols-4 gap-4 w-full max-w-4xl h-[540px] will-change-transform">
+                            ${cellsHtml}
+                        </div>
+                    </div>
+                    <div id="v6-s2" class="absolute inset-0 flex items-center justify-center bg-white text-black" style="opacity:0; visibility:hidden;">
+                        <div id="v6-s2-rig" class="flex flex-col items-center justify-center text-center will-change-transform px-8">
+                            <div id="v6-big" class="apple-display text-[150px] leading-none text-black will-change-transform">16 okruhů.</div>
+                            <div id="v6-sub" class="apple-display text-6xl text-[#86868B] mt-6 will-change-transform">Veškerá látka na jednom místě.</div>
+                        </div>
+                    </div>
+                `;
+            } else if (index === 6) {
+                // VIDEO 07: 3D Perspective Card Flip (Flashcards)
+                stage.innerHTML = `
+                    <div id="v7-s1" class="absolute inset-0 flex items-center justify-center bg-black" style="perspective: 1600px;">
+                        <div id="v7-card" class="relative w-[780px] h-[460px] rounded-[40px] will-change-transform" style="transform-style: preserve-3d;">
+                            <!-- Front Face (Black Question) -->
+                            <div id="v7-front" class="absolute inset-0 rounded-[40px] bg-[#141416] border-2 border-white/20 p-12 flex flex-col justify-between text-white" style="backface-visibility: hidden;">
+                                <div class="flex justify-between items-center font-mono-tech text-xs text-[#86868B] uppercase tracking-widest">
+                                    <span>FLASHCARD • ČESKÝ JAZYK</span>
+                                    <span>OTÁZKA 01/50</span>
+                                </div>
+                                <div class="apple-display text-6xl text-left">Objekt vs. Subjekt ve větě?</div>
+                                <div class="font-mono-tech text-xs text-white/50 text-left">Kliknutím otočíš kartičku →</div>
+                            </div>
+                            <!-- Back Face (White Answer) -->
+                            <div id="v7-back" class="absolute inset-0 rounded-[40px] bg-white border-2 border-black p-12 flex flex-col justify-between text-black" style="backface-visibility: hidden; transform: rotateY(180deg);">
+                                <div class="flex justify-between items-center font-mono-tech text-xs text-[#86868B] uppercase tracking-widest">
+                                    <span>ODPOVĚĎ • PRAVIDLO</span>
+                                    <span class="text-black font-bold">✓ ZAPAMATOVÁNO</span>
+                                </div>
+                                <div class="apple-display text-6xl text-left">Předmět (4. pád) vs. Podmět (1. pád).</div>
+                                <div class="font-mono-tech text-xs text-black/60 text-left">Chytré opakování do dlouhodobé paměti</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="v7-s2" class="absolute inset-0 flex items-center justify-center bg-white text-black" style="opacity:0; visibility:hidden;">
+                        <div id="v7-s2-rig" class="flex flex-col items-center justify-center text-center will-change-transform px-8">
+                            <div id="v7-title" class="v7-h2 apple-display text-black will-change-transform">Chytré flashcards.</div>
+                            <div id="v7-desc" class="v7-h2 apple-display text-[#86868B] mt-4 will-change-transform">Vzorce a pravidla nikdy nezapomeneš.</div>
+                        </div>
+                    </div>
+                `;
+            } else if (index === 7) {
+                // VIDEO 08: Precision Laser Strike-Through (Konec PDF)
+                stage.innerHTML = `
+                    <div id="v8-s1" class="absolute inset-0 flex flex-col items-center justify-center bg-black text-white">
+                        <div id="v8-list" class="relative flex flex-col items-center gap-6 will-change-transform">
+                            <div id="v8-item1" class="v8-h1 apple-display text-[#86868B] relative">Tisknutí stohů PDF.</div>
+                            <div id="v8-item2" class="v8-h1 apple-display text-[#86868B] relative">Hledání klíčů správných řešení.</div>
+                            <div id="v8-item3" class="v8-h1 apple-display text-[#86868B] relative">500 Kč za hodinu doučování.</div>
+                        </div>
+                        <div id="v8-laser" class="absolute inset-x-0 bg-white will-change-transform" style="height: 4px; transform: scaleX(0);"></div>
+                    </div>
+                    <div id="v8-s2" class="absolute inset-0 flex items-center justify-center bg-white text-black" style="opacity:0; visibility:hidden;">
+                        <div id="v8-s2-rig" class="flex flex-col items-center justify-center text-center will-change-transform px-8">
+                            <div id="v8-clean1" class="v8-h2 apple-display text-black will-change-transform">Zapomeň na papíry.</div>
+                            <div id="v8-clean2" class="v8-h2 apple-display mt-4 px-10 py-3 rounded-full bg-black text-white will-change-transform">Všechno se opraví samo.</div>
+                        </div>
+                    </div>
+                `;
+            } else if (index === 8) {
+                // VIDEO 09: Rising Full-Bleed Progress Bar (8% -> 100%)
+                stage.innerHTML = `
+                    <div id="v9-s1" class="absolute inset-0 flex items-center justify-center bg-black text-white overflow-hidden">
+                        <div id="v9-fill" class="absolute inset-x-0 bottom-0 bg-white will-change-transform" style="height: 0%;"></div>
+                        <div id="v9-center" class="relative z-10 flex flex-col items-center justify-center text-center mix-blend-difference text-white will-change-transform">
+                            <span class="font-mono-tech text-sm tracking-[0.35em] uppercase mb-4">CELKOVÝ POKROK ŽÁKA</span>
+                            <div id="v9-pct" class="apple-display text-[190px] leading-none font-mono-tech font-bold">8%</div>
+                            <div id="v9-sub" class="apple-display text-5xl mt-4">Rosteš s každým testem.</div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // VIDEO 10: High-Tempo Strobe Manifesto ("Don't Blink" style)
+                stage.innerHTML = `
+                    <div id="v10-s1" class="absolute inset-0 flex items-center justify-center bg-black text-white">
+                        <div id="v10-word" class="apple-display text-center px-8 will-change-transform" style="font-size: 160px;">9. TŘÍDA.</div>
+                    </div>
+                `;
+            }
+
+            updateConceptButtonsUI();
+            updateLayout();
+        }
+
+        function renderConceptButtons() {
+            const container = document.getElementById('concept-buttons-container');
+            container.innerHTML = '';
+            CONCEPTS.forEach((c, idx) => {
+                const btn = document.createElement('button');
+                btn.id = `concept-btn-${idx}`;
+                btn.onclick = () => selectConcept(idx);
+                btn.textContent = `${c.id} ${c.name}`;
+                container.appendChild(btn);
+            });
+            updateConceptButtonsUI();
+        }
+
+        function updateConceptButtonsUI() {
+            CONCEPTS.forEach((_, idx) => {
+                const btn = document.getElementById(`concept-btn-${idx}`);
+                if (!btn) return;
+                btn.className = (idx === activeConceptIndex)
+                    ? 'px-3 py-1.5 rounded-lg bg-white text-black font-mono-tech text-[11px] font-semibold shrink-0 transition-all shadow-sm'
+                    : 'px-3 py-1.5 rounded-lg border border-white/10 hover:border-white/35 text-[#86868B] hover:text-white font-mono-tech text-[11px] shrink-0 transition-all';
+            });
+        }
+
+        function selectConcept(index) {
+            activeConceptIndex = (index + CONCEPTS.length) % CONCEPTS.length;
+            buildConceptDOM(activeConceptIndex);
+            currentFrame = 0;
+            isPlaying = true;
+            updatePlayButtonUI();
+            renderFrame(0);
+        }
+
+        function toggleSequenceAll() {
+            autoSequenceAll = !autoSequenceAll;
+            const btn = document.getElementById('btn-seq-mode');
+            if (autoSequenceAll) {
+                btn.textContent = 'Auto-Play 10×: ON';
+                btn.className = 'shrink-0 px-3 py-1.5 rounded-lg bg-white text-black font-mono-tech text-[11px] font-semibold transition-colors';
+            } else {
+                btn.textContent = 'Auto-Play 10×: OFF';
+                btn.className = 'shrink-0 px-3 py-1.5 rounded-lg border border-white/15 hover:border-white/40 font-mono-tech text-[11px] text-[#86868B] hover:text-white transition-colors';
+            }
+        }
+
+        function updateLayout() {
+            const comp = document.getElementById('composition');
+            const isClean = document.body.classList.contains('clean-mode');
+            const padX = isClean ? 0 : 48;
+            const padY = isClean ? 0 : 190;
+
+            const availW = Math.max(320, window.innerWidth - padX);
+            const availH = Math.max(240, window.innerHeight - padY);
+            const screenRatio = availW / availH;
+
+            let dim;
+            if (aspect === 'fit') {
+                if (screenRatio >= 1.25) {
+                    dim = { w: 1920, h: Math.round(1920 / screenRatio) };
+                } else if (screenRatio < 0.8) {
+                    dim = { w: 1080, h: Math.round(1080 / screenRatio) };
+                } else {
+                    dim = { w: 1440, h: Math.round(1440 / screenRatio) };
+                }
+            } else {
+                dim = DIMENSIONS[aspect] || DIMENSIONS['16:9'];
+            }
+            currentDim = dim;
+
+            comp.style.width = `${dim.w}px`;
+            comp.style.height = `${dim.h}px`;
+
+            const scaleX = (window.innerWidth - padX) / dim.w;
+            const scaleY = (window.innerHeight - padY) / dim.h;
+            const scale = Math.min(scaleX, scaleY);
+            comp.style.transform = `scale(${scale.toFixed(4)})`;
+
+            const isPortrait = aspect === '9:16' || (aspect === 'fit' && dim.w < dim.h * 0.8);
+            const isSquare = aspect === '1:1' || (aspect === 'fit' && dim.w >= dim.h * 0.8 && dim.w <= dim.h * 1.2);
+            const isIpad = aspect === 'ipad';
+
+            // Responsive typography sizing across custom engines
+            const h1Size = isIpad ? 168 : (isPortrait ? 90 : (isSquare ? 112 : 136));
+            const h2Size = isIpad ? 128 : (isPortrait ? 66 : (isSquare ? 84 : 104));
+
+            document.querySelectorAll('.v1-h1, .v3-row').forEach(el => el.style.fontSize = `${isIpad ? 138 : (isPortrait ? 74 : (isSquare ? 94 : 112))}px`);
+            document.querySelectorAll('.v1-h2, .v2-h2, .v4-h2, .v5-h2, .v7-h2, .v8-h2').forEach(el => el.style.fontSize = `${h2Size}px`);
+            document.querySelectorAll('.v4-h1, .v8-h1').forEach(el => el.style.fontSize = `${isIpad ? 118 : (isPortrait ? 68 : (isSquare ? 82 : 96))}px`);
+
+            const v2Counter = document.getElementById('v2-counter');
+            if (v2Counter) v2Counter.style.fontSize = `${isIpad ? 308 : (isPortrait ? 180 : 250)}px`;
+            const v2Sub = document.getElementById('v2-sub');
+            if (v2Sub) v2Sub.style.fontSize = `${isIpad ? 96 : (isPortrait ? 58 : 78)}px`;
+
+            const v4Big = document.getElementById('v4-big-100');
+            if (v4Big) v4Big.style.fontSize = `${h1Size}px`;
+            const v4Sub = document.getElementById('v4-sub-box');
+            if (v4Sub) v4Sub.style.fontSize = `${isIpad ? 88 : (isPortrait ? 52 : 72)}px`;
+
+            const s3IconSize = isIpad ? 186 : (isPortrait ? 112 : (isSquare ? 132 : 152));
+            const s3TextSize = isIpad ? 176 : (isPortrait ? 104 : (isSquare ? 124 : 144));
+            const s3TagSize  = isIpad ? 54  : (isPortrait ? 34  : (isSquare ? 40  : 44));
+
+            document.getElementById('s3-icon-wrap').style.width = `${s3IconSize}px`;
+            document.getElementById('s3-icon-wrap').style.height = `${s3IconSize}px`;
+            document.getElementById('s3-text-inner').style.fontSize = `${s3TextSize}px`;
+            document.getElementById('s3-tagline').style.fontSize = `${s3TagSize}px`;
+
+            const measuredWidth = document.getElementById('s3-text-inner').getBoundingClientRect().width / scale;
+            targetTextSlotWidth = Math.ceil((measuredWidth > 50 ? measuredWidth : document.getElementById('s3-text-inner').scrollWidth) + 16);
+        }
+
+        // ============================================================================
+        // MASTER 60FPS RENDER ENGINE (10 DISTINCT CHOREOGRAPHIES)
+        // ============================================================================
+        function renderFrame(rawFrame) {
+            const f = Math.max(0, Math.min(TOTAL_FRAMES, rawFrame));
+            const fInt = Math.round(f);
+            const c = CONCEPTS[activeConceptIndex];
+
+            document.getElementById('scrubber').value = fInt;
+            document.getElementById('hud-frame').textContent = `${String(fInt).padStart(3, '0')} / ${TOTAL_FRAMES}f`;
+            document.getElementById('hud-time').textContent = `${(f / FPS).toFixed(2)}s / ${(TOTAL_FRAMES / FPS).toFixed(2)}s`;
+
+            const activeScene = f < c.cut1 ? 1 : (f < c.cut2 ? 2 : 3);
+            [1, 2, 3].forEach(idx => {
+                const btn = document.getElementById(`jump-${idx}`);
+                btn.className = (idx === activeScene)
+                    ? 'px-2.5 py-1 rounded-md bg-white text-black font-medium transition-colors'
+                    : 'px-2.5 py-1 rounded-md border border-white/10 hover:border-white/40 text-white transition-colors';
+            });
+
+            const customStage = document.getElementById('custom-stage');
+            const s3 = document.getElementById('scene-3');
+
+            if (f < c.cut2) {
+                customStage.style.opacity = '1';
+                customStage.style.visibility = 'visible';
+                s3.style.opacity = '0';
+                s3.style.visibility = 'hidden';
+                renderCustomConcept(activeConceptIndex, f, c);
+            } else {
+                customStage.style.opacity = '0';
+                customStage.style.visibility = 'hidden';
+                s3.style.opacity = '1';
+                s3.style.visibility = 'visible';
+                renderOfficialLogoFinale(f, c.cut2);
+            }
+        }
+
+        function renderCustomConcept(idx, f, c) {
+            // -----------------------------------------------------------------
+            // ENGINE 01: INLINE CAPSULE ZOOM + INVERTED PILL WIPE
+            // -----------------------------------------------------------------
+            if (idx === 0) {
+                const s1 = document.getElementById('v1-s1');
+                const s2 = document.getElementById('v1-s2');
+                if (f < 180) {
+                    s1.style.opacity = '1'; s1.style.visibility = 'visible';
+                    s2.style.opacity = '0'; s2.style.visibility = 'hidden';
+
+                    const lensEmergence = easeOutQuart(progress(f, 0, 45));
+                    const baseScale = lerp(0.95, 1.0, lensEmergence) + lerp(0, 0.015, progress(f, 45, 155));
+                    document.getElementById('v1-s1-rig').style.transform = `scale(${baseScale.toFixed(4)})`;
+
+                    const words = [
+                        { id: 'v1-w1', ms: 15, me: 52, is: 24, ie: 64 },
+                        { id: 'v1-w2', ms: 24, me: 62, is: 38, ie: 78 },
+                        { id: 'v1-w3', ms: 36, me: 74, is: 54, ie: 90 },
+                        { id: 'v1-w4', ms: 42, me: 80, is: 60, ie: 95 }
+                    ];
+                    words.forEach(w => {
+                        const el = document.getElementById(w.id);
+                        const mEase = easeOutQuart(progress(f, w.ms, w.me));
+                        const iEase = easeOutQuart(progress(f, w.is, w.ie));
+                        el.style.transform = `translate3d(0, ${lerp(115, 0, mEase).toFixed(2)}%, 0)`;
+                        el.style.filter = mEase < 0.99 ? `blur(${lerp(8, 0, mEase).toFixed(2)}px)` : 'none';
+                        el.style.color = lerpRGB(36, 36, 38, 255, 255, 255, iEase);
+                    });
+
+                    const partEase = easeInOutCubic(progress(f, 90, 128));
+                    const isIpad = aspect === 'ipad';
+                    document.getElementById('v1-slot').style.width = `${lerp(isIpad ? 34 : 28, isIpad ? 126 : 102, partEase).toFixed(2)}px`;
+
+                    const cap = document.getElementById('v1-capsule');
+                    const isl = document.getElementById('v1-island');
+                    if (f < 92) {
+                        cap.style.opacity = '0';
+                    } else if (f <= 156) {
+                        const rev = easeOutQuart(progress(f, 94, 132));
+                        const wake = easeInOutCubic(progress(f, 138, 156));
+                        cap.style.opacity = easeOutQuart(progress(f, 94, 114)).toFixed(3);
+                        cap.style.backgroundColor = `rgba(255,255,255,${wake.toFixed(3)})`;
+                        cap.style.transform = `translate3d(0, ${lerp(12, 0, rev).toFixed(2)}px, 0) scale(${lerp(0.84, 1.0, rev).toFixed(4)})`;
+                        isl.style.opacity = (1 - wake).toFixed(3);
+                    } else {
+                        const z = 1 + Math.pow(progress(f, 156, 180), 3.0) * 78;
+                        cap.style.opacity = '1';
+                        cap.style.backgroundColor = '#FFFFFF';
+                        cap.style.transform = `scale(${z.toFixed(3)})`;
+                        isl.style.opacity = '0';
+                    }
+                } else {
+                    s1.style.opacity = '0'; s1.style.visibility = 'hidden';
+                    s2.style.opacity = '1'; s2.style.visibility = 'visible';
+
+                    const settleEase = easeOutQuart(progress(f, 180, 210));
+                    const recedeEase = easeInOutCubic(progress(f, 325, 350));
+                    const s2Scale = (lerp(0.95, 1.0, settleEase) + lerp(0, 0.015, progress(f, 210, 325))) - (recedeEase * 0.09);
+                    const s2Rig = document.getElementById('v1-s2-rig');
+                    s2Rig.style.transform = `scale(${s2Scale.toFixed(4)})`;
+                    s2Rig.style.opacity = (1 - recedeEase).toFixed(3);
+
+                    const dimEase = easeOutQuart(progress(f, 255, 305));
+                    ['v1-s2-w1', 'v1-s2-w2', 'v1-s2-w3', 'v1-s2-w4', 'v1-s2-w5', 'v1-s2-w6'].forEach((id, i) => {
+                        const el = document.getElementById(id);
+                        const eEase = easeOutQuart(progress(f, 180 + i * 4, 206 + i * 4));
+                        const sEase = easeOutQuart(progress(f, 188 + i * 8, 216 + i * 8));
+                        const cVal = Math.round(lerp(lerp(210, 0, sEase), 134, dimEase));
+                        el.style.transform = `translate3d(0, ${lerp(105, 0, eEase).toFixed(2)}%, 0)`;
+                        el.style.color = `rgb(${cVal}, ${cVal}, ${cVal})`;
+                    });
+
+                    const pillBase = document.getElementById('v1-pill-base');
+                    const pillInv = document.getElementById('v1-pill-inv');
+                    const pEnter = easeOutQuart(progress(f, 202, 228));
+                    pillBase.style.transform = `translate3d(0, ${lerp(105, 0, pEnter).toFixed(2)}%, 0)`;
+                    const wipe = easeOutQuart(progress(f, 250, 302));
+                    pillInv.style.clipPath = `inset(0 ${lerp(100, 0, wipe).toFixed(2)}% 0 0 round 999px)`;
+                }
+            }
+            // -----------------------------------------------------------------
+            // ENGINE 02: KINETIC ODOMETER (000 -> 358)
+            // -----------------------------------------------------------------
+            else if (idx === 1) {
+                const s1 = document.getElementById('v2-s1');
+                const s2 = document.getElementById('v2-s2');
+                if (f < 175) {
+                    s1.style.opacity = '1'; s1.style.visibility = 'visible';
+                    s2.style.opacity = '0'; s2.style.visibility = 'hidden';
+
+                    const countP = easeOutQuart(progress(f, 12, 115));
+                    const val = Math.round(lerp(0, 358, countP));
+                    document.getElementById('v2-counter').textContent = String(val).padStart(3, '0');
+
+                    const subP = easeOutQuart(progress(f, 40, 80));
+                    document.getElementById('v2-sub').style.transform = `translate3d(0, ${lerp(110, 0, subP).toFixed(2)}%, 0)`;
+
+                    const curtainP = easeInOutQuint(progress(f, 138, 175));
+                    document.getElementById('v2-curtain').style.height = `${(curtainP * 100).toFixed(2)}%`;
+                } else {
+                    s1.style.opacity = '0'; s1.style.visibility = 'hidden';
+                    s2.style.opacity = '1'; s2.style.visibility = 'visible';
+
+                    const r1 = easeOutQuart(progress(f, 180, 215));
+                    const r2 = easeOutQuart(progress(f, 205, 240));
+                    const exit = easeInOutCubic(progress(f, 325, 350));
+
+                    const rig = document.getElementById('v2-s2-rig');
+                    rig.style.opacity = (1 - exit).toFixed(3);
+                    document.getElementById('v2-row1-l').style.transform = `translate3d(${lerp(-60, 0, r1).toFixed(2)}px, 0, 0)`;
+                    document.getElementById('v2-row1-l').style.opacity = r1.toFixed(3);
+                    document.getElementById('v2-row2-l').style.transform = `translate3d(${lerp(-60, 0, r2).toFixed(2)}px, 0, 0)`;
+                    document.getElementById('v2-row2-l').style.opacity = r2.toFixed(3);
+                }
+            }
+            // -----------------------------------------------------------------
+            // ENGINE 03: 5-FEATURE VERTICAL DRUM + SQUIRCLE CONVERGENCE
+            // -----------------------------------------------------------------
+            else if (idx === 2) {
+                const enterFrames = [8, 48, 88, 128, 168];
+                let drumFocus = 0;
+                for (let k = 1; k < 5; k++) {
+                    drumFocus += easeInOutCubic(progress(f, enterFrames[k], enterFrames[k] + 28));
+                }
+                const recenter = easeInOutCubic(progress(f, 204, 240));
+                const centerIdx = lerp(drumFocus, 2.0, recenter);
+                const collapseP = easeInOutQuint(progress(f, 252, 308));
+                const exitFade = easeInQuart(progress(f, 282, 308));
+
+                for (let i = 0; i < 5; i++) {
+                    const rowEl = document.getElementById(`v3-r${i}`);
+                    const w0 = document.getElementById(`v3-w${i}-0`);
+                    const w1 = document.getElementById(`v3-w${i}-1`);
+                    const sf = enterFrames[i];
+                    if (f < sf) { rowEl.style.opacity = '0'; continue; }
+
+                    const r0 = easeOutQuart(progress(f, sf, sf + 28));
+                    const r1 = easeOutQuart(progress(f, sf + 6, sf + 34));
+                    w0.style.transform = `translate3d(0, ${lerp(115, 0, r0).toFixed(2)}%, 0)`;
+                    w1.style.transform = `translate3d(0, ${lerp(115, 0, r1).toFixed(2)}%, 0)`;
+
+                    const isIpad = aspect === 'ipad';
+                    const drumStep = isIpad ? 168 : 136;
+                    const y = lerp((i - centerIdx) * drumStep, 0, collapseP);
+                    rowEl.style.opacity = (1 - exitFade).toFixed(3);
+                    rowEl.style.transform = `translate3d(0, ${y.toFixed(2)}px, 0)`;
+                }
+
+                const portal = document.getElementById('v3-portal');
+                if (f < 280) {
+                    portal.style.opacity = '0';
+                    portal.style.transform = 'scale(0)';
+                } else if (f <= 312) {
+                    const pop = springApple(progress(f, 280, 312));
+                    portal.style.opacity = easeOutQuart(progress(f, 280, 296)).toFixed(3);
+                    portal.style.transform = `scale(${lerp(0.1, 1.0, pop).toFixed(4)})`;
+                } else {
+                    const z = 1 + Math.pow(progress(f, 312, 336), 3.2) * 35;
+                    portal.style.opacity = '1';
+                    portal.style.transform = `scale(${z.toFixed(3)})`;
+                }
+            }
+            // -----------------------------------------------------------------
+            // ENGINE 04: APPLE MINIMALIST SPLIT-SCREEN DUALITY (MATIKA × ČEŠTINA)
+            // -----------------------------------------------------------------
+            else if (idx === 3) {
+                const s1 = document.getElementById('v4-s1');
+                const s2 = document.getElementById('v4-s2');
+
+                if (f < 190) {
+                    s1.style.opacity = '1'; s1.style.visibility = 'visible';
+                    s2.style.opacity = '0'; s2.style.visibility = 'hidden';
+
+                    // Smooth opposing vertical curtain entrance (0 - 52f)
+                    const leftPanelEase = easeOutQuart(progress(f, 0, 48));
+                    const rightPanelEase = easeOutQuart(progress(f, 8, 56));
+
+                    const leftEl = document.getElementById('v4-left');
+                    const rightEl = document.getElementById('v4-right');
+                    const dividerEl = document.getElementById('v4-divider');
+
+                    // Convergence towards center before portal expansion (142 - 172f)
+                    const convergeP = easeInOutCubic(progress(f, 140, 170));
+
+                    leftEl.style.transform = `translate3d(0, ${lerp(-100, 0, leftPanelEase).toFixed(2)}%, 0)`;
+                    rightEl.style.transform = `translate3d(0, ${lerp(100, 0, rightPanelEase).toFixed(2)}%, 0)`;
+
+                    // Subtle drift + magnetic pull towards the central seam
+                    const mRig = document.getElementById('v4-m-rig');
+                    const cRig = document.getElementById('v4-c-rig');
+                    const pullX = lerp(0, 140, easeInQuart(progress(f, 142, 174)));
+                    const rigFadeOut = 1 - easeOutQuart(progress(f, 152, 172));
+                    const rigBlur = lerp(0, 10, easeInQuart(progress(f, 148, 172)));
+
+                    mRig.style.transform = `translate3d(${pullX.toFixed(2)}px, 0, 0) scale(${lerp(0.96, 1.0, leftPanelEase).toFixed(4)})`;
+                    mRig.style.opacity = rigFadeOut.toFixed(3);
+                    mRig.style.filter = rigBlur > 0.1 ? `blur(${rigBlur.toFixed(2)}px)` : 'none';
+
+                    cRig.style.transform = `translate3d(${(-pullX).toFixed(2)}px, 0, 0) scale(${lerp(0.96, 1.0, rightPanelEase).toFixed(4)})`;
+                    cRig.style.opacity = rigFadeOut.toFixed(3);
+                    cRig.style.filter = rigBlur > 0.1 ? `blur(${rigBlur.toFixed(2)}px)` : 'none';
+
+                    // Left side: Matematika masked reveal & 0 -> 50 counter
+                    const mTitleEase = easeOutQuart(progress(f, 20, 58));
+                    const mIllumEase = easeOutQuart(progress(f, 28, 68));
+                    const mTitle = document.getElementById('v4-m-title');
+                    mTitle.style.transform = `translate3d(0, ${lerp(115, 0, mTitleEase).toFixed(2)}%, 0)`;
+                    mTitle.style.filter = mTitleEase < 0.99 ? `blur(${lerp(8, 0, mTitleEase).toFixed(2)}px)` : 'none';
+                    mTitle.style.color = lerpRGB(45, 45, 48, 255, 255, 255, mIllumEase);
+
+                    const mMetaEase = easeOutQuart(progress(f, 14, 46));
+                    const mMeta = document.getElementById('v4-m-meta');
+                    mMeta.style.opacity = mMetaEase.toFixed(3);
+                    mMeta.style.transform = `translate3d(0, ${lerp(14, 0, mMetaEase).toFixed(2)}px, 0)`;
+
+                    const mPtsEase = easeOutQuart(progress(f, 44, 80));
+                    const mPtsWrap = document.getElementById('v4-m-pts-wrap');
+                    mPtsWrap.style.transform = `translate3d(0, ${lerp(115, 0, mPtsEase).toFixed(2)}%, 0)`;
+                    document.getElementById('v4-m-num').textContent = Math.round(lerp(0, 50, easeOutQuart(progress(f, 48, 108))));
+
+                    // Right side: Čeština masked reveal & 0 -> 50 counter
+                    const cTitleEase = easeOutQuart(progress(f, 30, 68));
+                    const cIllumEase = easeOutQuart(progress(f, 38, 78));
+                    const cTitle = document.getElementById('v4-c-title');
+                    cTitle.style.transform = `translate3d(0, ${lerp(115, 0, cTitleEase).toFixed(2)}%, 0)`;
+                    cTitle.style.filter = cTitleEase < 0.99 ? `blur(${lerp(8, 0, cTitleEase).toFixed(2)}px)` : 'none';
+                    cTitle.style.color = lerpRGB(205, 205, 210, 29, 29, 31, cIllumEase);
+
+                    const cMetaEase = easeOutQuart(progress(f, 24, 56));
+                    const cMeta = document.getElementById('v4-c-meta');
+                    cMeta.style.opacity = cMetaEase.toFixed(3);
+                    cMeta.style.transform = `translate3d(0, ${lerp(14, 0, cMetaEase).toFixed(2)}px, 0)`;
+
+                    const cPtsEase = easeOutQuart(progress(f, 54, 90));
+                    const cPtsWrap = document.getElementById('v4-c-pts-wrap');
+                    cPtsWrap.style.transform = `translate3d(0, ${lerp(115, 0, cPtsEase).toFixed(2)}%, 0)`;
+                    document.getElementById('v4-c-num').textContent = Math.round(lerp(0, 50, easeOutQuart(progress(f, 58, 118))));
+
+                    // Central "+" Fusion Node & Portal Expansion (85 - 190f)
+                    const badge = document.getElementById('v4-plus-badge');
+                    const plusSym = document.getElementById('v4-plus-symbol');
+                    dividerEl.style.opacity = (easeOutQuart(progress(f, 20, 50)) * (1 - progress(f, 155, 175))).toFixed(3);
+
+                    if (f < 82) {
+                        badge.style.opacity = '0';
+                        badge.style.transform = 'translate(-50%, -50%) scale(0)';
+                    } else if (f <= 156) {
+                        const pop = springApple(progress(f, 82, 122));
+                        const rot = lerp(-90, 0, easeOutQuart(progress(f, 82, 120)));
+                        badge.style.opacity = easeOutQuart(progress(f, 82, 98)).toFixed(3);
+                        badge.style.transform = `translate(-50%, -50%) scale(${pop.toFixed(4)})`;
+                        plusSym.style.transform = `rotate(${rot.toFixed(1)}deg)`;
+                        plusSym.style.opacity = '1';
+                    } else {
+                        const zoomP = progress(f, 156, 190);
+                        const zoomScale = 1 + Math.pow(zoomP, 3.0) * 48;
+                        badge.style.opacity = '1';
+                        badge.style.transform = `translate(-50%, -50%) scale(${zoomScale.toFixed(3)})`;
+                        plusSym.style.opacity = (1 - easeOutQuart(progress(f, 156, 168))).toFixed(3);
+                    }
+                } else {
+                    // Act 2: Unified 100 Points + Inverted Pill Wipe (190 - 350f)
+                    s1.style.opacity = '0'; s1.style.visibility = 'hidden';
+                    s2.style.opacity = '1'; s2.style.visibility = 'visible';
+
+                    const settleEase = easeOutQuart(progress(f, 190, 220));
+                    const recedeEase = easeInOutCubic(progress(f, 325, 350));
+                    const s2Scale = (lerp(0.95, 1.0, settleEase) + lerp(0, 0.015, progress(f, 220, 325))) - (recedeEase * 0.09);
+
+                    const s2Rig = document.getElementById('v4-s2-rig');
+                    s2Rig.style.transform = `scale(${s2Scale.toFixed(4)})`;
+                    s2Rig.style.opacity = (1 - recedeEase).toFixed(3);
+                    s2Rig.style.filter = recedeEase > 0.01 ? `blur(${lerp(0, 12, recedeEase).toFixed(2)}px)` : 'none';
+
+                    const dimEase = easeOutQuart(progress(f, 262, 310));
+                    const s2Words = [
+                        { id: 'v4-s2-w1', e: 190, s: [194, 220] },
+                        { id: 'v4-s2-w2', e: 194, s: [200, 228] },
+                        { id: 'v4-s2-w3', e: 198, s: [208, 236] },
+                        { id: 'v4-s2-w4', e: 204, s: [216, 244] },
+                        { id: 'v4-s2-w5', e: 208, s: [224, 252] },
+                        { id: 'v4-s2-w6', e: 218, s: [242, 270] },
+                        { id: 'v4-s2-w7', e: 222, s: [248, 276] }
+                    ];
+
+                    s2Words.forEach(w => {
+                        const el = document.getElementById(w.id);
+                        const enterEase = easeOutQuart(progress(f, w.e, w.e + 26));
+                        const scrubEase = easeOutQuart(progress(f, w.s[0], w.s[1]));
+                        const baseR = lerp(210, 0, scrubEase);
+                        const baseG = lerp(210, 0, scrubEase);
+                        const baseB = lerp(215, 0, scrubEase);
+
+                        el.style.transform = `translate3d(0, ${lerp(105, 0, enterEase).toFixed(2)}%, 0)`;
+                        el.style.filter = enterEase < 0.99 ? `blur(${lerp(6, 0, enterEase).toFixed(2)}px)` : 'none';
+                        el.style.color = `rgb(${Math.round(lerp(baseR, 134, dimEase))}, ${Math.round(lerp(baseG, 134, dimEase))}, ${Math.round(lerp(baseB, 139, dimEase))})`;
+                    });
+
+                    const pillBase = document.getElementById('v4-pill-base');
+                    const pillInv = document.getElementById('v4-pill-inv');
+                    const pillEnter = easeOutQuart(progress(f, 212, 238));
+                    const pillScrub = easeOutQuart(progress(f, 234, 260));
+
+                    pillBase.style.transform = `translate3d(0, ${lerp(105, 0, pillEnter).toFixed(2)}%, 0)`;
+                    pillBase.style.filter = pillEnter < 0.99 ? `blur(${lerp(6, 0, pillEnter).toFixed(2)}px)` : 'none';
+                    pillBase.style.color = lerpRGB(210, 210, 215, 0, 0, 0, pillScrub);
+
+                    const wipeEase = easeOutQuart(progress(f, 256, 308));
+                    pillInv.style.clipPath = `inset(0 ${lerp(100, 0, wipeEase).toFixed(2)}% 0 0 round 999px)`;
+                }
+            }
+            // -----------------------------------------------------------------
+            // ENGINE 05: RADIAL SVG CHRONO DIAL (130 MIN)
+            // -----------------------------------------------------------------
+            else if (idx === 4) {
+                const s1 = document.getElementById('v5-s1');
+                const s2 = document.getElementById('v5-s2');
+                if (f < 180) {
+                    s1.style.opacity = '1'; s1.style.visibility = 'visible';
+                    s2.style.opacity = '0'; s2.style.visibility = 'hidden';
+
+                    const ringP = easeInOutCubic(progress(f, 10, 135));
+                    const ringEl = document.getElementById('v5-ring');
+                    ringEl.style.strokeDashoffset = (540.35 * (1 - ringP)).toFixed(2);
+
+                    const mins = Math.round(lerp(0, 130, ringP));
+                    document.getElementById('v5-time').textContent = `${ mins }:00`;
+
+                    const irisP = easeInQuart(progress(f, 148, 180));
+                    const iris = document.getElementById('v5-iris');
+                    iris.style.opacity = progress(f, 148, 158).toFixed(3);
+                    iris.style.transform = `scale(${(irisP * 28).toFixed(3)})`;
+                } else {
+                    s1.style.opacity = '0'; s1.style.visibility = 'hidden';
+                    s2.style.opacity = '1'; s2.style.visibility = 'visible';
+
+                    const l1 = easeOutQuart(progress(f, 184, 215));
+                    const l2 = easeOutQuart(progress(f, 204, 235));
+                    const l3 = springApple(progress(f, 230, 275));
+                    const exit = easeInOutCubic(progress(f, 326, 350));
+
+                    document.getElementById('v5-s2-rig').style.opacity = (1 - exit).toFixed(3);
+                    document.getElementById('v5-s2-l1').style.transform = `translate3d(0, ${lerp(40, 0, l1).toFixed(2)}px, 0)`;
+                    document.getElementById('v5-s2-l1').style.opacity = l1.toFixed(3);
+                    document.getElementById('v5-s2-l2').style.transform = `translate3d(0, ${lerp(40, 0, l2).toFixed(2)}px, 0)`;
+                    document.getElementById('v5-s2-l2').style.opacity = l2.toFixed(3);
+                    document.getElementById('v5-s2-l3').style.transform = `scale(${lerp(0.75, 1.0, l3).toFixed(4)})`;
+                    document.getElementById('v5-s2-l3').style.opacity = easeOutQuart(progress(f, 230, 250)).toFixed(3);
+                }
+            }
+            // -----------------------------------------------------------------
+            // ENGINE 06: 4x4 BENTO MATRIX (16 OKRUHŮ)
+            // -----------------------------------------------------------------
+            else if (idx === 5) {
+                const s1 = document.getElementById('v6-s1');
+                const s2 = document.getElementById('v6-s2');
+                if (f < 190) {
+                    s1.style.opacity = '1'; s1.style.visibility = 'visible';
+                    s2.style.opacity = '0'; s2.style.visibility = 'hidden';
+
+                    for (let i = 0; i < 16; i++) {
+                        const cell = document.getElementById(`v6-cell-${i}`);
+                        const start = 6 + i * 6;
+                        const p = springApple(progress(f, start, start + 30));
+                        const fade = easeOutQuart(progress(f, start, start + 16));
+                        const invertWhite = easeOutQuart(progress(f, 125 + i * 2, 155 + i * 2));
+
+                        cell.style.opacity = fade.toFixed(3);
+                        cell.style.transform = `scale(${lerp(0.7, 1.0, p).toFixed(3)})`;
+                        if (invertWhite > 0.5) {
+                            cell.style.backgroundColor = '#FFFFFF';
+                            cell.children[1].style.color = '#000000';
+                        } else {
+                            cell.style.backgroundColor = '#121214';
+                            cell.children[1].style.color = '#FFFFFF';
+                        }
+                    }
+                    const zoomGrid = 1 + Math.pow(progress(f, 162, 190), 3) * 14;
+                    document.getElementById('v6-grid').style.transform = `scale(${zoomGrid.toFixed(3)})`;
+                } else {
+                    s1.style.opacity = '0'; s1.style.visibility = 'hidden';
+                    s2.style.opacity = '1'; s2.style.visibility = 'visible';
+
+                    const p1 = springApple(progress(f, 192, 240));
+                    const p2 = easeOutQuart(progress(f, 220, 260));
+                    const exit = easeInOutCubic(progress(f, 330, 355));
+
+                    document.getElementById('v6-s2-rig').style.opacity = (1 - exit).toFixed(3);
+                    document.getElementById('v6-big').style.transform = `scale(${lerp(0.65, 1.0, p1).toFixed(4)})`;
+                    document.getElementById('v6-sub').style.transform = `translate3d(0, ${lerp(40, 0, p2).toFixed(2)}px, 0)`;
+                    document.getElementById('v6-sub').style.opacity = p2.toFixed(3);
+                }
+            }
+            // -----------------------------------------------------------------
+            // ENGINE 07: 3D PERSPECTIVE FLASHCARD FLIP
+            // -----------------------------------------------------------------
+            else if (idx === 6) {
+                const s1 = document.getElementById('v7-s1');
+                const s2 = document.getElementById('v7-s2');
+                if (f < 180) {
+                    s1.style.opacity = '1'; s1.style.visibility = 'visible';
+                    s2.style.opacity = '0'; s2.style.visibility = 'hidden';
+
+                    const enterP = springApple(progress(f, 5, 55));
+                    const flipP = easeInOutCubic(progress(f, 75, 130));
+                    const zoomOut = Math.pow(progress(f, 152, 180), 3) * 16;
+
+                    const rotY = lerp(0, 180, flipP);
+                    const sc = lerp(0.75, 1.0, enterP) + zoomOut;
+                    const card = document.getElementById('v7-card');
+                    card.style.transform = `scale(${sc.toFixed(3)}) rotateY(${rotY.toFixed(2)}deg)`;
+                } else {
+                    s1.style.opacity = '0'; s1.style.visibility = 'hidden';
+                    s2.style.opacity = '1'; s2.style.visibility = 'visible';
+
+                    const p1 = easeOutQuart(progress(f, 184, 220));
+                    const p2 = easeOutQuart(progress(f, 205, 245));
+                    const exit = easeInOutCubic(progress(f, 326, 350));
+
+                    document.getElementById('v7-s2-rig').style.opacity = (1 - exit).toFixed(3);
+                    document.getElementById('v7-title').style.transform = `translate3d(0, ${lerp(50, 0, p1).toFixed(2)}px, 0)`;
+                    document.getElementById('v7-title').style.opacity = p1.toFixed(3);
+                    document.getElementById('v7-desc').style.transform = `translate3d(0, ${lerp(50, 0, p2).toFixed(2)}px, 0)`;
+                    document.getElementById('v7-desc').style.opacity = p2.toFixed(3);
+                }
+            }
+            // -----------------------------------------------------------------
+            // ENGINE 08: LASER STRIKE-THROUGH + VERTICAL SHUTTER OPEN
+            // -----------------------------------------------------------------
+            else if (idx === 7) {
+                const s1 = document.getElementById('v8-s1');
+                const s2 = document.getElementById('v8-s2');
+                if (f < 185) {
+                    s1.style.opacity = '1'; s1.style.visibility = 'visible';
+                    s2.style.opacity = '0'; s2.style.visibility = 'hidden';
+
+                    ['v8-item1', 'v8-item2', 'v8-item3'].forEach((id, idx) => {
+                        const el = document.getElementById(id);
+                        const p = easeOutQuart(progress(f, 8 + idx * 22, 38 + idx * 22));
+                        el.style.opacity = p.toFixed(3);
+                        el.style.transform = `translate3d(0, ${lerp(35, 0, p).toFixed(2)}px, 0)`;
+                    });
+
+                    const laserLine = easeOutQuart(progress(f, 95, 135));
+                    const shutterOpen = easeInOutQuint(progress(f, 140, 185));
+                    const laser = document.getElementById('v8-laser');
+                    laser.style.transform = `scaleX(${laserLine.toFixed(4)})`;
+                    laser.style.height = `${lerp(6, currentDim.h, shutterOpen).toFixed(1)}px`;
+                } else {
+                    s1.style.opacity = '0'; s1.style.visibility = 'hidden';
+                    s2.style.opacity = '1'; s2.style.visibility = 'visible';
+
+                    const p1 = easeOutQuart(progress(f, 188, 225));
+                    const p2 = springApple(progress(f, 215, 265));
+                    const exit = easeInOutCubic(progress(f, 326, 350));
+
+                    document.getElementById('v8-s2-rig').style.opacity = (1 - exit).toFixed(3);
+                    document.getElementById('v8-clean1').style.transform = `translate3d(0, ${lerp(40, 0, p1).toFixed(2)}px, 0)`;
+                    document.getElementById('v8-clean2').style.transform = `scale(${lerp(0.75, 1.0, p2).toFixed(4)})`;
+                    document.getElementById('v8-clean2').style.opacity = easeOutQuart(progress(f, 215, 235)).toFixed(3);
+                }
+            }
+            // -----------------------------------------------------------------
+            // ENGINE 09: RISING LIQUID PROGRESS FLOOD (8% -> 100%)
+            // -----------------------------------------------------------------
+            else if (idx === 8) {
+                const floodP = easeInOutQuint(progress(f, 35, 230));
+                const countVal = Math.round(lerp(8, 100, floodP));
+                document.getElementById('v9-pct').textContent = `${countVal}%`;
+                document.getElementById('v9-fill').style.height = `${(floodP * 100).toFixed(2)}%`;
+
+                const exit = easeInOutCubic(progress(f, 325, 355));
+                const center = document.getElementById('v9-center');
+                center.style.opacity = (1 - exit).toFixed(3);
+                center.style.transform = `scale(${lerp(0.92, 1.04, floodP) * lerp(1, 0.88, exit)})`;
+            }
+            // -----------------------------------------------------------------
+            // ENGINE 10: STROBE RAPID-CUT MANIFESTO ("DON'T BLINK")
+            // -----------------------------------------------------------------
+            else {
+                const container = document.getElementById('v10-s1');
+                const wordEl = document.getElementById('v10-word');
+
+                const beats = [
+                    { end: 40,  bg: '#000000', fg: '#FFFFFF', text: '9. TŘÍDA.' },
+                    { end: 80,  bg: '#FFFFFF', fg: '#000000', text: 'CERMAT.' },
+                    { end: 120, bg: '#000000', fg: '#FFFFFF', text: '26 TESTŮ.' },
+                    { end: 165, bg: '#FFFFFF', fg: '#000000', text: '358 OTÁZEK.' },
+                    { end: 215, bg: '#000000', fg: '#FFFFFF', text: 'BEZ STRESU.' },
+                    { end: 345, bg: '#FFFFFF', fg: '#000000', text: 'PŘIJAT.' }
+                ];
+
+                const activeBeat = beats.find(b => f < b.end) || beats[beats.length - 1];
+                container.style.backgroundColor = activeBeat.bg;
+                wordEl.style.color = activeBeat.fg;
+                wordEl.textContent = activeBeat.text;
+
+                const exit = easeInOutCubic(progress(f, 320, 345));
+                wordEl.style.opacity = (1 - exit).toFixed(3);
+                wordEl.style.transform = `scale(${lerp(1.0, 0.88, exit).toFixed(4)})`;
+            }
+        }
+
+        // ============================================================================
+        // SCENE 3: 100% IDENTICAL OFFICIAL LOGO FINALE FROM REFERENCE (4)
+        // ============================================================================
+        function renderOfficialLogoFinale(f, s3Start) {
+            const holdDrift = lerp(1.0, 1.025, progress(f, s3Start + 85, TOTAL_FRAMES));
+            document.getElementById('s3-rig').style.transform = `scale(${holdDrift.toFixed(4)})`;
+
+            const iconWrap = document.getElementById('s3-icon-wrap');
+            const svgD = document.getElementById('s3-svg-d');
+            const svgDot = document.getElementById('s3-svg-dot');
+
+            const iconSpring = springApple(progress(f, s3Start, s3Start + 42));
+            const iconFade = easeOutQuart(progress(f, s3Start, s3Start + 16));
+            iconWrap.style.opacity = iconFade.toFixed(3);
+            iconWrap.style.transform = `scale(${lerp(0.56, 1.0, iconSpring).toFixed(4)})`;
+            iconWrap.style.filter = `blur(${lerp(10, 0, iconFade).toFixed(2)}px)`;
+
+            const dSpring = springApple(progress(f, s3Start + 8, s3Start + 42));
+            svgD.style.opacity = easeOutQuart(progress(f, s3Start + 8, s3Start + 24)).toFixed(3);
+            svgD.style.transform = `translate3d(0, ${lerp(10, 0, dSpring).toFixed(2)}px, 0) scale(${lerp(0.72, 1.0, dSpring).toFixed(4)})`;
+
+            if (f < s3Start + 24) {
+                svgDot.style.opacity = '0';
+                svgDot.style.transform = 'scale(0)';
+            } else {
+                svgDot.style.opacity = easeOutQuart(progress(f, s3Start + 24, s3Start + 34)).toFixed(3);
+                svgDot.style.transform = `scale(${springDotPop(progress(f, s3Start + 24, s3Start + 58)).toFixed(4)})`;
+            }
+
+            const textSlot = document.getElementById('s3-text-slot');
+            const dotAppEl = document.getElementById('s3-dot-app');
+
+            if (f < s3Start + 40) {
+                textSlot.style.width = '0px';
+                textSlot.style.opacity = '0';
+            } else {
+                textSlot.style.width = `${lerp(0, targetTextSlotWidth, easeOutQuart(progress(f, s3Start + 40, s3Start + 88))).toFixed(1)}px`;
+                textSlot.style.opacity = easeOutQuart(progress(f, s3Start + 42, s3Start + 62)).toFixed(3);
+
+                wordmarkChars.forEach((chSpan, idx) => {
+                    const charStart = s3Start + 42 + idx * 2.2;
+                    const charEase = easeOutQuart(progress(f, charStart, charStart + 34));
+                    chSpan.style.color = lerpRGB(134, 134, 139, 29, 29, 31, charEase);
+                    chSpan.style.transform = `translate3d(0, ${lerp(18, 0, charEase).toFixed(2)}%, 0)`;
+                    chSpan.style.filter = `blur(${lerp(10, 0, charEase).toFixed(2)}px)`;
+                });
+
+                const appEase = easeOutQuart(progress(f, s3Start + 62, s3Start + 92));
+                dotAppEl.style.opacity = appEase.toFixed(3);
+                dotAppEl.style.transform = `translate3d(${lerp(24, 0, appEase).toFixed(2)}px, 0, 0)`;
+                dotAppEl.style.filter = `blur(${lerp(8, 0, appEase).toFixed(2)}px)`;
+            }
+
+            const tagEl = document.getElementById('s3-tagline');
+            if (f < s3Start + 85) {
+                tagEl.style.opacity = '0';
+                tagEl.style.transform = 'translate3d(0, 115%, 0)';
+            } else {
+                const tagEase = easeOutQuart(progress(f, s3Start + 85, s3Start + 126));
+                tagEl.style.opacity = tagEase.toFixed(3);
+                tagEl.style.transform = `translate3d(0, ${lerp(115, 0, tagEase).toFixed(2)}%, 0)`;
+                tagEl.style.filter = `blur(${lerp(6, 0, tagEase).toFixed(2)}px)`;
+            }
+        }
+
+        function tick(timestamp) {
+            if (!lastTimestamp) lastTimestamp = timestamp;
+            const deltaMs = timestamp - lastTimestamp;
+            lastTimestamp = timestamp;
+
+            if (isPlaying) {
+                currentFrame += (deltaMs / 1000) * FPS;
+                if (currentFrame >= TOTAL_FRAMES) {
+                    if (autoSequenceAll) {
+                        activeConceptIndex = (activeConceptIndex + 1) % CONCEPTS.length;
+                        buildConceptDOM(activeConceptIndex);
+                    }
+                    currentFrame = 0;
+                }
+                renderFrame(currentFrame);
+            }
+            requestAnimationFrame(tick);
+        }
+
+        function togglePlay() {
+            isPlaying = !isPlaying;
+            updatePlayButtonUI();
+        }
+
+        function restartVideo() {
+            currentFrame = 0;
+            isPlaying = true;
+            updatePlayButtonUI();
+            renderFrame(0);
+        }
+
+        function updatePlayButtonUI() {
+            const playIcon = document.getElementById('icon-play');
+            const pauseIcon = document.getElementById('icon-pause');
+            if (isPlaying) {
+                playIcon.classList.add('hidden');
+                pauseIcon.classList.remove('hidden');
+            } else {
+                playIcon.classList.remove('hidden');
+                pauseIcon.classList.add('hidden');
+            }
+        }
+
+        function onScrub(val) {
+            isPlaying = false;
+            updatePlayButtonUI();
+            currentFrame = parseFloat(val);
+            renderFrame(currentFrame);
+        }
+
+        function jumpToScene(sceneNum) {
+            const c = CONCEPTS[activeConceptIndex];
+            if (sceneNum === 1) seekTo(0);
+            else if (sceneNum === 2) seekTo(c.cut1);
+            else seekTo(c.cut2);
+        }
+
+        function seekTo(frame) {
+            currentFrame = Math.max(0, Math.min(TOTAL_FRAMES, frame));
+            renderFrame(currentFrame);
+        }
+
+        function stepFrame(delta) {
+            isPlaying = false;
+            updatePlayButtonUI();
+            currentFrame = (Math.round(currentFrame) + delta + TOTAL_FRAMES + 1) % (TOTAL_FRAMES + 1);
+            renderFrame(currentFrame);
+        }
+
+        function setAspect(nextAsp) {
+            aspect = nextAsp;
+            ['16:9', '9:16', '1:1', 'ipad', 'fit'].forEach(a => {
+                const el = document.getElementById(`asp-${a.replace(':', '-')}`);
+                if (el) {
+                    el.className = (a === aspect)
+                        ? 'px-2.5 py-1 bg-white text-black font-medium transition-colors'
+                        : 'px-2.5 py-1 text-[#86868B] hover:text-white transition-colors';
+                }
+            });
+            updateLayout();
+            renderFrame(currentFrame);
+        }
+
+        function toggleCleanMode() {
+            const hud = document.getElementById('hud-bar');
+            const topBar = document.getElementById('top-concept-bar');
+            const toast = document.getElementById('clean-toast');
+            const isClean = document.body.classList.toggle('clean-mode');
+
+            if (isClean) {
+                hud.classList.add('opacity-0', 'pointer-events-none', 'translate-y-4');
+                topBar.classList.add('opacity-0', 'pointer-events-none', '-translate-y-4');
+                toast.classList.remove('opacity-0');
+                setTimeout(() => toast.classList.add('opacity-0'), 2400);
+            } else {
+                hud.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-4');
+                topBar.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-4');
+            }
+            updateLayout();
+            renderFrame(currentFrame);
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') { e.preventDefault(); togglePlay(); }
+            else if (e.code === 'ArrowRight') { e.preventDefault(); stepFrame(1); }
+            else if (e.code === 'ArrowLeft') { e.preventDefault(); stepFrame(-1); }
+            else if (e.key === 'h' || e.key === 'H' || e.key === 'c' || e.key === 'C') { e.preventDefault(); toggleCleanMode(); }
+            else if (e.code === 'Escape') { if (document.body.classList.contains('clean-mode')) toggleCleanMode(); }
+            else if (e.key >= '1' && e.key <= '9') { selectConcept(parseInt(e.key, 10) - 1); }
+            else if (e.key === '0') { selectConcept(9); }
+        });
+
+        window.addEventListener('resize', updateLayout);
+        window.addEventListener('orientationchange', () => { setTimeout(updateLayout, 100); });
+
+        window.onload = () => {
+            renderConceptButtons();
+            buildConceptDOM(3); // Default directly to 04 Matika × Čeština
+            activeConceptIndex = 3;
+            updateConceptButtonsUI();
+            if (document.fonts && document.fonts.ready) {
+                document.fonts.ready.then(() => { updateLayout(); renderFrame(currentFrame); });
+            }
+            renderFrame(0);
+            requestAnimationFrame(tick);
+        };
+    </script>
+</body>
+</html>
