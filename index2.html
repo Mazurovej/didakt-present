@@ -64,10 +64,12 @@
             justify-content: center;
             position: relative;
             background-color: #050505;
+            overflow: hidden;
         }
 
         #composition {
             position: relative;
+            flex-shrink: 0;
             overflow: hidden;
             transform-origin: center center;
             background-color: #000000;
@@ -140,7 +142,7 @@
 <body>
 
     <div id="viewport">
-        <div id="composition">
+        <div id="composition" class="shrink-0">
 
             <!-- ======================================================== -->
             <!-- DYNAMIC ENGINE STAGE (SCENES 1 & 2 — 10 UNIQUE ENGINES)  -->
@@ -663,13 +665,14 @@
 
             let dim;
             if (aspect === 'fit') {
-                if (screenRatio >= 1.25) {
-                    dim = { w: 1920, h: Math.round(1920 / screenRatio) };
-                } else if (screenRatio < 0.8) {
-                    dim = { w: 1080, h: Math.round(1080 / screenRatio) };
+                if (screenRatio >= 1) {
+                    dim = { w: Math.round(1080 * screenRatio), h: 1080 };
                 } else {
-                    dim = { w: 1440, h: Math.round(1440 / screenRatio) };
+                    dim = { w: 1080, h: Math.round(1080 / screenRatio) };
                 }
+            } else if (aspect === 'ipad') {
+                const isPortraitOrientation = window.innerWidth < window.innerHeight;
+                dim = isPortraitOrientation ? { w: 1640, h: 2360 } : { w: 2360, h: 1640 };
             } else {
                 dim = DIMENSIONS[aspect] || DIMENSIONS['16:9'];
             }
@@ -678,36 +681,37 @@
             comp.style.width = `${dim.w}px`;
             comp.style.height = `${dim.h}px`;
 
-            const scaleX = (window.innerWidth - padX) / dim.w;
-            const scaleY = (window.innerHeight - padY) / dim.h;
+            const scaleX = availW / dim.w;
+            const scaleY = availH / dim.h;
             const scale = Math.min(scaleX, scaleY);
             comp.style.transform = `scale(${scale.toFixed(4)})`;
 
-            const isPortrait = aspect === '9:16' || (aspect === 'fit' && dim.w < dim.h * 0.8);
-            const isSquare = aspect === '1:1' || (aspect === 'fit' && dim.w >= dim.h * 0.8 && dim.w <= dim.h * 1.2);
-            const isIpad = aspect === 'ipad';
+            const isPortrait = dim.w < dim.h * 0.9;
+            const isSquare = dim.w >= dim.h * 0.9 && dim.w <= dim.h * 1.15;
+            const isIpadRes = aspect === 'ipad' || (dim.w >= 2000 && dim.h >= 1400);
 
             // Responsive typography sizing across custom engines
-            const h1Size = isIpad ? 168 : (isPortrait ? 90 : (isSquare ? 112 : 136));
-            const h2Size = isIpad ? 128 : (isPortrait ? 66 : (isSquare ? 84 : 104));
+            const scaleFactor = isIpadRes ? (dim.w / 1920) : 1;
+            const h1Size = Math.round((isPortrait ? 90 : (isSquare ? 112 : 136)) * scaleFactor);
+            const h2Size = Math.round((isPortrait ? 66 : (isSquare ? 84 : 104)) * scaleFactor);
 
-            document.querySelectorAll('.v1-h1, .v3-row').forEach(el => el.style.fontSize = `${isIpad ? 138 : (isPortrait ? 74 : (isSquare ? 94 : 112))}px`);
+            document.querySelectorAll('.v1-h1, .v3-row').forEach(el => el.style.fontSize = `${Math.round((isPortrait ? 74 : (isSquare ? 94 : 112)) * scaleFactor)}px`);
             document.querySelectorAll('.v1-h2, .v2-h2, .v4-h2, .v5-h2, .v7-h2, .v8-h2').forEach(el => el.style.fontSize = `${h2Size}px`);
-            document.querySelectorAll('.v4-h1, .v8-h1').forEach(el => el.style.fontSize = `${isIpad ? 118 : (isPortrait ? 68 : (isSquare ? 82 : 96))}px`);
+            document.querySelectorAll('.v4-h1, .v8-h1').forEach(el => el.style.fontSize = `${Math.round((isPortrait ? 68 : (isSquare ? 82 : 96)) * scaleFactor)}px`);
 
             const v2Counter = document.getElementById('v2-counter');
-            if (v2Counter) v2Counter.style.fontSize = `${isIpad ? 308 : (isPortrait ? 180 : 250)}px`;
+            if (v2Counter) v2Counter.style.fontSize = `${Math.round((isPortrait ? 180 : 250) * scaleFactor)}px`;
             const v2Sub = document.getElementById('v2-sub');
-            if (v2Sub) v2Sub.style.fontSize = `${isIpad ? 96 : (isPortrait ? 58 : 78)}px`;
+            if (v2Sub) v2Sub.style.fontSize = `${Math.round((isPortrait ? 58 : 78) * scaleFactor)}px`;
 
             const v4Big = document.getElementById('v4-big-100');
             if (v4Big) v4Big.style.fontSize = `${h1Size}px`;
             const v4Sub = document.getElementById('v4-sub-box');
-            if (v4Sub) v4Sub.style.fontSize = `${isIpad ? 88 : (isPortrait ? 52 : 72)}px`;
+            if (v4Sub) v4Sub.style.fontSize = `${Math.round((isPortrait ? 52 : 72) * scaleFactor)}px`;
 
-            const s3IconSize = isIpad ? 186 : (isPortrait ? 112 : (isSquare ? 132 : 152));
-            const s3TextSize = isIpad ? 176 : (isPortrait ? 104 : (isSquare ? 124 : 144));
-            const s3TagSize  = isIpad ? 54  : (isPortrait ? 34  : (isSquare ? 40  : 44));
+            const s3IconSize = Math.round((isPortrait ? 112 : (isSquare ? 132 : 152)) * scaleFactor);
+            const s3TextSize = Math.round((isPortrait ? 104 : (isSquare ? 124 : 144)) * scaleFactor);
+            const s3TagSize  = Math.round((isPortrait ? 34 : (isSquare ? 40 : 44)) * scaleFactor);
 
             document.getElementById('s3-icon-wrap').style.width = `${s3IconSize}px`;
             document.getElementById('s3-icon-wrap').style.height = `${s3IconSize}px`;
@@ -715,7 +719,8 @@
             document.getElementById('s3-tagline').style.fontSize = `${s3TagSize}px`;
 
             const measuredWidth = document.getElementById('s3-text-inner').getBoundingClientRect().width / scale;
-            targetTextSlotWidth = Math.ceil((measuredWidth > 50 ? measuredWidth : document.getElementById('s3-text-inner').scrollWidth) + 16);
+            const safeMinWidth = Math.ceil(s3TextSize * 6.3 + 30);
+            targetTextSlotWidth = Math.max(safeMinWidth, Math.ceil((measuredWidth > 50 ? measuredWidth : 0) + 16));
         }
 
         // ============================================================================
