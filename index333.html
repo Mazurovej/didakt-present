@@ -290,20 +290,20 @@
         // steps: hold checkpoints after each key text beat for professional keynote presenting!
         const SLIDES = [
             {
-                engineIdx: 0,
-                steps: [130, 315],
-                holdFrame: 315, // Act 1 ("Celé přijímačky v kapse.") -> Act 2 ("Příprava za cenu jedné hodiny")
-                tag: "01 Vize & Kapsa",
-                title: "Celé přijímačky v kapse.",
-                notes: "Představit vizi: Studenti dnes žijí v mobilech. Didakťáky jim přináší celou přípravu na přijímačky do kapsy za cenu jedné hodiny doučování."
-            },
-            {
-                engineIdx: 7, // Konec PDF
+                engineIdx: 7, // Konec PDF (Začátek problémem)
                 steps: [108, 270],
                 holdFrame: 270, // 3 přeškrtnuté bolesti -> "Zapomeň na papíry. Všechno se opraví samo."
-                tag: "02 Problém",
+                tag: "01 Problém",
                 title: "Konec papírům a stohům PDF.",
                 notes: "Pojmenovat staré bolesti: Tisknutí stohů zmatených PDF, ztracené klíče správných řešení a 500 Kč za jedinou hodinu doučování."
+            },
+            {
+                engineIdx: 0, // Vize & Kapsa
+                steps: [130, 315],
+                holdFrame: 315, // Act 1 ("Celé přijímačky v kapse.") -> Act 2 ("Příprava za cenu jedné hodiny")
+                tag: "02 Vize & Kapsa",
+                title: "Celé přijímačky v kapse.",
+                notes: "Představit vizi: Studenti dnes žijí v mobilech. Didakťáky jim přináší celou přípravu na přijímačky do kapsy za cenu jedné hodiny doučování."
             },
             {
                 engineIdx: 3, // 3D Mockup Showcase (001, 002, 003 Synchronized Fly-in)
@@ -314,12 +314,12 @@
                 notes: "Představit reálnou aplikaci: Všechny 3 obrazovky přilétají naráz v synchronizované 3D kompozici. Ukázat čistý design, přehlednost a rychlost procvičování."
             },
             {
-                engineIdx: 1, // 358 Úloh
+                engineIdx: 1, // 358 Úloh & 26 Cermat testů
                 steps: [120, 260],
-                holdFrame: 260, // 358 řešených otázek -> 26 ostrých testů & postupy krok za krokem
+                holdFrame: 260, // 358 řešených otázek -> 26 Cermat testů & postupy krok za krokem
                 tag: "04 Obsah v číslech",
-                title: "358 úloh & 26 ostrých testů.",
-                notes: "Masivní databáze: 358 otázek, 26 reálných Cermat testů s podrobnými postupy krok za krokem a okamžitým vyhodnocením."
+                title: "358 úloh & 26 Cermat testů.",
+                notes: "Masivní databáze: 358 otázek, 26 Cermat testů (ostré testy i nanečisto) s podrobnými postupy krok za krokem a okamžitým vyhodnocením."
             },
             {
                 engineIdx: 5, // 16 Okruhů Bento
@@ -338,12 +338,12 @@
                 notes: "Reálný stres: 70 minut matematika, 60 minut čeština. Žáci se naučí hospodařit s časem, aby je u ostrého testu nic nepřekvapilo."
             },
             {
-                engineIdx: 6, // 3D Flashcards
-                steps: [55, 125, 260],
-                holdFrame: 260, // Otázka na kartičce -> Otočení na odpověď -> Chytré flashcards
+                engineIdx: 6, // 3D Flashcards (Automatická ukázka -> hold u textu)
+                steps: [290],
+                holdFrame: 290, // Celá animace flashcard proběhne automaticky a zastaví se u textu
                 tag: "07 Paměť",
                 title: "Chytré 3D Flashcards.",
-                notes: "Efektivita: Vzorce, mnemotechnické pomůcky a pravidla pravopisu (mě vs mně) pomocí spaced repetition do dlouhodobé paměti."
+                notes: "Efektivita: Vzorce a pravidla pravopisu pomocí spaced repetition. Ukázka otočení a odchodu proběhne automaticky a zastaví se u hlavního textu."
             },
             {
                 engineIdx: 8, // Růst pokroku
@@ -529,8 +529,8 @@
                     <div id="v2-s2" class="full-bleed-scene flex items-center justify-center bg-white text-black" style="opacity:0; visibility:hidden;">
                         <div id="v2-s2-rig" class="w-full max-w-7xl px-20 flex flex-col gap-14 will-change-transform mx-auto">
                             <div id="v2-row1" class="flex items-baseline justify-between border-b-2 border-black/10 pb-8 will-change-transform" style="opacity:0; transform: translate3d(-50px, 0, 0);">
-                                <span class="v2-h2 apple-display text-black whitespace-nowrap">26 ostrých testů.</span>
-                                <span class="font-mono-tech text-4xl font-bold text-[#86868B]">100% Cermat</span>
+                                <span class="v2-h2 apple-display text-black whitespace-nowrap">26 Cermat testů.</span>
+                                <span class="font-mono-tech text-3xl font-bold text-[#86868B] whitespace-nowrap">Ostré testy i nanečisto</span>
                             </div>
                             <div id="v2-row2" class="flex items-baseline justify-between border-b-2 border-black/10 pb-8 will-change-transform" style="opacity:0; transform: translate3d(-50px, 0, 0);">
                                 <span class="v2-h2 apple-display text-black whitespace-nowrap">Postupy krok za krokem.</span>
@@ -662,29 +662,38 @@
                     </div>
                 `;
             } else if (idx === 6) {
-                // VIDEO 07: 3D Perspective Card Flip (Flashcards) + Swipe-Up Shutter Transition
+                // VIDEO 07: 3D Perspective Card Flip (Flashcards) + Smooth Dissolve & Glide Transition
                 stage.innerHTML = `
-                    <div id="v7-s1" class="full-bleed-scene flex items-center justify-center bg-black overflow-hidden" style="perspective: 1800px;">
-                        <div id="v7-card" class="relative w-[820px] h-[480px] rounded-[36px] will-change-transform" style="transform-style: preserve-3d;">
-                            <div id="v7-front" class="absolute inset-0 rounded-[36px] bg-[#141416] border-2 border-white/20 p-12 flex flex-col justify-between text-white shadow-2xl" style="backface-visibility: hidden;">
-                                <div class="flex justify-between items-center font-mono-tech text-xs text-[#86868B] uppercase tracking-widest">
-                                    <span>FLASHCARD • ČESKÝ JAZYK</span>
-                                    <span>OTÁZKA 01/50</span>
+                    <div id="v7-s1" class="full-bleed-scene flex items-center justify-center bg-black">
+                        <!-- 2D transform rig for smooth scale, translate, fade and clean exit -->
+                        <div id="v7-card-wrap" class="relative will-change-transform" style="perspective: 1600px;">
+                            <!-- Pure 3D card element that flips on Y-axis without any translate interference -->
+                            <div id="v7-card" class="relative w-[840px] h-[480px] rounded-[36px] will-change-transform shadow-2xl" style="transform-style: preserve-3d;">
+                                <!-- Front Face: Question -->
+                                <div id="v7-front" class="absolute inset-0 rounded-[36px] bg-[#141416] border-2 border-white/20 p-12 flex flex-col justify-between text-white shadow-2xl" style="backface-visibility: hidden; -webkit-backface-visibility: hidden;">
+                                    <div class="flex justify-between items-center font-mono-tech text-xs text-[#86868B] uppercase tracking-widest">
+                                        <span>FLASHCARD • ČESKÝ JAZYK</span>
+                                        <span>OTÁZKA 01/50</span>
+                                    </div>
+                                    <div class="apple-display text-5xl text-left leading-snug">Objekt vs. Subjekt ve větě?</div>
+                                    <div class="font-mono-tech text-xs text-white/50 text-left flex items-center gap-2">
+                                        <span class="inline-block w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+                                        <span>Ukázka otočení kartičky →</span>
+                                    </div>
                                 </div>
-                                <div class="apple-display text-5xl text-left leading-snug">Objekt vs. Subjekt ve větě?</div>
-                                <div class="font-mono-tech text-xs text-white/50 text-left">Kliknutím otočíš kartičku →</div>
-                            </div>
-                            <div id="v7-back" class="absolute inset-0 rounded-[36px] bg-white border-2 border-black/15 p-12 flex flex-col justify-between text-black shadow-2xl" style="backface-visibility: hidden; transform: rotateY(180deg);">
-                                <div class="flex justify-between items-center font-mono-tech text-xs text-[#86868B] uppercase tracking-widest">
-                                    <span>ODPOVĚĎ • PRAVIDLO</span>
-                                    <span class="text-emerald-600 font-bold px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200">✓ ZAPAMATOVÁNO</span>
+                                <!-- Back Face: Answer -->
+                                <div id="v7-back" class="absolute inset-0 rounded-[36px] bg-white border-2 border-black/15 p-12 flex flex-col justify-between text-black shadow-2xl" style="backface-visibility: hidden; -webkit-backface-visibility: hidden; transform: rotateY(180deg);">
+                                    <div class="flex justify-between items-center font-mono-tech text-xs text-[#86868B] uppercase tracking-widest">
+                                        <span>ODPOVĚĎ • PRAVIDLO</span>
+                                        <span class="text-emerald-600 font-bold px-3.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-xs">✓ ZAPAMATOVÁNO</span>
+                                    </div>
+                                    <div class="apple-display text-5xl text-left leading-snug text-black">Předmět (4. pád) vs. Podmět (1. pád).</div>
+                                    <div class="font-mono-tech text-xs text-black/60 text-left">Chytré opakování do dlouhodobé paměti</div>
                                 </div>
-                                <div class="apple-display text-5xl text-left leading-snug">Předmět (4. pád) vs. Podmět (1. pád).</div>
-                                <div class="font-mono-tech text-xs text-black/60 text-left">Chytré opakování do dlouhodobé paměti</div>
                             </div>
                         </div>
-                        <div id="v7-curtain" class="absolute inset-0 bg-white pointer-events-none will-change-transform" style="transform: translate3d(0, 100%, 0);"></div>
                     </div>
+                    <!-- Scene 2: Pure White Typography Finale -->
                     <div id="v7-s2" class="full-bleed-scene flex items-center justify-center bg-white text-black" style="opacity:0; visibility:hidden;">
                         <div id="v7-s2-rig" class="flex flex-col items-center justify-center text-center will-change-transform px-8 max-w-[1760px] mx-auto">
                             <div id="v7-title" class="apple-display text-black whitespace-nowrap will-change-transform" style="opacity:0; transform: translate3d(0, 40px, 0); font-size: 92px;">Chytré flashcards.</div>
@@ -1335,67 +1344,75 @@
                 }
             }
             // -----------------------------------------------------------------
-            // ENGINE 07 (SLIDE 6): 3D PERSPECTIVE FLASHCARD + SWIPE-UP REVEAL
+            // ENGINE 07 (SLIDE 6): 3D PERSPECTIVE FLASHCARD (FULLY AUTOMATIC)
             // -----------------------------------------------------------------
             else if (idx === 6) {
                 const s1 = document.getElementById('v7-s1');
                 const s2 = document.getElementById('v7-s2');
                 if (!s1 || !s2) return;
 
+                const cardWrap = document.getElementById('v7-card-wrap');
                 const cardEl = document.getElementById('v7-card');
-                const curtainEl = document.getElementById('v7-curtain');
 
-                if (f < 164) {
+                // Automated timeline (60 FPS):
+                // f: 0..36    -> Card smooth entrance (scale 0.88 -> 1.0, fade in)
+                // f: 36..85   -> Hold on Question ("Objekt vs. Subjekt ve větě?")
+                // f: 85..140  -> Smooth 3D Flip 180° around Y axis
+                // f: 140..195 -> Hold on Answer ("Předmět vs. Podmět. ✓ ZAPAMATOVÁNO")
+                // f: 195..242 -> Smooth clean card exit (glide up & fade out) + Scene 2 white fade in
+                // f: 228..285 -> Scene 2 text ("Chytré flashcards. Vzorce a pravidla...") reveals
+                // f: 285..290 -> Settled in final state, HOLDS PERMANENTLY at frame 290!
+
+                // Theme color management: black during card demo, pure white for final text
+                if (f < 220) {
                     setFullBleedTheme('#000000');
-                    s1.style.opacity = '1'; s1.style.visibility = 'visible';
-                    s2.style.opacity = '0'; s2.style.visibility = 'hidden';
-
-                    const enterP = springPop(progress(f, 5, 48));
-                    const flipP = easeInOutCubic(progress(f, 65, 118));
-                    const rotY = lerp(0, 180, flipP);
-
-                    if (f < 128) {
-                        // Phase 1: Card entrance and clean 180° flip
-                        if (cardEl) {
-                            cardEl.style.transform = `scale(${lerp(0.82, 1.0, enterP).toFixed(4)}) rotateY(${rotY.toFixed(2)}deg)`;
-                            cardEl.style.opacity = '1';
-                        }
-                        if (curtainEl) curtainEl.style.transform = 'translate3d(0, 100%, 0)';
-                    } else {
-                        // Phase 2: Natural swipe-up dismissal ("✓ Zapamatováno") + Rising white curtain
-                        const swipeP = easeInOutCubic(progress(f, 128, 158));
-                        const cardY = lerp(0, -440, swipeP);
-                        const cardScale = lerp(1.0, 0.92, swipeP);
-                        const cardRotZ = lerp(0, -3.5, swipeP);
-                        const cardFade = 1 - easeInQuart(progress(f, 136, 158));
-
-                        if (cardEl) {
-                            cardEl.style.transform = `translate3d(0, ${cardY.toFixed(2)}px, 0) scale(${cardScale.toFixed(4)}) rotateY(180deg) rotateZ(${cardRotZ.toFixed(2)}deg)`;
-                            cardEl.style.opacity = cardFade.toFixed(3);
-                        }
-
-                        const curtainP = easeInOutQuint(progress(f, 134, 164));
-                        if (curtainEl) curtainEl.style.transform = `translate3d(0, ${lerp(100, 0, curtainP).toFixed(2)}%, 0)`;
-                    }
                 } else {
-                    // Phase 3: Act 2 typography on pristine white
                     setFullBleedTheme('#FFFFFF');
-                    s1.style.opacity = '0'; s1.style.visibility = 'hidden';
-                    s2.style.opacity = '1'; s2.style.visibility = 'visible';
+                }
 
-                    const p1 = easeOutQuart(progress(f, 166, 202));
-                    const p2 = easeOutQuart(progress(f, 184, 222));
+                // 1. Entrance (f: 0 .. 36)
+                const enterP = springPop(progress(f, 4, 36));
 
-                    const titleEl = document.getElementById('v7-title');
-                    const descEl = document.getElementById('v7-desc');
-                    if (titleEl) {
-                        titleEl.style.transform = `translate3d(0, ${lerp(40, 0, p1).toFixed(2)}px, 0)`;
-                        titleEl.style.opacity = p1.toFixed(3);
-                    }
-                    if (descEl) {
-                        descEl.style.transform = `translate3d(0, ${lerp(40, 0, p2).toFixed(2)}px, 0)`;
-                        descEl.style.opacity = p2.toFixed(3);
-                    }
+                // 2. 3D Flip (f: 85 .. 140)
+                const flipP = easeInOutCubic(progress(f, 85, 140));
+                const rotY = lerp(0, 180, flipP);
+
+                // 3. Clean Card Exit (f: 195 .. 238)
+                const exitP = easeApple(progress(f, 195, 238));
+
+                if (cardWrap) {
+                    const wrapScale = lerp(lerp(0.88, 1.0, enterP), 0.94, exitP);
+                    const wrapY = lerp(lerp(50, 0, enterP), -100, exitP);
+                    const wrapOpacity = Math.min(enterP, 1 - exitP);
+                    cardWrap.style.transform = `translate3d(0, ${wrapY.toFixed(2)}px, 0) scale(${wrapScale.toFixed(4)})`;
+                    cardWrap.style.opacity = Math.max(0, wrapOpacity).toFixed(3);
+                }
+
+                if (cardEl) {
+                    cardEl.style.transform = `rotateY(${rotY.toFixed(2)}deg)`;
+                }
+
+                // 4. Scene 1 vs Scene 2 cross-dissolve (f: 205 .. 242)
+                const s2Fade = easeApple(progress(f, 205, 242));
+                s1.style.opacity = (1 - s2Fade).toFixed(3);
+                s1.style.visibility = s2Fade >= 1 ? 'hidden' : 'visible';
+
+                s2.style.opacity = s2Fade.toFixed(3);
+                s2.style.visibility = s2Fade > 0 ? 'visible' : 'hidden';
+
+                // 5. Scene 2 Typography Animation (f: 228 .. 285)
+                const p1 = easeOutQuart(progress(f, 228, 268));
+                const p2 = easeOutQuart(progress(f, 242, 282));
+
+                const titleEl = document.getElementById('v7-title');
+                const descEl = document.getElementById('v7-desc');
+                if (titleEl) {
+                    titleEl.style.transform = `translate3d(0, ${lerp(40, 0, p1).toFixed(2)}px, 0)`;
+                    titleEl.style.opacity = p1.toFixed(3);
+                }
+                if (descEl) {
+                    descEl.style.transform = `translate3d(0, ${lerp(40, 0, p2).toFixed(2)}px, 0)`;
+                    descEl.style.opacity = p2.toFixed(3);
                 }
             }
             // -----------------------------------------------------------------
