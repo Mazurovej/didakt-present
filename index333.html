@@ -318,7 +318,7 @@
             },
             {
                 engineIdx: 5, // 16 Okruhů Bento
-                steps: [125, 270],
+                steps: [132, 270],
                 holdFrame: 270, // 16 bento tiles -> 16 tematických okruhů
                 tag: "05 Okruhy látky",
                 title: "16 tematických okruhů.",
@@ -350,7 +350,7 @@
             },
             {
                 engineIdx: 2, // 5 Funkcí Buben & Spojení
-                steps: [180, 425],
+                steps: [246, 425],
                 holdFrame: 425, // 5 funkcí buben -> 5 funkcí v jedné aplikaci
                 tag: "09 Ekosystém",
                 title: "5 funkcí v jedné aplikaci.",
@@ -358,7 +358,7 @@
             },
             {
                 engineIdx: 10, // LOGO FINALE
-                steps: [84, 130],
+                steps: [130],
                 holdFrame: 130, // Logo squircle + Didakťáky.app -> Slogan "Cermat nanečisto. V tvém mobilu."
                 tag: "10 Logo finále",
                 title: "Didakťáky.app — Závěr.",
@@ -1358,14 +1358,14 @@
                     for (let i = 0; i < 16; i++) {
                         const cell = document.getElementById(`v6-cell-${i}`);
                         if (!cell) continue;
-                        const start = 4 + i * 4.5;
-                        const p = easeApple(progress(f, start, start + 24));
-                        const fade = easeApple(progress(f, start, start + 14));
+                        const start = 4 + i * 3.5;
+                        const p = easeApple(progress(f, start, start + 20));
+                        const fade = easeApple(progress(f, start, start + 12));
 
                         cell.style.opacity = fade.toFixed(3);
                         cell.style.transform = `translate3d(0, ${lerp(18, 0, p).toFixed(2)}px, 0)`;
 
-                        const flashP = easeInOutCubic(progress(f, 100 + i * 2, 120 + i * 2));
+                        const flashP = easeInOutCubic(progress(f, 74 + i * 2, 90 + i * 2));
                         if (flashP > 0.05 && flashP < 0.95) {
                             cell.style.borderColor = 'rgba(255,255,255,0.45)';
                         } else {
@@ -1373,11 +1373,11 @@
                         }
                     }
 
-                    const zoomP = Math.pow(progress(f, 138, 168), 3);
+                    const zoomP = Math.pow(progress(f, 140, 170), 3);
                     const gridEl = document.getElementById('v6-grid');
                     if (gridEl) gridEl.style.transform = `scale(${(1 + zoomP * 5).toFixed(3)})`;
                     const curtainEl = document.getElementById('v6-curtain');
-                    if (curtainEl) curtainEl.style.opacity = easeInOutCubic(progress(f, 142, 166)).toFixed(3);
+                    if (curtainEl) curtainEl.style.opacity = easeInOutCubic(progress(f, 144, 168)).toFixed(3);
                 } else {
                     setFullBleedTheme('#FFFFFF');
                     s1.style.opacity = '0'; s1.style.visibility = 'hidden';
