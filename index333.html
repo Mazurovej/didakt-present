@@ -16,6 +16,11 @@
     <!-- MQTT for Real-Time Sync between Phone & Monitor -->
     <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
 
+    <!-- Preload 3D Showcase Mockups -->
+    <link rel="preload" as="image" href="001.png">
+    <link rel="preload" as="image" href="002.png">
+    <link rel="preload" as="image" href="003.png">
+
     <style>
         :root {
             --pure-black: #000000;
@@ -301,12 +306,12 @@
                 notes: "Pojmenovat staré bolesti: Tisknutí stohů zmatených PDF, ztracené klíče správných řešení a 500 Kč za jedinou hodinu doučování."
             },
             {
-                engineIdx: 3, // Matika × Čeština
-                steps: [145, 315],
-                holdFrame: 315, // Matematika 50b + Čeština 50b -> 100 bodů ve hře bez stresu
-                tag: "03 Dva předměty",
-                title: "Matematika + Čeština = 100 bodů.",
-                notes: "Zdůraznit: 100 bodů ve hře. Žádné střídání aplikací, oba přijímací předměty v jednotném, krásném a přehledném systému."
+                engineIdx: 3, // 3D Mockup Showcase (002 Hero Center -> 001 & 003 Wings Fly-in)
+                steps: [55, 140],
+                holdFrame: 140, // Mockup 2 v centru -> Přílet křídel 001 a 003 do plného 3D triptychu
+                tag: "03 Showcase aplikace",
+                title: "Didakťáky v kapse. Vše v jednom.",
+                notes: "Představit reálnou aplikaci: Nejprve hlavní rozhraní (čistý, moderní design), následně kompletní ekosystém (přijímačky nanečisto, témata, statistiky)."
             },
             {
                 engineIdx: 1, // 358 Úloh
@@ -569,54 +574,31 @@
                     </div>
                 `;
             } else if (idx === 3) {
-                // VIDEO 04: Apple Minimalist Split-Screen Duality (Matematika 50b + Český jazyk 50b = 100 bodů)
+                // VIDEO 04 -> SLIDE 03: 3D Mockup Ecosystem (002 Hero Center -> 001 & 003 Wings Fly-in)
                 stage.innerHTML = `
-                    <div id="v4-s1" class="full-bleed-scene flex overflow-hidden bg-black">
-                        <!-- Left Half: Matematika (Pure Black) -->
-                        <div id="v4-left" class="relative w-1/2 h-full bg-black text-white flex flex-col items-center justify-center will-change-transform px-8" style="transform: translate3d(0, -100%, 0);">
-                            <div id="v4-m-rig" class="flex flex-col items-center justify-center text-center will-change-transform">
-                                <span id="v4-m-meta" class="font-mono-tech text-xs tracking-[0.28em] text-[#86868B] uppercase mb-5 will-change-transform" style="opacity:0; transform: translate3d(0, 14px, 0);">70 MINUT • CERMAT</span>
-                                <div class="line-mask"><span id="v4-m-title" class="v4-h1 apple-display word-node text-white" style="transform: translate3d(0, 115%, 0);">Matematika.</span></div>
-                                <div class="line-mask mt-4"><div id="v4-m-pts-wrap" class="apple-tagline text-4xl font-semibold text-[#86868B] will-change-transform" style="transform: translate3d(0, 115%, 0);"><span id="v4-m-num" class="text-white font-bold font-mono-tech" style="font-variant-numeric: tabular-nums;">0</span>&nbsp;bodů</div></div>
+                    <div id="v4-s1" class="full-bleed-scene relative flex flex-col items-center justify-center bg-black overflow-hidden select-none">
+                        <!-- Ambient Studio Background Glow -->
+                        <div id="v4-ambient-glow" class="absolute w-[1000px] h-[1000px] rounded-full pointer-events-none will-change-transform" style="background: radial-gradient(circle, rgba(59,130,246,0.16) 0%, rgba(147,51,234,0.08) 40%, rgba(0,0,0,0) 70%); opacity: 0; filter: blur(70px); transform: translate3d(0, 40px, 0);"></div>
+
+                        <!-- Top Header Typography -->
+                        <div id="v4-header" class="absolute top-[40px] left-0 right-0 flex flex-col items-center text-center z-30 pointer-events-none px-6">
+                            <span id="v4-tag" class="font-mono-tech text-xs tracking-[0.35em] text-[#86868B] uppercase mb-2.5 will-change-transform" style="opacity:0; transform: translate3d(0, 14px, 0);">APLIKACE V PRAXI</span>
+                            <div class="line-mask overflow-hidden">
+                                <h2 id="v4-title" class="apple-display text-6xl font-bold tracking-tight text-white will-change-transform" style="transform: translate3d(0, 115%, 0);">Vše v jedné kapse.</h2>
+                            </div>
+                            <div class="line-mask overflow-hidden mt-2">
+                                <p id="v4-sub" class="apple-tagline text-2xl text-[#86868B] will-change-transform" style="transform: translate3d(0, 115%, 0);">Přehledné, moderní prostředí pro okamžité procvičování bez papírů.</p>
                             </div>
                         </div>
 
-                        <!-- Right Half: Český jazyk (Pure White) -->
-                        <div id="v4-right" class="relative w-1/2 h-full bg-white text-[#1D1D1F] flex flex-col items-center justify-center will-change-transform px-8" style="transform: translate3d(0, 100%, 0);">
-                            <div id="v4-c-rig" class="flex flex-col items-center justify-center text-center will-change-transform">
-                                <span id="v4-c-meta" class="font-mono-tech text-xs tracking-[0.28em] text-[#86868B] uppercase mb-5 will-change-transform" style="opacity:0; transform: translate3d(0, 14px, 0);">60 MINUT • CERMAT</span>
-                                <div class="line-mask"><span id="v4-c-title" class="v4-h1 apple-display word-node text-[#1D1D1F]" style="transform: translate3d(0, 115%, 0);">Čeština.</span></div>
-                                <div class="line-mask mt-4"><div id="v4-c-pts-wrap" class="apple-tagline text-4xl font-semibold text-[#86868B] will-change-transform" style="transform: translate3d(0, 115%, 0);"><span id="v4-c-num" class="text-[#1D1D1F] font-bold font-mono-tech" style="font-variant-numeric: tabular-nums;">0</span>&nbsp;bodů</div></div>
-                            </div>
-                        </div>
-
-                        <!-- Precision Central Axis & Fusion Badge -->
-                        <div id="v4-divider" class="absolute left-1/2 top-0 bottom-0 w-[1.5px] -translate-x-1/2 bg-white/25 pointer-events-none will-change-transform"></div>
-                        <div id="v4-plus-badge" class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 rounded-full bg-white text-black border border-black/15 shadow-2xl flex items-center justify-center font-mono-tech text-4xl font-bold pointer-events-none will-change-transform z-20" style="opacity:0; transform: translate(-50%, -50%) scale(0);">
-                            <span id="v4-plus-symbol" class="will-change-transform">+</span>
-                        </div>
-                    </div>
-
-                    <!-- Act 2: Unified 100 Points + Apple Inverted Pill Wipe -->
-                    <div id="v4-s2" class="full-bleed-scene flex items-center justify-center bg-white text-[#1D1D1F]" style="opacity:0; visibility:hidden;">
-                        <div id="v4-s2-rig" class="flex flex-col items-center justify-center text-center will-change-transform px-8 max-w-[1760px] mx-auto">
-                            <div class="v4-h2 apple-display flex items-baseline justify-center gap-x-[0.26em] whitespace-nowrap">
-                                <span class="line-mask"><span id="v4-s2-w1" class="word-node" style="transform: translate3d(0, 105%, 0);">100</span></span>
-                                <span class="line-mask"><span id="v4-s2-w2" class="word-node" style="transform: translate3d(0, 105%, 0);">bodů</span></span>
-                                <span class="line-mask"><span id="v4-s2-w3" class="word-node" style="transform: translate3d(0, 105%, 0);">ve&nbsp;hře.</span></span>
-                            </div>
-                            <div class="v4-h2 apple-display flex items-center justify-center gap-x-[0.26em] whitespace-nowrap mt-[0.1em]">
-                                <span class="line-mask"><span id="v4-s2-w4" class="word-node" style="transform: translate3d(0, 105%, 0);">Dva</span></span>
-                                <span class="line-mask"><span id="v4-s2-w5" class="word-node" style="transform: translate3d(0, 105%, 0);">předměty,</span></span>
-                                <span class="inline-grid place-items-center align-middle relative">
-                                    <span id="v4-pill-base" class="col-start-1 row-start-1 inline-flex items-center justify-center px-[0.42em] pt-[0.12em] pb-[0.16em] leading-none rounded-full will-change-transform" style="transform: translate3d(0, 105%, 0);">jedna&nbsp;aplikace</span>
-                                    <span id="v4-pill-inv" class="col-start-1 row-start-1 inline-flex items-center justify-center px-[0.42em] pt-[0.12em] pb-[0.16em] leading-none rounded-full bg-black text-white pointer-events-none will-change-transform" style="clip-path: inset(0 100% 0 0 round 999px);">jedna&nbsp;aplikace</span>
-                                </span>
-                            </div>
-                            <div class="v4-h2 apple-display flex items-baseline justify-center gap-x-[0.26em] whitespace-nowrap mt-[0.1em]">
-                                <span class="line-mask"><span id="v4-s2-w6" class="word-node" style="transform: translate3d(0, 105%, 0);">bez</span></span>
-                                <span class="line-mask"><span id="v4-s2-w7" class="word-node" style="transform: translate3d(0, 105%, 0);">stresu.</span></span>
-                            </div>
+                        <!-- 3D Mockup Container (1280x960 preserves exact 4:3 6000x4500 aspect ratio) -->
+                        <div id="v4-stage-wrap" class="relative w-[1280px] h-[960px] pointer-events-none flex items-center justify-center translate-y-[24px]">
+                            <!-- Left Phone (001.png) -->
+                            <img id="v4-img-left" src="001.png" alt="Mockup Left" class="absolute inset-0 w-full h-full object-contain pointer-events-none will-change-transform z-10" style="opacity: 0;">
+                            <!-- Center Hero Phone (002.png) -->
+                            <img id="v4-img-center" src="002.png" alt="Mockup Center" class="absolute inset-0 w-full h-full object-contain pointer-events-none will-change-transform z-20" style="opacity: 0;">
+                            <!-- Right Phone (003.png) -->
+                            <img id="v4-img-right" src="003.png" alt="Mockup Right" class="absolute inset-0 w-full h-full object-contain pointer-events-none will-change-transform z-10" style="opacity: 0;">
                         </div>
                     </div>
                 `;
@@ -1152,143 +1134,88 @@
                 }
             }
             // -----------------------------------------------------------------
-            // ENGINE 04 (SLIDE 2): APPLE MINIMALIST SPLIT-SCREEN DUALITY
+            // ENGINE 04 (SLIDE 3): 3D MOCKUP SHOWCASE (HERO 002 -> WINGS 001 & 003)
             // -----------------------------------------------------------------
             else if (idx === 3) {
+                setFullBleedTheme('#000000');
                 const s1 = document.getElementById('v4-s1');
-                const s2 = document.getElementById('v4-s2');
-                if (!s1 || !s2) return;
+                if (!s1) return;
+                s1.style.opacity = '1';
+                s1.style.visibility = 'visible';
 
-                if (f < 188) {
-                    setFullBleedTheme('linear-gradient(to right, #000000 50%, #FFFFFF 50%)');
-                    s1.style.opacity = '1'; s1.style.visibility = 'visible';
-                    s2.style.opacity = '0'; s2.style.visibility = 'hidden';
+                // --- Header Typography & Ambient Glow (0 - 52f) ---
+                const tagEl = document.getElementById('v4-tag');
+                const titleEl = document.getElementById('v4-title');
+                const subEl = document.getElementById('v4-sub');
+                const glowEl = document.getElementById('v4-ambient-glow');
 
-                    const leftPanelEase = easeOutQuart(progress(f, 0, 48));
-                    const rightPanelEase = easeOutQuart(progress(f, 8, 56));
-                    const leftEl = document.getElementById('v4-left');
-                    const rightEl = document.getElementById('v4-right');
-                    const dividerEl = document.getElementById('v4-divider');
+                const tagEase = easeOutQuart(progress(f, 4, 30));
+                const titleEase = easeOutQuart(progress(f, 10, 42));
+                const subEase = easeOutQuart(progress(f, 18, 48));
+                const glowEase = easeOutQuart(progress(f, 6, 50));
 
-                    if (leftEl) leftEl.style.transform = `translate3d(0, ${lerp(-100, 0, leftPanelEase).toFixed(2)}%, 0)`;
-                    if (rightEl) rightEl.style.transform = `translate3d(0, ${lerp(100, 0, rightPanelEase).toFixed(2)}%, 0)`;
+                if (tagEl) {
+                    tagEl.style.opacity = tagEase.toFixed(3);
+                    tagEl.style.transform = `translate3d(0, ${lerp(14, 0, tagEase).toFixed(2)}px, 0)`;
+                }
+                if (titleEl) {
+                    titleEl.style.transform = `translate3d(0, ${lerp(115, 0, titleEase).toFixed(2)}%, 0)`;
+                }
+                if (subEl) {
+                    subEl.style.transform = `translate3d(0, ${lerp(115, 0, subEase).toFixed(2)}%, 0)`;
+                }
+                if (glowEl) {
+                    const extraGlow = easeOutQuart(progress(f, 55, 114));
+                    glowEl.style.opacity = lerp(glowEase * 0.7, 0.95, extraGlow).toFixed(3);
+                    glowEl.style.transform = `translate3d(0, 40px, 0) scale(${lerp(0.85, 1.25, extraGlow).toFixed(4)})`;
+                }
 
-                    // Magnetic pull towards the central seam before portal expansion (142 - 174f)
-                    const mRig = document.getElementById('v4-m-rig');
-                    const cRig = document.getElementById('v4-c-rig');
-                    const pullX = lerp(0, 140, easeInQuart(progress(f, 142, 174)));
-                    const rigFadeOut = 1 - easeOutQuart(progress(f, 152, 172));
+                // --- Phase 1: Center Hero Phone (002.png) Emergence (0 - 55f) ---
+                const imgCenter = document.getElementById('v4-img-center');
+                if (imgCenter) {
+                    const enterP = springApple(progress(f, 4, 48));
+                    const fadeP = easeApple(progress(f, 4, 24));
+                    const sc = lerp(0.86, 1.0, enterP);
+                    const y = lerp(45, 0, enterP);
 
-                    if (mRig) {
-                        mRig.style.transform = `translate3d(${pullX.toFixed(2)}px, 0, 0) scale(${lerp(0.96, 1.0, leftPanelEase).toFixed(4)})`;
-                        mRig.style.opacity = rigFadeOut.toFixed(3);
-                    }
-                    if (cRig) {
-                        cRig.style.transform = `translate3d(${(-pullX).toFixed(2)}px, 0, 0) scale(${lerp(0.96, 1.0, rightPanelEase).toFixed(4)})`;
-                        cRig.style.opacity = rigFadeOut.toFixed(3);
-                    }
+                    // Subtle organic micro-elevation reaction while wings fly into place
+                    const pulse = Math.sin(progress(f, 58, 114) * Math.PI);
+                    const dynamicScale = sc + pulse * 0.015;
 
-                    // Left side: Matematika masked reveal & 0 -> 50 counter
-                    const mMetaEase = easeOutQuart(progress(f, 14, 46));
-                    const mMeta = document.getElementById('v4-m-meta');
-                    if (mMeta) {
-                        mMeta.style.opacity = mMetaEase.toFixed(3);
-                        mMeta.style.transform = `translate3d(0, ${lerp(14, 0, mMetaEase).toFixed(2)}px, 0)`;
-                    }
-                    const mTitleEase = easeOutQuart(progress(f, 20, 58));
-                    const mTitle = document.getElementById('v4-m-title');
-                    if (mTitle) mTitle.style.transform = `translate3d(0, ${lerp(115, 0, mTitleEase).toFixed(2)}%, 0)`;
+                    imgCenter.style.opacity = fadeP.toFixed(3);
+                    imgCenter.style.transform = `translate3d(0, ${y.toFixed(2)}px, 0) scale(${dynamicScale.toFixed(4)})`;
+                }
 
-                    const mPtsEase = easeOutQuart(progress(f, 44, 80));
-                    const mPtsWrap = document.getElementById('v4-m-pts-wrap');
-                    if (mPtsWrap) mPtsWrap.style.transform = `translate3d(0, ${lerp(115, 0, mPtsEase).toFixed(2)}%, 0)`;
-                    const mNum = document.getElementById('v4-m-num');
-                    if (mNum) mNum.textContent = Math.round(lerp(0, 50, easeOutQuart(progress(f, 48, 108))));
+                // --- Phase 2: Left (001.png) & Right (003.png) Wings Fly-in (55 - 130f) ---
+                const imgLeft = document.getElementById('v4-img-left');
+                const imgRight = document.getElementById('v4-img-right');
 
-                    // Right side: Čeština masked reveal & 0 -> 50 counter
-                    const cMetaEase = easeOutQuart(progress(f, 24, 56));
-                    const cMeta = document.getElementById('v4-c-meta');
-                    if (cMeta) {
-                        cMeta.style.opacity = cMetaEase.toFixed(3);
-                        cMeta.style.transform = `translate3d(0, ${lerp(14, 0, cMetaEase).toFixed(2)}px, 0)`;
-                    }
-                    const cTitleEase = easeOutQuart(progress(f, 30, 68));
-                    const cTitle = document.getElementById('v4-c-title');
-                    if (cTitle) cTitle.style.transform = `translate3d(0, ${lerp(115, 0, cTitleEase).toFixed(2)}%, 0)`;
-
-                    const cPtsEase = easeOutQuart(progress(f, 54, 90));
-                    const cPtsWrap = document.getElementById('v4-c-pts-wrap');
-                    if (cPtsWrap) cPtsWrap.style.transform = `translate3d(0, ${lerp(115, 0, cPtsEase).toFixed(2)}%, 0)`;
-                    const cNum = document.getElementById('v4-c-num');
-                    if (cNum) cNum.textContent = Math.round(lerp(0, 50, easeOutQuart(progress(f, 58, 118))));
-
-                    // Central "+" Fusion Node & Portal Expansion (82 - 188f)
-                    const badge = document.getElementById('v4-plus-badge');
-                    const plusSym = document.getElementById('v4-plus-symbol');
-                    if (dividerEl) dividerEl.style.opacity = (easeOutQuart(progress(f, 20, 50)) * (1 - progress(f, 155, 175))).toFixed(3);
-
-                    if (badge) {
-                        if (f < 82) {
-                            badge.style.opacity = '0';
-                            badge.style.transform = 'translate(-50%, -50%) scale(0)';
-                        } else if (f <= 156) {
-                            const pop = springApple(progress(f, 82, 122));
-                            const rot = lerp(-90, 0, easeOutQuart(progress(f, 82, 120)));
-                            badge.style.opacity = easeOutQuart(progress(f, 82, 98)).toFixed(3);
-                            badge.style.transform = `translate(-50%, -50%) scale(${pop.toFixed(4)})`;
-                            if (plusSym) {
-                                plusSym.style.transform = `rotate(${rot.toFixed(1)}deg)`;
-                                plusSym.style.opacity = '1';
-                            }
-                        } else {
-                            const zoomP = progress(f, 156, 188);
-                            const zoomScale = 1 + Math.pow(zoomP, 2.8) * 85;
-                            badge.style.opacity = '1';
-                            badge.style.transform = `translate(-50%, -50%) scale(${zoomScale.toFixed(3)})`;
-                            if (plusSym) plusSym.style.opacity = (1 - easeOutQuart(progress(f, 156, 168))).toFixed(3);
-                        }
-                    }
+                if (f < 56) {
+                    if (imgLeft) imgLeft.style.opacity = '0';
+                    if (imgRight) imgRight.style.opacity = '0';
                 } else {
-                    setFullBleedTheme('#FFFFFF');
-                    s1.style.opacity = '0'; s1.style.visibility = 'hidden';
-                    s2.style.opacity = '1'; s2.style.visibility = 'visible';
-
-                    const settleEase = easeOutQuart(progress(f, 188, 220));
-                    const s2Scale = lerp(0.95, 1.0, settleEase) + lerp(0, 0.015, progress(f, 220, 315));
-                    const s2Rig = document.getElementById('v4-s2-rig');
-                    if (s2Rig) s2Rig.style.transform = `scale(${s2Scale.toFixed(4)})`;
-
-                    const dimEase = easeOutQuart(progress(f, 260, 308));
-                    const s2Words = [
-                        { id: 'v4-s2-w1', e: 190, s: [194, 220] },
-                        { id: 'v4-s2-w2', e: 194, s: [200, 228] },
-                        { id: 'v4-s2-w3', e: 198, s: [208, 236] },
-                        { id: 'v4-s2-w4', e: 204, s: [216, 244] },
-                        { id: 'v4-s2-w5', e: 208, s: [224, 252] },
-                        { id: 'v4-s2-w6', e: 218, s: [242, 270] },
-                        { id: 'v4-s2-w7', e: 222, s: [248, 276] }
-                    ];
-
-                    s2Words.forEach(w => {
-                        const el = document.getElementById(w.id);
-                        if (!el) return;
-                        const enterEase = easeOutQuart(progress(f, w.e, w.e + 26));
-                        const scrubEase = easeOutQuart(progress(f, w.s[0], w.s[1]));
-                        const baseVal = lerp(210, 0, scrubEase);
-                        const cVal = Math.round(lerp(baseVal, 134, dimEase));
-                        el.style.transform = `translate3d(0, ${lerp(105, 0, enterEase).toFixed(2)}%, 0)`;
-                        el.style.color = `rgb(${cVal}, ${cVal}, ${cVal})`;
-                    });
-
-                    const pillBase = document.getElementById('v4-pill-base');
-                    const pillInv = document.getElementById('v4-pill-inv');
-                    if (pillBase) {
-                        const pillEnter = easeOutQuart(progress(f, 212, 238));
-                        pillBase.style.transform = `translate3d(0, ${lerp(105, 0, pillEnter).toFixed(2)}%, 0)`;
+                    // Left Phone (001) flies in from left with subtle 3D perspective tilt
+                    if (imgLeft) {
+                        const pLeft = springApple(progress(f, 56, 112));
+                        const fadeLeft = easeApple(progress(f, 56, 78));
+                        const xLeft = lerp(-260, 0, pLeft);
+                        const yLeft = lerp(35, 0, pLeft);
+                        const scLeft = lerp(0.88, 1.0, pLeft);
+                        const rotLeft = lerp(-4.5, 0, pLeft);
+                        imgLeft.style.opacity = fadeLeft.toFixed(3);
+                        imgLeft.style.transform = `translate3d(${xLeft.toFixed(2)}px, ${yLeft.toFixed(2)}px, 0) scale(${scLeft.toFixed(4)}) rotate(${rotLeft.toFixed(2)}deg)`;
                     }
-                    if (pillInv) {
-                        const wipeEase = easeOutQuart(progress(f, 256, 308));
-                        pillInv.style.clipPath = `inset(0 ${lerp(100, 0, wipeEase).toFixed(2)}% 0 0 round 999px)`;
+
+                    // Right Phone (003) flies in from right with subtle 3D perspective tilt (staggered by 4 frames)
+                    if (imgRight) {
+                        const pRight = springApple(progress(f, 60, 116));
+                        const fadeRight = easeApple(progress(f, 60, 82));
+                        const xRight = lerp(260, 0, pRight);
+                        const yRight = lerp(35, 0, pRight);
+                        const scRight = lerp(0.88, 1.0, pRight);
+                        const rotRight = lerp(4.5, 0, pRight);
+                        imgRight.style.opacity = fadeRight.toFixed(3);
+                        imgRight.style.transform = `translate3d(${xRight.toFixed(2)}px, ${yRight.toFixed(2)}px, 0) scale(${scRight.toFixed(4)}) rotate(${rotRight.toFixed(2)}deg)`;
                     }
                 }
             }
@@ -1650,8 +1577,6 @@
             if (!def) return;
             if (def.engineIdx === 10) {
                 setFullBleedTheme('#FFFFFF');
-            } else if (def.engineIdx === 3) {
-                setFullBleedTheme('linear-gradient(to right, #000000 50%, #FFFFFF 50%)');
             } else {
                 setFullBleedTheme('#000000');
             }
@@ -1932,7 +1857,7 @@
                 if (isLastStep) {
                     nextBtnLabel.textContent = currentSlide < SLIDES.length - 1 ? 'DALŠÍ SLIDE →' : 'KONEC PREZENTACE';
                 } else {
-                    nextBtnLabel.textContent = `DALŠÍ TEXT (${currentStep + 1}/${stepsCount}) →`;
+                    nextBtnLabel.textContent = `DALŠÍ KROK (${currentStep + 1}/${stepsCount}) →`;
                 }
             }
 
