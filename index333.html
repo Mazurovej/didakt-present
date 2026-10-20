@@ -83,6 +83,7 @@
             transform-origin: center center;
             background-color: transparent !important;
             will-change: transform;
+            flex-shrink: 0 !important;
         }
 
         #slide-canvas, #custom-stage {
@@ -116,12 +117,12 @@
             will-change: transform, opacity, filter, color;
         }
 
-        /* Blackout curtain for speaker */
+        /* Blackout curtain for speaker (strictly inside presentation-screen) */
         #blackout-curtain {
-            position: fixed;
+            position: absolute;
             inset: 0;
             background-color: #000000;
-            z-index: 9999;
+            z-index: 90;
             pointer-events: none;
             opacity: 0;
             transition: opacity 0.4s ease;
@@ -138,7 +139,7 @@
     <!-- ================================================================= -->
     <div id="presentation-screen" class="w-full h-full">
         <div id="viewport">
-            <div id="composition" style="width: 1920px; height: 1080px;">
+            <div id="composition" class="shrink-0" style="width: 1920px; height: 1080px; flex-shrink: 0;">
 
                 <!-- SLIDE CANVAS WRAPPER (FOR APPLE KEYNOTE SEAMLESS SLIDE TRANSITIONS) -->
                 <div id="slide-canvas" class="absolute inset-0 will-change-transform">
@@ -175,13 +176,15 @@
                 </div>
             </div>
         </div>
+        <!-- Blackout curtain: ONLY covers presentation screen, NEVER the mobile remote controller -->
+        <div id="blackout-curtain"></div>
     </div>
 
 
     <!-- ================================================================= -->
     <!-- 2. MOBILE REMOTE CONTROLLER                                       -->
     <!-- ================================================================= -->
-    <div id="remote-controller" class="fixed inset-0 z-50 flex flex-col bg-[#0A0A0C] text-white hidden">
+    <div id="remote-controller" class="fixed inset-0 z-[100] flex flex-col bg-[#0A0A0C] text-white hidden">
         
         <header class="shrink-0 px-5 pt-4 pb-3 flex items-center justify-between border-b border-white/10 bg-[#121216]/90 backdrop-blur-2xl">
             <div class="flex items-center gap-3">
@@ -243,9 +246,9 @@
             </div>
 
             <div class="grid grid-cols-4 gap-2">
-                <button onclick="toggleBlackoutRemote()" id="btn-remote-blackout" class="p-2.5 rounded-xl bg-[#141418] border border-white/10 flex flex-col items-center justify-center gap-1 text-[10px] font-mono-tech text-white/80 active:scale-95">
-                    <span>🌑</span>
-                    <span>Ztmavit [B]</span>
+                <button onclick="toggleBlackoutRemote()" id="btn-remote-blackout" class="p-2.5 rounded-xl bg-[#141418] border border-white/10 flex flex-col items-center justify-center gap-1 text-[10px] font-mono-tech text-white/80 active:scale-95 transition-all">
+                    <span id="remote-blackout-icon">🌑</span>
+                    <span id="remote-blackout-text">Ztmavit [B]</span>
                 </button>
                 <button onclick="togglePresentationTimer()" id="btn-remote-timer" class="p-2.5 rounded-xl bg-[#141418] border border-white/10 flex flex-col items-center justify-center gap-1 text-[10px] font-mono-tech text-white/80 active:scale-95">
                     <span>⏱️</span>
@@ -270,8 +273,6 @@
             </div>
         </main>
     </div>
-
-    <div id="blackout-curtain"></div>
 
 
     <!-- ================================================================= -->
@@ -440,6 +441,13 @@
                 logoScene.style.opacity = '1';
                 logoScene.style.visibility = 'visible';
                 updateLayout();
+                const s3Inner = document.getElementById('s3-text-inner');
+                const comp = document.getElementById('composition');
+                const scale = (comp && window.innerWidth) ? Math.min(window.innerWidth / 1920, window.innerHeight / 1080) : 1;
+                if (s3Inner) {
+                    const rectW = s3Inner.getBoundingClientRect().width / (scale || 1);
+                    targetTextSlotWidth = Math.max(940, Math.ceil(rectW + 24));
+                }
                 return;
             }
 
@@ -452,7 +460,7 @@
                 // VIDEO 01: Original Inline Phone Capsule + Inverted Pill Wipe
                 stage.innerHTML = `
                     <div id="v1-s1" class="full-bleed-scene flex items-center justify-center bg-black text-white">
-                        <div id="v1-s1-rig" class="flex flex-col items-center justify-center text-center will-change-transform">
+                        <div id="v1-s1-rig" class="flex flex-col items-center justify-center text-center will-change-transform max-w-[1760px] mx-auto">
                             <div class="v1-h1 apple-display flex items-baseline justify-center gap-x-[0.27em] whitespace-nowrap">
                                 <span class="line-mask"><span id="v1-w1" class="word-node" style="transform: translate3d(0, 115%, 0);">Celé</span></span>
                                 <span class="line-mask"><span id="v1-w2" class="word-node" style="transform: translate3d(0, 115%, 0);">přijímačky</span></span>
@@ -469,7 +477,7 @@
                         </div>
                     </div>
                     <div id="v1-s2" class="full-bleed-scene flex items-center justify-center bg-white text-black" style="opacity:0; visibility:hidden;">
-                        <div id="v1-s2-rig" class="flex flex-col items-center justify-center text-center will-change-transform px-8">
+                        <div id="v1-s2-rig" class="flex flex-col items-center justify-center text-center will-change-transform px-8 max-w-[1760px] mx-auto">
                             <div class="v1-h2 apple-display flex items-baseline justify-center gap-x-[0.26em] whitespace-nowrap">
                                 <span class="line-mask"><span id="v1-s2-w1" class="word-node" style="transform: translate3d(0, 105%, 0);">Příprava</span></span>
                                 <span class="line-mask"><span id="v1-s2-w2" class="word-node" style="transform: translate3d(0, 105%, 0);">na</span></span>
@@ -503,7 +511,7 @@
                         <div id="v2-curtain" class="absolute inset-x-0 bottom-0 bg-white will-change-transform pointer-events-none" style="height: 0%;"></div>
                     </div>
                     <div id="v2-s2" class="full-bleed-scene flex items-center justify-center bg-white text-black" style="opacity:0; visibility:hidden;">
-                        <div id="v2-s2-rig" class="w-full max-w-7xl px-20 flex flex-col gap-14 will-change-transform">
+                        <div id="v2-s2-rig" class="w-full max-w-7xl px-20 flex flex-col gap-14 will-change-transform mx-auto">
                             <div id="v2-row1" class="flex items-baseline justify-between border-b-2 border-black/10 pb-8 will-change-transform" style="opacity:0; transform: translate3d(-50px, 0, 0);">
                                 <span class="v2-h2 apple-display text-black whitespace-nowrap">26 ostrých testů.</span>
                                 <span class="font-mono-tech text-4xl font-bold text-[#86868B]">100% Cermat</span>
@@ -529,7 +537,7 @@
                         </div>
                     </div>
                     <div id="v3-s2" class="full-bleed-scene flex items-center justify-center bg-white text-[#1D1D1F]" style="opacity:0; visibility:hidden;">
-                        <div id="v3-s2-rig" class="flex flex-col items-center justify-center text-center will-change-transform px-8">
+                        <div id="v3-s2-rig" class="flex flex-col items-center justify-center text-center will-change-transform px-8 max-w-[1760px] mx-auto">
                             <div class="v3-h2 apple-display flex items-baseline justify-center gap-x-[0.26em] whitespace-nowrap">
                                 <span class="line-mask"><span id="v3-s2-w1" class="word-node" style="transform: translate3d(0, 105%, 0);">5</span></span>
                                 <span class="line-mask"><span id="v3-s2-w2" class="word-node" style="transform: translate3d(0, 105%, 0);">funkcí</span></span>
@@ -580,7 +588,7 @@
 
                     <!-- Act 2: Unified 100 Points + Apple Inverted Pill Wipe -->
                     <div id="v4-s2" class="full-bleed-scene flex items-center justify-center bg-white text-[#1D1D1F]" style="opacity:0; visibility:hidden;">
-                        <div id="v4-s2-rig" class="flex flex-col items-center justify-center text-center will-change-transform px-8">
+                        <div id="v4-s2-rig" class="flex flex-col items-center justify-center text-center will-change-transform px-8 max-w-[1760px] mx-auto">
                             <div class="v4-h2 apple-display flex items-baseline justify-center gap-x-[0.26em] whitespace-nowrap">
                                 <span class="line-mask"><span id="v4-s2-w1" class="word-node" style="transform: translate3d(0, 105%, 0);">100</span></span>
                                 <span class="line-mask"><span id="v4-s2-w2" class="word-node" style="transform: translate3d(0, 105%, 0);">bodů</span></span>
@@ -619,10 +627,10 @@
                         </div>
                     </div>
                     <div id="v5-s2" class="full-bleed-scene flex items-center justify-center bg-white text-black" style="opacity:0; visibility:hidden;">
-                        <div id="v5-s2-rig" class="flex flex-col items-center justify-center text-center will-change-transform px-8">
-                            <div id="v5-s2-l1" class="v5-h2 apple-display text-[#86868B] will-change-transform" style="opacity:0; transform: translate3d(0, 40px, 0);">70 minut matematika.</div>
-                            <div id="v5-s2-l2" class="v5-h2 apple-display text-[#86868B] mt-2 will-change-transform" style="opacity:0; transform: translate3d(0, 40px, 0);">60 minut čeština.</div>
-                            <div id="v5-s2-l3" class="v5-h2 apple-display text-black mt-6 px-10 py-3 rounded-full border-4 border-black will-change-transform" style="opacity:0; transform: scale(0.8);">Trénuj pod reálným tlakem.</div>
+                        <div id="v5-s2-rig" class="flex flex-col items-center justify-center text-center will-change-transform px-8 max-w-[1760px] mx-auto">
+                            <div id="v5-s2-l1" class="v5-h2 apple-display text-[#86868B] whitespace-nowrap will-change-transform" style="opacity:0; transform: translate3d(0, 40px, 0);">70 minut matematika.</div>
+                            <div id="v5-s2-l2" class="v5-h2 apple-display text-[#86868B] mt-2 whitespace-nowrap will-change-transform" style="opacity:0; transform: translate3d(0, 40px, 0);">60 minut čeština.</div>
+                            <div id="v5-s2-l3" class="apple-display text-black mt-6 px-10 py-3 rounded-full border-4 border-black whitespace-nowrap will-change-transform" style="opacity:0; transform: scale(0.8); font-size: 74px;">Trénuj pod reálným tlakem.</div>
                         </div>
                     </div>
                 `;
@@ -651,7 +659,7 @@
                         <div id="v6-curtain" class="absolute inset-0 bg-white pointer-events-none will-change-transform" style="opacity:0;"></div>
                     </div>
                     <div id="v6-s2" class="full-bleed-scene flex items-center justify-center bg-white text-black" style="opacity:0; visibility:hidden;">
-                        <div id="v6-s2-rig" class="flex flex-col items-center justify-center text-center will-change-transform px-8">
+                        <div id="v6-s2-rig" class="flex flex-col items-center justify-center text-center will-change-transform px-8 max-w-[1760px] mx-auto">
                             <div id="v6-big" class="apple-display text-[140px] leading-none text-black will-change-transform" style="opacity:0; transform: scale(0.85);">16 okruhů.</div>
                             <div id="v6-sub" class="apple-display text-5xl text-[#86868B] mt-6 will-change-transform" style="opacity:0; transform: translate3d(0, 35px, 0);">Veškerá látka na jednom místě.</div>
                         </div>
@@ -681,9 +689,9 @@
                         </div>
                     </div>
                     <div id="v7-s2" class="full-bleed-scene flex items-center justify-center bg-white text-black" style="opacity:0; visibility:hidden;">
-                        <div id="v7-s2-rig" class="flex flex-col items-center justify-center text-center will-change-transform px-8">
-                            <div id="v7-title" class="v7-h2 apple-display text-black will-change-transform" style="opacity:0; transform: translate3d(0, 40px, 0);">Chytré flashcards.</div>
-                            <div id="v7-desc" class="v7-h2 apple-display text-[#86868B] mt-4 will-change-transform" style="opacity:0; transform: translate3d(0, 40px, 0);">Vzorce a pravidla nikdy nezapomeneš.</div>
+                        <div id="v7-s2-rig" class="flex flex-col items-center justify-center text-center will-change-transform px-8 max-w-[1760px] mx-auto">
+                            <div id="v7-title" class="apple-display text-black whitespace-nowrap will-change-transform" style="opacity:0; transform: translate3d(0, 40px, 0); font-size: 92px;">Chytré flashcards.</div>
+                            <div id="v7-desc" class="apple-display text-[#86868B] mt-5 whitespace-nowrap will-change-transform font-medium" style="opacity:0; transform: translate3d(0, 40px, 0); font-size: 52px;">Vzorce a pravidla nikdy nezapomeneš.</div>
                         </div>
                     </div>
                 `;
@@ -691,26 +699,26 @@
                 // VIDEO 08: Sequential Laser Strike-Through + Laser Shutter Wipe (Konec PDF)
                 stage.innerHTML = `
                     <div id="v8-s1" class="full-bleed-scene flex flex-col items-center justify-center bg-black text-white">
-                        <div id="v8-list" class="relative flex flex-col items-center gap-7 will-change-transform">
+                        <div id="v8-list" class="relative flex flex-col items-center gap-7 will-change-transform max-w-[1760px] mx-auto">
                             <div class="relative flex items-center justify-center">
-                                <div id="v8-item1" class="v8-h1 apple-display text-white relative will-change-transform" style="opacity:0; transform: translate3d(0, 28px, 0);">Tisknutí stohů PDF.</div>
-                                <div id="v8-strike1" class="absolute top-[52%] left-[-4%] right-[-4%] h-[5px] bg-[#FF3B30] rounded-full will-change-transform pointer-events-none" style="transform: scaleX(0); transform-origin: left center;"></div>
+                                <div id="v8-item1" class="v8-h1 apple-display text-white relative whitespace-nowrap will-change-transform" style="opacity:0; transform: translate3d(0, 28px, 0);">Tisknutí stohů PDF.</div>
+                                <div id="v8-strike1" class="absolute top-[52%] left-[-2%] right-[-2%] h-[5px] bg-[#FF3B30] rounded-full will-change-transform pointer-events-none" style="transform: scaleX(0); transform-origin: left center;"></div>
                             </div>
                             <div class="relative flex items-center justify-center">
-                                <div id="v8-item2" class="v8-h1 apple-display text-white relative will-change-transform" style="opacity:0; transform: translate3d(0, 28px, 0);">Hledání klíčů správných řešení.</div>
-                                <div id="v8-strike2" class="absolute top-[52%] left-[-4%] right-[-4%] h-[5px] bg-[#FF3B30] rounded-full will-change-transform pointer-events-none" style="transform: scaleX(0); transform-origin: left center;"></div>
+                                <div id="v8-item2" class="v8-h1 apple-display text-white relative whitespace-nowrap will-change-transform" style="opacity:0; transform: translate3d(0, 28px, 0);">Hledání klíčů správných řešení.</div>
+                                <div id="v8-strike2" class="absolute top-[52%] left-[-2%] right-[-2%] h-[5px] bg-[#FF3B30] rounded-full will-change-transform pointer-events-none" style="transform: scaleX(0); transform-origin: left center;"></div>
                             </div>
                             <div class="relative flex items-center justify-center">
-                                <div id="v8-item3" class="v8-h1 apple-display text-white relative will-change-transform" style="opacity:0; transform: translate3d(0, 28px, 0);">500 Kč za hodinu doučování.</div>
-                                <div id="v8-strike3" class="absolute top-[52%] left-[-4%] right-[-4%] h-[5px] bg-[#FF3B30] rounded-full will-change-transform pointer-events-none" style="transform: scaleX(0); transform-origin: left center;"></div>
+                                <div id="v8-item3" class="v8-h1 apple-display text-white relative whitespace-nowrap will-change-transform" style="opacity:0; transform: translate3d(0, 28px, 0);">500 Kč za hodinu doučování.</div>
+                                <div id="v8-strike3" class="absolute top-[52%] left-[-2%] right-[-2%] h-[5px] bg-[#FF3B30] rounded-full will-change-transform pointer-events-none" style="transform: scaleX(0); transform-origin: left center;"></div>
                             </div>
                         </div>
                         <div id="v8-laser" class="absolute inset-x-0 bg-white will-change-transform pointer-events-none" style="height: 4px; top: 50%; transform: translateY(-50%) scaleX(0);"></div>
                     </div>
                     <div id="v8-s2" class="full-bleed-scene flex items-center justify-center bg-white text-black" style="opacity:0; visibility:hidden;">
-                        <div id="v8-s2-rig" class="flex flex-col items-center justify-center text-center will-change-transform px-8">
-                            <div id="v8-clean1" class="v8-h2 apple-display text-black will-change-transform" style="opacity:0; transform: translate3d(0, 35px, 0);">Zapomeň na papíry.</div>
-                            <div id="v8-clean2" class="v8-h2 apple-display mt-6 px-12 py-3.5 rounded-full bg-black text-white will-change-transform" style="opacity:0; transform: scale(0.8);">Všechno se opraví samo.</div>
+                        <div id="v8-s2-rig" class="flex flex-col items-center justify-center text-center will-change-transform px-8 max-w-[1760px] mx-auto">
+                            <div id="v8-clean1" class="v8-h2 apple-display text-black whitespace-nowrap will-change-transform" style="opacity:0; transform: translate3d(0, 35px, 0);">Zapomeň na papíry.</div>
+                            <div id="v8-clean2" class="apple-display mt-6 px-12 py-3.5 rounded-full bg-black text-white whitespace-nowrap will-change-transform" style="opacity:0; transform: scale(0.8); font-size: 74px;">Všechno se opraví samo.</div>
                         </div>
                     </div>
                 `;
@@ -721,7 +729,7 @@
                         <div id="v9-fill" class="absolute inset-x-0 bottom-0 bg-white will-change-transform" style="height: 0%;"></div>
                         <!-- White text layer (visible on top black portion) -->
                         <div id="v9-layer-white" class="absolute inset-0 flex items-center justify-center pointer-events-none" style="clip-path: inset(0 0 0% 0);">
-                            <div id="v9-center-w" class="flex flex-col items-center justify-center text-center text-white will-change-transform">
+                            <div id="v9-center-w" class="flex flex-col items-center justify-center text-center text-white will-change-transform max-w-[1760px] mx-auto">
                                 <span class="font-mono-tech text-xs tracking-[0.35em] text-[#86868B] uppercase mb-4">CELKOVÝ POKROK ŽÁKA</span>
                                 <div id="v9-pct-w" class="apple-display text-[190px] leading-none font-mono-tech font-bold text-white" style="font-variant-numeric: tabular-nums;">8%</div>
                                 <div class="apple-display text-5xl mt-4 text-white">Rosteš s každým testem.</div>
@@ -729,7 +737,7 @@
                         </div>
                         <!-- Black text layer (visible on bottom rising white portion) -->
                         <div id="v9-layer-black" class="absolute inset-0 flex items-center justify-center pointer-events-none" style="clip-path: inset(100% 0 0 0);">
-                            <div id="v9-center-b" class="flex flex-col items-center justify-center text-center text-black will-change-transform">
+                            <div id="v9-center-b" class="flex flex-col items-center justify-center text-center text-black will-change-transform max-w-[1760px] mx-auto">
                                 <span class="font-mono-tech text-xs tracking-[0.35em] text-[#86868B] uppercase mb-4">CELKOVÝ POKROK ŽÁKA</span>
                                 <div id="v9-pct-b" class="apple-display text-[190px] leading-none font-mono-tech font-bold text-black" style="font-variant-numeric: tabular-nums;">8%</div>
                                 <div class="apple-display text-5xl mt-4 text-black">Rosteš s každým testem.</div>
@@ -759,22 +767,37 @@
             const h = 1080;
             comp.style.width = `${w}px`;
             comp.style.height = `${h}px`;
+            comp.style.flexShrink = '0';
 
-            const scaleX = window.innerWidth / w;
-            const scaleY = window.innerHeight / h;
+            const vw = window.innerWidth;
+            const vh = window.innerHeight;
+            const scaleX = vw / w;
+            const scaleY = vh / h;
             const scale = Math.min(scaleX, scaleY) || 1;
             comp.style.transform = `scale(${scale.toFixed(4)})`;
 
             // Compute exact negative bleed offsets so .full-bleed-scene covers 100vw x 100vh on any aspect ratio
-            const bleedX = Math.ceil(Math.max(0, (window.innerWidth / scale - w) / 2)) + 4;
-            const bleedY = Math.ceil(Math.max(0, (window.innerHeight / scale - h) / 2)) + 4;
+            const bleedX = Math.ceil(Math.max(0, (vw / scale - w) / 2)) + 6;
+            const bleedY = Math.ceil(Math.max(0, (vh / scale - h) / 2)) + 6;
             comp.style.setProperty('--bleed-x', `-${bleedX}px`);
             comp.style.setProperty('--bleed-y', `-${bleedY}px`);
 
-            document.querySelectorAll('.v1-h1, .v3-row').forEach(el => el.style.fontSize = `112px`);
-            document.querySelectorAll('.v1-h2, .v3-h2, .v4-h2, .v5-h2, .v7-h2, .v8-h2').forEach(el => el.style.fontSize = `104px`);
+            // Proportional and safe typography hierarchy (prevents edge overflow on any screen)
+            document.querySelectorAll('.v1-h1').forEach(el => el.style.fontSize = `108px`);
+            document.querySelectorAll('.v3-row').forEach(el => el.style.fontSize = `100px`);
+            document.querySelectorAll('.v1-h2, .v3-h2, .v4-h2, .v5-h2, .v8-h2').forEach(el => el.style.fontSize = `88px`);
             document.querySelectorAll('.v2-h2').forEach(el => el.style.fontSize = `82px`);
-            document.querySelectorAll('.v4-h1, .v8-h1').forEach(el => el.style.fontSize = `96px`);
+            document.querySelectorAll('.v4-h1').forEach(el => el.style.fontSize = `92px`);
+            document.querySelectorAll('.v8-h1').forEach(el => el.style.fontSize = `84px`);
+
+            const v5L3 = document.getElementById('v5-s2-l3');
+            if (v5L3) v5L3.style.fontSize = `74px`;
+            const v7Title = document.getElementById('v7-title');
+            if (v7Title) v7Title.style.fontSize = `92px`;
+            const v7Desc = document.getElementById('v7-desc');
+            if (v7Desc) v7Desc.style.fontSize = `52px`;
+            const v8Clean2 = document.getElementById('v8-clean2');
+            if (v8Clean2) v8Clean2.style.fontSize = `74px`;
 
             const v2Counter = document.getElementById('v2-counter');
             if (v2Counter) v2Counter.style.fontSize = `250px`;
@@ -791,9 +814,14 @@
             const s3Tagline = document.getElementById('s3-tagline');
             if (s3Tagline) s3Tagline.style.fontSize = `44px`;
 
+            // Always enforce safe minimum width for Slide 11 logo text so it never collapses to 16px!
+            const safeLogoMinWidth = 940;
             if (s3TextInner) {
-                const measuredWidth = s3TextInner.getBoundingClientRect().width / scale;
-                targetTextSlotWidth = Math.ceil((measuredWidth > 50 ? measuredWidth : s3TextInner.scrollWidth) + 16);
+                const rectW = s3TextInner.getBoundingClientRect().width / (scale || 1);
+                const measured = rectW > 100 ? rectW : (s3TextInner.scrollWidth || 0);
+                targetTextSlotWidth = Math.max(safeLogoMinWidth, Math.ceil(measured + 24));
+            } else {
+                targetTextSlotWidth = safeLogoMinWidth;
             }
         }
 
@@ -1710,14 +1738,31 @@
             isBlackout = state;
             const curtain = document.getElementById('blackout-curtain');
             const remoteBtn = document.getElementById('btn-remote-blackout');
-            if (isBlackout) {
-                curtain.style.opacity = '1';
-                curtain.style.pointerEvents = 'auto';
-                if (remoteBtn) remoteBtn.classList.add('bg-white', 'text-black');
-            } else {
-                curtain.style.opacity = '0';
-                curtain.style.pointerEvents = 'none';
-                if (remoteBtn) remoteBtn.classList.remove('bg-white', 'text-black');
+            const iconEl = document.getElementById('remote-blackout-icon');
+            const textEl = document.getElementById('remote-blackout-text');
+
+            if (curtain) {
+                if (isBlackout) {
+                    curtain.style.opacity = '1';
+                    curtain.style.pointerEvents = 'auto';
+                } else {
+                    curtain.style.opacity = '0';
+                    curtain.style.pointerEvents = 'none';
+                }
+            }
+
+            if (remoteBtn) {
+                if (isBlackout) {
+                    remoteBtn.classList.remove('bg-[#141418]', 'text-white/80', 'border-white/10');
+                    remoteBtn.classList.add('bg-red-600', 'text-white', 'border-red-400', 'font-bold', 'shadow-lg', 'shadow-red-600/30');
+                    if (iconEl) iconEl.textContent = '💡';
+                    if (textEl) textEl.textContent = 'Obnovit [B]';
+                } else {
+                    remoteBtn.classList.remove('bg-red-600', 'text-white', 'border-red-400', 'font-bold', 'shadow-lg', 'shadow-red-600/30');
+                    remoteBtn.classList.add('bg-[#141418]', 'text-white/80', 'border-white/10');
+                    if (iconEl) iconEl.textContent = '🌑';
+                    if (textEl) textEl.textContent = 'Ztmavit [B]';
+                }
             }
 
             if (broadcast) {
@@ -1953,6 +1998,35 @@
         }
 
         // =====================================================================
+        // FULLSCREEN (NATIVE CROSS-BROWSER & IPAD SUPPORT)
+        // =====================================================================
+        function toggleFullscreen() {
+            const elem = document.documentElement;
+            const isFS = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+            if (!isFS) {
+                if (elem.requestFullscreen) {
+                    elem.requestFullscreen().catch(() => {});
+                } else if (elem.webkitRequestFullscreen) {
+                    elem.webkitRequestFullscreen();
+                } else if (elem.webkitEnterFullscreen) {
+                    elem.webkitEnterFullscreen();
+                } else if (elem.msRequestFullscreen) {
+                    elem.msRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen().catch(() => {});
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.webkitCancelFullScreen) {
+                    document.webkitCancelFullScreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+            }
+        }
+
+        // =====================================================================
         // KEYBOARD HOTKEYS (FOR MONITOR)
         // =====================================================================
         window.addEventListener('keydown', (e) => {
@@ -1970,11 +2044,7 @@
                 toggleBlackout();
             } else if (e.code === 'KeyF') {
                 e.preventDefault();
-                if (!document.fullscreenElement) {
-                    document.documentElement.requestFullscreen().catch(() => {});
-                } else {
-                    if (document.exitFullscreen) document.exitFullscreen();
-                }
+                toggleFullscreen();
             } else if (e.key >= '1' && e.key <= '9') {
                 const target = parseInt(e.key, 10) - 1;
                 if (target < SLIDES.length) {
@@ -1985,15 +2055,38 @@
             }
         });
 
-        // Swipe support
+        // Touch & Swipe navigation for iPad / Mobile
         let touchStartX = 0;
-        let touchEndX = 0;
-        window.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
+        let touchStartY = 0;
+        let touchStartTime = 0;
+
+        window.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+            touchStartY = e.changedTouches[0].screenY;
+            touchStartTime = Date.now();
+        }, { passive: true });
+
         window.addEventListener('touchend', (e) => {
-            touchEndX = e.changedTouches[0].screenX;
-            const diff = touchEndX - touchStartX;
-            if (Math.abs(diff) > 50) {
-                if (diff < 0) nextSlide(); else prevSlide();
+            const touchEndX = e.changedTouches[0].screenX;
+            const touchEndY = e.changedTouches[0].screenY;
+            const diffX = touchEndX - touchStartX;
+            const diffY = touchEndY - touchStartY;
+            const elapsed = Date.now() - touchStartTime;
+
+            // Swipe detection
+            if (Math.abs(diffX) > 60 && Math.abs(diffX) > Math.abs(diffY) * 1.5) {
+                if (diffX < 0) nextSlide(); else prevSlide();
+                return;
+            }
+
+            // Tap detection on presentation screen (Left 25% = prev, Right 75% = next)
+            if (Math.abs(diffX) < 15 && Math.abs(diffY) < 15 && elapsed < 400 && !isRemoteMode) {
+                const clientX = e.changedTouches[0].clientX;
+                if (clientX < window.innerWidth * 0.25) {
+                    prevSlide();
+                } else {
+                    nextSlide();
+                }
             }
         }, { passive: true });
 
