@@ -1,0 +1,2027 @@
+<!DOCTYPE html>
+<html lang="cs" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Didakťáky.app — 10× Apple Kinetic Keynote</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- MQTT for Real-Time Sync between Phone & Monitor -->
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+
+    <style>
+        :root {
+            --pure-black: #000000;
+            --pure-white: #FFFFFF;
+            --apple-charcoal: #1D1D1F;
+            --apple-grey: #86868B;
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: geometricPrecision;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+            color: #FFFFFF;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        body.monitor-mode {
+            cursor: none;
+        }
+
+        .font-mono-tech {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .apple-display {
+            letter-spacing: -0.05em;
+            line-height: 1.05;
+            font-weight: 700;
+            font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+        }
+
+        .apple-tagline {
+            letter-spacing: -0.025em;
+            line-height: 1.25;
+            font-weight: 500;
+            font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+        }
+
+        #viewport {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background-color: #000000;
+            overflow: hidden;
+        }
+
+        #composition {
+            position: relative;
+            overflow: visible !important;
+            transform-origin: center center;
+            background-color: transparent !important;
+            will-change: transform;
+        }
+
+        #slide-canvas, #custom-stage {
+            overflow: visible !important;
+            background-color: transparent !important;
+        }
+
+        /* Full-bleed scene wrapper that dynamically expands beyond 1920x1080 to cover 100vw x 100vh on any monitor aspect ratio */
+        .full-bleed-scene {
+            position: absolute;
+            top: var(--bleed-y, -4px);
+            bottom: var(--bleed-y, -4px);
+            left: var(--bleed-x, -4px);
+            right: var(--bleed-x, -4px);
+            overflow: hidden;
+        }
+
+        .line-mask {
+            overflow: hidden;
+            display: inline-flex;
+            align-items: baseline;
+            vertical-align: bottom;
+            padding-bottom: 0.09em;
+            margin-bottom: -0.09em;
+            padding-left: 0.04em;
+            padding-right: 0.04em;
+        }
+
+        .word-node {
+            display: inline-block;
+            will-change: transform, opacity, filter, color;
+        }
+
+        /* Blackout curtain for speaker */
+        #blackout-curtain {
+            position: fixed;
+            inset: 0;
+            background-color: #000000;
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="monitor-mode">
+
+    <!-- ================================================================= -->
+    <!-- 1. MONITOR VIEW: PURE APPLE KINETIC KEYNOTE (ZERO UI, ZERO BLUR)  -->
+    <!-- ================================================================= -->
+    <div id="presentation-screen" class="w-full h-full">
+        <div id="viewport">
+            <div id="composition" style="width: 1920px; height: 1080px;">
+
+                <!-- SLIDE CANVAS WRAPPER (FOR APPLE KEYNOTE SEAMLESS SLIDE TRANSITIONS) -->
+                <div id="slide-canvas" class="absolute inset-0 will-change-transform">
+
+                    <!-- DYNAMIC KINETIC ENGINE STAGE (SLIDES 1 TO 10) -->
+                    <div id="custom-stage" class="absolute inset-0 z-10" style="opacity:1; visibility:visible;">
+                        <!-- Built dynamically per slide -->
+                    </div>
+
+                    <!-- SLIDE 11: 100% IDENTICAL OFFICIAL APPLE LOGO FINALE -->
+                    <div id="scene-logo" class="full-bleed-scene flex items-center justify-center bg-white text-[#1D1D1F] z-30" style="opacity:0; visibility:hidden;">
+                        <div id="s3-rig" class="flex flex-col items-center justify-center will-change-transform">
+                            <div class="flex items-center justify-center">
+                                <div id="s3-icon-wrap" class="relative shrink-0 will-change-transform" style="width: 152px; height: 152px;">
+                                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full overflow-visible">
+                                        <rect width="100" height="100" rx="24" fill="#000000" />
+                                        <path id="s3-svg-d" fill-rule="evenodd" clip-rule="evenodd" d="M25 24H44C58 24 66 33.5 66 49C66 64.5 58 74 44 74H25V24ZM37.5 35.5H43C50.5 35.5 54.5 41 54.5 49C54.5 57 50.5 62.5 43 62.5H37.5V35.5Z" fill="#FFFFFF" style="transform-origin: 45px 49px;" />
+                                        <circle id="s3-svg-dot" cx="74" cy="69" r="5.2" fill="#FFFFFF" style="transform-origin: 74px 69px;" />
+                                    </svg>
+                                </div>
+                                <div id="s3-text-slot" class="overflow-hidden flex items-center will-change-transform" style="width: 0px; opacity: 0;">
+                                    <div id="s3-text-inner" class="pl-[0.22em] pr-[0.08em] py-[0.12em] whitespace-nowrap flex items-baseline tracking-[-0.04em] leading-none">
+                                        <span id="s3-wordmark" class="font-bold text-[#1D1D1F] inline-flex"></span>
+                                        <span id="s3-dot-app" class="font-normal text-[#86868B] inline-block will-change-transform">.app</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="line-mask mt-10">
+                                <div id="s3-tagline" class="apple-tagline text-[#86868B] will-change-transform" style="opacity: 0;">Cermat nanečisto. V&nbsp;tvém mobilu.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ================================================================= -->
+    <!-- 2. MOBILE REMOTE CONTROLLER                                       -->
+    <!-- ================================================================= -->
+    <div id="remote-controller" class="fixed inset-0 z-50 flex flex-col bg-[#0A0A0C] text-white hidden">
+        
+        <header class="shrink-0 px-5 pt-4 pb-3 flex items-center justify-between border-b border-white/10 bg-[#121216]/90 backdrop-blur-2xl">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-xl bg-black border border-white/20 flex items-center justify-center p-1 shadow-md">
+                    <svg viewBox="0 0 100 100" fill="none" class="w-full h-full">
+                        <rect width="100" height="100" rx="24" fill="#000000" />
+                        <path d="M25 24H44C58 24 66 33.5 66 49C66 64.5 58 74 44 74H25V24ZM37.5 35.5H43C50.5 35.5 54.5 41 54.5 49C54.5 57 50.5 62.5 43 62.5H37.5V35.5Z" fill="#FFFFFF" />
+                        <circle cx="74" cy="69" r="5.2" fill="#FFFFFF" />
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-sm font-bold tracking-tight">Didakťáky Keynote</h1>
+                    <div class="flex items-center gap-1.5 font-mono-tech text-[10px] text-[#86868B]">
+                        <span id="remote-status-dot" class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                        <span id="remote-status-text">Monitor připojen</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <span id="remote-slide-num" class="px-2.5 py-1 rounded-full bg-white/10 font-mono-tech text-xs text-white font-medium">
+                    01 / 11
+                </span>
+                <button onclick="toggleForceView()" class="p-2 rounded-lg bg-white/5 border border-white/10 text-white/70 active:scale-95" title="Přepnout zobrazení">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                </button>
+            </div>
+        </header>
+
+        <main class="flex-1 overflow-y-auto no-scrollbar p-4 flex flex-col gap-4">
+            <div class="p-4 rounded-2xl bg-[#141418] border border-white/10 shadow-xl flex flex-col gap-2">
+                <div class="flex items-center justify-between text-xs font-mono-tech text-[#86868B]">
+                    <span>AKTUÁLNÍ SLIDE NA MONITORU</span>
+                    <span id="remote-card-tag" class="text-white/80 uppercase">01 Kapsa</span>
+                </div>
+                <h2 id="remote-card-title" class="text-lg font-bold text-white leading-snug">
+                    Celé přijímačky v kapse.
+                </h2>
+                <div class="mt-2 p-3 rounded-xl bg-black/50 border border-white/5 flex flex-col gap-1.5">
+                    <div class="flex items-center gap-1.5 text-[11px] font-mono-tech text-amber-400 font-semibold">
+                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        <span>TAHÁK PRO ŘEČNÍKA:</span>
+                    </div>
+                    <p id="remote-speaker-notes" class="text-xs text-white/85 leading-relaxed font-sans">
+                        Představit vizi: Dnešní deváťáci žijí v mobilu. Didakťáky jim dávají kompletní přípravu do kapsy na každých 5 minut volného času.
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="remotePrev()" class="h-28 rounded-2xl bg-[#1A1A20] active:bg-[#25252D] border border-white/15 flex flex-col items-center justify-center gap-2 active:scale-[0.98] transition-all shadow-md">
+                    <svg class="w-8 h-8 text-white/80" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+                    <span class="font-mono-tech text-xs tracking-wider text-white/70">PŘEDCHOZÍ</span>
+                </button>
+                <button onclick="remoteNext()" class="h-28 rounded-2xl bg-white text-black active:bg-white/90 flex flex-col items-center justify-center gap-2 active:scale-[0.98] transition-all shadow-2xl font-bold">
+                    <svg class="w-8 h-8 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+                    <span class="font-mono-tech text-xs tracking-wider">DALŠÍ SLIDE</span>
+                </button>
+            </div>
+
+            <div class="grid grid-cols-4 gap-2">
+                <button onclick="toggleBlackoutRemote()" id="btn-remote-blackout" class="p-2.5 rounded-xl bg-[#141418] border border-white/10 flex flex-col items-center justify-center gap-1 text-[10px] font-mono-tech text-white/80 active:scale-95">
+                    <span>🌑</span>
+                    <span>Ztmavit [B]</span>
+                </button>
+                <button onclick="togglePresentationTimer()" id="btn-remote-timer" class="p-2.5 rounded-xl bg-[#141418] border border-white/10 flex flex-col items-center justify-center gap-1 text-[10px] font-mono-tech text-white/80 active:scale-95">
+                    <span>⏱️</span>
+                    <span id="remote-timer-val">00:00</span>
+                </button>
+                <button onclick="jumpToSlide(SLIDES.length - 1)" class="p-2.5 rounded-xl bg-[#141418] border border-white/10 flex flex-col items-center justify-center gap-1 text-[10px] font-mono-tech text-white/80 active:scale-95">
+                    <span>🏁</span>
+                    <span>Logo finále</span>
+                </button>
+                <button onclick="restartCurrentSlide()" class="p-2.5 rounded-xl bg-[#141418] border border-white/10 flex flex-col items-center justify-center gap-1 text-[10px] font-mono-tech text-white/80 active:scale-95">
+                    <span>🔄</span>
+                    <span>Replay</span>
+                </button>
+            </div>
+
+            <div class="mt-2 flex flex-col gap-2">
+                <div class="flex items-center justify-between text-xs font-mono-tech text-[#86868B] px-1">
+                    <span>VŠECHNY SLIDY PREZENTACE</span>
+                    <span id="remote-total-count">10 CELKEM</span>
+                </div>
+                <div id="remote-slide-list" class="flex flex-col gap-2 pb-6"></div>
+            </div>
+        </main>
+    </div>
+
+    <div id="blackout-curtain"></div>
+
+
+    <!-- ================================================================= -->
+    <!-- 3. MASTER KINETIC ENGINE (FULL 2-ACT MASTERPIECE + CRISP TRANSITIONS) -->
+    <!-- ================================================================= -->
+    <script>
+        const FPS = 60;
+
+        // SLIDES DEFINITIONS: Maps to the bespoke masterpiece engines + Logo Finale
+        // holdFrame is set exactly at the fully resolved peak of Act 2!
+        const SLIDES = [
+            {
+                engineIdx: 0,
+                holdFrame: 315, // Act 1 + Act 2 inverted pill wipe fully resolved & holds
+                tag: "01 Vize & Kapsa",
+                title: "Celé přijímačky v kapse.",
+                notes: "Představit vizi: Studenti dnes žijí v mobilech. Didakťáky jim přináší celou přípravu na přijímačky do kapsy za cenu jedné hodiny doučování."
+            },
+            {
+                engineIdx: 7, // Konec PDF
+                holdFrame: 270, // Sequential laser strike on 3 pain points -> "Zapomeň na papíry" holds
+                tag: "02 Problém",
+                title: "Konec papírům a stohům PDF.",
+                notes: "Pojmenovat staré bolesti: Tisknutí stohů zmatených PDF, ztracené klíče správných řešení a 500 Kč za jedinou hodinu doučování."
+            },
+            {
+                engineIdx: 3, // Matika × Čeština
+                holdFrame: 315, // 50 pts split screen merges into + portal -> 100 bodů ve hře pill wipe holds
+                tag: "03 Dva předměty",
+                title: "Matematika + Čeština = 100 bodů.",
+                notes: "Zdůraznit: 100 bodů ve hře. Žádné střídání aplikací, oba přijímací předměty v jednotném, krásném a přehledném systému."
+            },
+            {
+                engineIdx: 1, // 358 Úloh
+                holdFrame: 260, // Odometer 000->358 -> 26 ostrých testů holds
+                tag: "04 Obsah v číslech",
+                title: "358 úloh & 26 ostrých testů.",
+                notes: "Masivní databáze: 358 otázek, 26 reálných Cermat testů s podrobnými postupy krok za krokem a okamžitým vyhodnocením."
+            },
+            {
+                engineIdx: 5, // 16 Okruhů Bento
+                holdFrame: 270, // 16 bento tiles -> massive 16 okruhů holds
+                tag: "05 Okruhy látky",
+                title: "16 tematických okruhů.",
+                notes: "Bento matice: Od zlomků a lineárních rovnic po větný rozbor a chytáky. Žák procvičuje cíleně to, kde má slabiny."
+            },
+            {
+                engineIdx: 4, // Časomíra
+                holdFrame: 270, // Radial ring to 130m -> 70m/60m reálný tlak holds
+                tag: "06 Psychologie",
+                title: "Ostrá časomíra pod tlakem.",
+                notes: "Reálný stres: 70 minut matematika, 60 minut čeština. Žáci se naučí hospodařit s časem, aby je u ostrého testu nic nepřekvapilo."
+            },
+            {
+                engineIdx: 6, // 3D Flashcards
+                holdFrame: 260, // 3D card flip -> Chytré flashcards holds
+                tag: "07 Paměť",
+                title: "Chytré 3D Flashcards.",
+                notes: "Efektivita: Vzorce, mnemotechnické pomůcky a pravidla pravopisu (mě vs mně) pomocí spaced repetition do dlouhodobé paměti."
+            },
+            {
+                engineIdx: 8, // Růst pokroku
+                holdFrame: 240, // Liquid progress flood 8% -> 100% full hold
+                tag: "08 Analytika",
+                title: "Měření pokroku (8% → 100%).",
+                notes: "Výsledky: Růst s každým vyřešeným testem, odhalení slabých míst a týdenní reporty pro studenta i rodiče."
+            },
+            {
+                engineIdx: 2, // 5 Funkcí Buben & Spojení
+                holdFrame: 425, // 5 features stack vertically -> merge into center squircle -> "5 funkcí v jedné aplikaci" holds
+                tag: "09 Ekosystém",
+                title: "5 funkcí v jedné aplikaci.",
+                notes: "Shrnutí výhod: Diagnostické testy, přijímačky nanečisto, 16 okruhů, chytré flashcards a týdenní reporty spojené do jediné aplikace."
+            },
+            {
+                engineIdx: 10, // LOGO FINALE
+                holdFrame: 130, // Official Apple squircle + bouncing dot + .app + tagline
+                tag: "10 Logo finále",
+                title: "Didakťáky.app — Závěr.",
+                notes: "Ikonické finále: Oficiální představení brandu Didakťáky.app. Cermat nanečisto v tvém mobilu. Výzva k vyzkoušení a prostor pro dotazy."
+            }
+        ];
+
+        let currentSlide = 0;
+        let currentFrame = 0;
+        let isBlackout = false;
+        let isPresenterTimerRunning = false;
+        let presenterTimerSeconds = 0;
+        let timerInterval = null;
+        let lastTimestamp = 0;
+        let targetTextSlotWidth = 860;
+
+        const urlParams = new URLSearchParams(window.location.search);
+        let ROOM_ID = (urlParams.get('room') || 'DIDAK').toUpperCase();
+        const MQTT_BROKER = 'wss://broker.emqx.io:8084/mqtt';
+        const MQTT_TOPIC = `didaktaky/presentation/${ROOM_ID}`;
+        let mqttClient = null;
+        const localChannel = ('BroadcastChannel' in window) ? new BroadcastChannel(`didak_pres_${ROOM_ID}`) : null;
+
+        // Wordmark letters for Scene Logo
+        const WORDMARK_TEXT = "Didakťáky";
+        const wordmarkEl = document.getElementById('s3-wordmark');
+        const wordmarkChars = [];
+        WORDMARK_TEXT.split('').forEach((ch) => {
+            const span = document.createElement('span');
+            span.textContent = ch;
+            span.className = 'inline-block will-change-transform';
+            wordmarkEl.appendChild(span);
+            wordmarkChars.push(span);
+        });
+
+        // Math Easing primitives - Ultra-Clean Apple Physics
+        function clamp01(t) { return Math.max(0, Math.min(1, t)); }
+        function progress(frame, startF, endF) {
+            if (endF <= startF) return frame >= endF ? 1 : 0;
+            return clamp01((frame - startF) / (endF - startF));
+        }
+        // Apple signature deceleration: rapid launch, buttery landing
+        function easeApple(t) { const x = clamp01(t); return 1 - Math.pow(1 - x, 4.2); }
+        function easeAppleQuint(t) { const x = clamp01(t); return 1 - Math.pow(1 - x, 5); }
+        function easeOutQuart(t) { const x = clamp01(t); return 1 - Math.pow(1 - x, 4); }
+        function easeInQuart(t) { const x = clamp01(t); return x * x * x * x; }
+        function easeInOutCubic(t) {
+            const x = clamp01(t);
+            return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+        }
+        function easeInOutQuint(t) {
+            const x = clamp01(t);
+            return x < 0.5 ? 16 * x * x * x * x * x : 1 - Math.pow(-2 * x + 2, 5) / 2;
+        }
+        // Critically damped Apple spring: natural weight, zero harsh jitter
+        function springApple(t) {
+            const x = clamp01(t);
+            if (x === 0 || x === 1) return x;
+            return 1 - Math.exp(-6.2 * x) * Math.cos(2.8 * x);
+        }
+        // Snappy pop spring for badges and icon reveals
+        function springPop(t) {
+            const x = clamp01(t);
+            if (x === 0 || x === 1) return x;
+            return 1 - Math.exp(-5.5 * x) * Math.cos(5.2 * x);
+        }
+        function springDotPop(t) {
+            const x = clamp01(t);
+            if (x === 0 || x === 1) return x;
+            return 1 - Math.exp(-5.2 * x) * Math.cos(7.5 * x);
+        }
+        function lerp(a, b, t) { return a + (b - a) * t; }
+        function lerpRGB(r1, g1, b1, r2, g2, b2, t) {
+            const p = clamp01(t);
+            return `rgb(${Math.round(lerp(r1, r2, p))}, ${Math.round(lerp(g1, g2, p))}, ${Math.round(lerp(b1, b2, p))})`;
+        }
+
+        // =====================================================================
+        // BESPOKE MASTERPIECE DOM RIG BUILDER
+        // =====================================================================
+        function buildSlideDOM(slideIndex) {
+            const slide = SLIDES[slideIndex];
+            const stage = document.getElementById('custom-stage');
+            const logoScene = document.getElementById('scene-logo');
+            const idx = slide.engineIdx;
+
+            if (idx === 10) {
+                stage.style.opacity = '0';
+                stage.style.visibility = 'hidden';
+                logoScene.style.opacity = '1';
+                logoScene.style.visibility = 'visible';
+                updateLayout();
+                return;
+            }
+
+            stage.style.opacity = '1';
+            stage.style.visibility = 'visible';
+            logoScene.style.opacity = '0';
+            logoScene.style.visibility = 'hidden';
+
+            if (idx === 0) {
+                // VIDEO 01: Original Inline Phone Capsule + Inverted Pill Wipe
+                stage.innerHTML = `
+                    <div id="v1-s1" class="full-bleed-scene flex items-center justify-center bg-black text-white">
+                        <div id="v1-s1-rig" class="flex flex-col items-center justify-center text-center will-change-transform">
+                            <div class="v1-h1 apple-display flex items-baseline justify-center gap-x-[0.27em] whitespace-nowrap">
+                                <span class="line-mask"><span id="v1-w1" class="word-node" style="transform: translate3d(0, 115%, 0);">Celé</span></span>
+                                <span class="line-mask"><span id="v1-w2" class="word-node" style="transform: translate3d(0, 115%, 0);">přijímačky</span></span>
+                            </div>
+                            <div class="v1-h1 apple-display flex items-center justify-center whitespace-nowrap mt-[0.06em]">
+                                <span class="line-mask"><span id="v1-w3" class="word-node" style="transform: translate3d(0, 115%, 0);">v</span></span>
+                                <div id="v1-slot" class="inline-flex items-center justify-center relative mx-[0.06em]" style="width: 28px; height: 1.02em;">
+                                    <div id="v1-capsule" class="relative flex flex-col items-center justify-start border-[2.5px] border-white rounded-[12px] pt-[0.065em] box-border will-change-transform" style="width: 0.52em; height: 0.96em; opacity: 0;">
+                                        <div id="v1-island" class="w-[36%] h-[3px] bg-white rounded-full will-change-transform"></div>
+                                    </div>
+                                </div>
+                                <span class="line-mask"><span id="v1-w4" class="word-node" style="transform: translate3d(0, 115%, 0);">kapse.</span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="v1-s2" class="full-bleed-scene flex items-center justify-center bg-white text-black" style="opacity:0; visibility:hidden;">
+                        <div id="v1-s2-rig" class="flex flex-col items-center justify-center text-center will-change-transform px-8">
+                            <div class="v1-h2 apple-display flex items-baseline justify-center gap-x-[0.26em] whitespace-nowrap">
+                                <span class="line-mask"><span id="v1-s2-w1" class="word-node" style="transform: translate3d(0, 105%, 0);">Příprava</span></span>
+                                <span class="line-mask"><span id="v1-s2-w2" class="word-node" style="transform: translate3d(0, 105%, 0);">na</span></span>
+                                <span class="line-mask"><span id="v1-s2-w3" class="word-node" style="transform: translate3d(0, 105%, 0);">přijímačky</span></span>
+                            </div>
+                            <div class="v1-h2 apple-display flex items-center justify-center gap-x-[0.26em] whitespace-nowrap mt-[0.1em]">
+                                <span class="line-mask"><span id="v1-s2-w4" class="word-node" style="transform: translate3d(0, 105%, 0);">za</span></span>
+                                <span class="line-mask"><span id="v1-s2-w5" class="word-node" style="transform: translate3d(0, 105%, 0);">cenu</span></span>
+                                <span class="inline-grid place-items-center align-middle relative">
+                                    <span id="v1-pill-base" class="col-start-1 row-start-1 inline-flex items-center justify-center px-[0.42em] pt-[0.12em] pb-[0.16em] leading-none rounded-full will-change-transform" style="transform: translate3d(0, 105%, 0);">jedné&nbsp;hodiny</span>
+                                    <span id="v1-pill-inv" class="col-start-1 row-start-1 inline-flex items-center justify-center px-[0.42em] pt-[0.12em] pb-[0.16em] leading-none rounded-full bg-black text-white pointer-events-none will-change-transform" style="clip-path: inset(0 100% 0 0 round 999px);">jedné&nbsp;hodiny</span>
+                                </span>
+                            </div>
+                            <div class="v1-h2 apple-display flex items-baseline justify-center whitespace-nowrap mt-[0.1em]">
+                                <span class="line-mask"><span id="v1-s2-w6" class="word-node" style="transform: translate3d(0, 105%, 0);">doučování.</span></span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (idx === 1) {
+                // VIDEO 02: Giant Kinetic Odometer (000 -> 358) + Rising White Curtain -> 26 Ostrých testů
+                stage.innerHTML = `
+                    <div id="v2-s1" class="full-bleed-scene flex flex-col items-center justify-center bg-black text-white">
+                        <div id="v2-tag" class="font-mono-tech text-xs tracking-[0.35em] text-[#86868B] uppercase mb-6 will-change-transform">DATABÁZE CERMAT ÚLOH</div>
+                        <div id="v2-num-wrap" class="flex items-baseline justify-center apple-display will-change-transform">
+                            <span id="v2-counter" class="font-mono-tech font-bold tracking-tighter text-white" style="font-variant-numeric: tabular-nums;">000</span>
+                        </div>
+                        <div class="line-mask mt-4">
+                            <div id="v2-sub" class="apple-display text-[#86868B] will-change-transform" style="transform: translate3d(0, 110%, 0);">řešených otázek.</div>
+                        </div>
+                        <div id="v2-curtain" class="absolute inset-x-0 bottom-0 bg-white will-change-transform pointer-events-none" style="height: 0%;"></div>
+                    </div>
+                    <div id="v2-s2" class="full-bleed-scene flex items-center justify-center bg-white text-black" style="opacity:0; visibility:hidden;">
+                        <div id="v2-s2-rig" class="w-full max-w-7xl px-20 flex flex-col gap-14 will-change-transform">
+                            <div id="v2-row1" class="flex items-baseline justify-between border-b-2 border-black/10 pb-8 will-change-transform" style="opacity:0; transform: translate3d(-50px, 0, 0);">
+                                <span class="v2-h2 apple-display text-black whitespace-nowrap">26 ostrých testů.</span>
+                                <span class="font-mono-tech text-4xl font-bold text-[#86868B]">100% Cermat</span>
+                            </div>
+                            <div id="v2-row2" class="flex items-baseline justify-between border-b-2 border-black/10 pb-8 will-change-transform" style="opacity:0; transform: translate3d(-50px, 0, 0);">
+                                <span class="v2-h2 apple-display text-black whitespace-nowrap">Postupy krok za krokem.</span>
+                                <span class="px-8 py-3 rounded-full bg-black text-white font-mono-tech text-3xl font-bold">Okamžitě</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (idx === 2) {
+                // VIDEO 03: 5-Feature Vertical Drum + Squircle Convergence + Unified Act 2
+                stage.innerHTML = `
+                    <div id="v3-s1" class="full-bleed-scene flex items-center justify-center bg-black text-white">
+                        <div id="v3-rig" class="relative w-full h-full flex items-center justify-center will-change-transform">
+                            <div id="v3-r0" class="v3-row absolute flex items-center justify-center whitespace-nowrap apple-display will-change-transform" style="opacity:0;"><span class="line-mask"><span class="inline-flex gap-x-[0.26em]"><span id="v3-w0-0" class="word-node" style="transform: translate3d(0, 115%, 0);">Diagnostické</span><span id="v3-w0-1" class="word-node" style="transform: translate3d(0, 115%, 0);">testy.</span></span></span></div>
+                            <div id="v3-r1" class="v3-row absolute flex items-center justify-center whitespace-nowrap apple-display will-change-transform" style="opacity:0;"><span class="line-mask"><span class="inline-flex gap-x-[0.26em]"><span id="v3-w1-0" class="word-node" style="transform: translate3d(0, 115%, 0);">Přijímačky</span><span id="v3-w1-1" class="word-node" style="transform: translate3d(0, 115%, 0);">nanečisto.</span></span></span></div>
+                            <div id="v3-r2" class="v3-row absolute flex items-center justify-center whitespace-nowrap apple-display will-change-transform" style="opacity:0;"><span class="line-mask"><span class="inline-flex gap-x-[0.26em]"><span id="v3-w2-0" class="word-node" style="transform: translate3d(0, 115%, 0);">16</span><span id="v3-w2-1" class="word-node" style="transform: translate3d(0, 115%, 0);">okruhů.</span></span></span></div>
+                            <div id="v3-r3" class="v3-row absolute flex items-center justify-center whitespace-nowrap apple-display will-change-transform" style="opacity:0;"><span class="line-mask"><span class="inline-flex gap-x-[0.26em]"><span id="v3-w3-0" class="word-node" style="transform: translate3d(0, 115%, 0);">Chytré</span><span id="v3-w3-1" class="word-node" style="transform: translate3d(0, 115%, 0);">flashcards.</span></span></span></div>
+                            <div id="v3-r4" class="v3-row absolute flex items-center justify-center whitespace-nowrap apple-display will-change-transform" style="opacity:0;"><span class="line-mask"><span class="inline-flex gap-x-[0.26em]"><span id="v3-w4-0" class="word-node" style="transform: translate3d(0, 115%, 0);">Týdenní</span><span id="v3-w4-1" class="word-node" style="transform: translate3d(0, 115%, 0);">reporty.</span></span></span></div>
+                            <div id="v3-portal" class="absolute bg-white pointer-events-none will-change-transform" style="width: 152px; height: 152px; border-radius: 36px; opacity: 0; transform: scale(0);"></div>
+                        </div>
+                    </div>
+                    <div id="v3-s2" class="full-bleed-scene flex items-center justify-center bg-white text-[#1D1D1F]" style="opacity:0; visibility:hidden;">
+                        <div id="v3-s2-rig" class="flex flex-col items-center justify-center text-center will-change-transform px-8">
+                            <div class="v3-h2 apple-display flex items-baseline justify-center gap-x-[0.26em] whitespace-nowrap">
+                                <span class="line-mask"><span id="v3-s2-w1" class="word-node" style="transform: translate3d(0, 105%, 0);">5</span></span>
+                                <span class="line-mask"><span id="v3-s2-w2" class="word-node" style="transform: translate3d(0, 105%, 0);">funkcí</span></span>
+                                <span class="line-mask"><span id="v3-s2-w3" class="word-node" style="transform: translate3d(0, 105%, 0);">spojených</span></span>
+                            </div>
+                            <div class="v3-h2 apple-display flex items-center justify-center gap-x-[0.26em] whitespace-nowrap mt-[0.1em]">
+                                <span class="line-mask"><span id="v3-s2-w4" class="word-node" style="transform: translate3d(0, 105%, 0);">v</span></span>
+                                <span class="inline-grid place-items-center align-middle relative">
+                                    <span id="v3-pill-base" class="col-start-1 row-start-1 inline-flex items-center justify-center px-[0.42em] pt-[0.12em] pb-[0.16em] leading-none rounded-full will-change-transform" style="transform: translate3d(0, 105%, 0);">jedné&nbsp;aplikaci</span>
+                                    <span id="v3-pill-inv" class="col-start-1 row-start-1 inline-flex items-center justify-center px-[0.42em] pt-[0.12em] pb-[0.16em] leading-none rounded-full bg-black text-white pointer-events-none will-change-transform" style="clip-path: inset(0 100% 0 0 round 999px);">jedné&nbsp;aplikaci</span>
+                                </span>
+                            </div>
+                            <div class="v3-h2 apple-display flex items-baseline justify-center gap-x-[0.26em] whitespace-nowrap mt-[0.1em]">
+                                <span class="line-mask"><span id="v3-s2-w5" class="word-node" style="transform: translate3d(0, 105%, 0);">pro&nbsp;tvůj</span></span>
+                                <span class="line-mask"><span id="v3-s2-w6" class="word-node" style="transform: translate3d(0, 105%, 0);">úspěch.</span></span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (idx === 3) {
+                // VIDEO 04: Apple Minimalist Split-Screen Duality (Matematika 50b + Český jazyk 50b = 100 bodů)
+                stage.innerHTML = `
+                    <div id="v4-s1" class="full-bleed-scene flex overflow-hidden bg-black">
+                        <!-- Left Half: Matematika (Pure Black) -->
+                        <div id="v4-left" class="relative w-1/2 h-full bg-black text-white flex flex-col items-center justify-center will-change-transform px-8" style="transform: translate3d(0, -100%, 0);">
+                            <div id="v4-m-rig" class="flex flex-col items-center justify-center text-center will-change-transform">
+                                <span id="v4-m-meta" class="font-mono-tech text-xs tracking-[0.28em] text-[#86868B] uppercase mb-5 will-change-transform" style="opacity:0; transform: translate3d(0, 14px, 0);">70 MINUT • CERMAT</span>
+                                <div class="line-mask"><span id="v4-m-title" class="v4-h1 apple-display word-node text-white" style="transform: translate3d(0, 115%, 0);">Matematika.</span></div>
+                                <div class="line-mask mt-4"><div id="v4-m-pts-wrap" class="apple-tagline text-4xl font-semibold text-[#86868B] will-change-transform" style="transform: translate3d(0, 115%, 0);"><span id="v4-m-num" class="text-white font-bold font-mono-tech" style="font-variant-numeric: tabular-nums;">0</span>&nbsp;bodů</div></div>
+                            </div>
+                        </div>
+
+                        <!-- Right Half: Český jazyk (Pure White) -->
+                        <div id="v4-right" class="relative w-1/2 h-full bg-white text-[#1D1D1F] flex flex-col items-center justify-center will-change-transform px-8" style="transform: translate3d(0, 100%, 0);">
+                            <div id="v4-c-rig" class="flex flex-col items-center justify-center text-center will-change-transform">
+                                <span id="v4-c-meta" class="font-mono-tech text-xs tracking-[0.28em] text-[#86868B] uppercase mb-5 will-change-transform" style="opacity:0; transform: translate3d(0, 14px, 0);">60 MINUT • CERMAT</span>
+                                <div class="line-mask"><span id="v4-c-title" class="v4-h1 apple-display word-node text-[#1D1D1F]" style="transform: translate3d(0, 115%, 0);">Čeština.</span></div>
+                                <div class="line-mask mt-4"><div id="v4-c-pts-wrap" class="apple-tagline text-4xl font-semibold text-[#86868B] will-change-transform" style="transform: translate3d(0, 115%, 0);"><span id="v4-c-num" class="text-[#1D1D1F] font-bold font-mono-tech" style="font-variant-numeric: tabular-nums;">0</span>&nbsp;bodů</div></div>
+                            </div>
+                        </div>
+
+                        <!-- Precision Central Axis & Fusion Badge -->
+                        <div id="v4-divider" class="absolute left-1/2 top-0 bottom-0 w-[1.5px] -translate-x-1/2 bg-white/25 pointer-events-none will-change-transform"></div>
+                        <div id="v4-plus-badge" class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 rounded-full bg-white text-black border border-black/15 shadow-2xl flex items-center justify-center font-mono-tech text-4xl font-bold pointer-events-none will-change-transform z-20" style="opacity:0; transform: translate(-50%, -50%) scale(0);">
+                            <span id="v4-plus-symbol" class="will-change-transform">+</span>
+                        </div>
+                    </div>
+
+                    <!-- Act 2: Unified 100 Points + Apple Inverted Pill Wipe -->
+                    <div id="v4-s2" class="full-bleed-scene flex items-center justify-center bg-white text-[#1D1D1F]" style="opacity:0; visibility:hidden;">
+                        <div id="v4-s2-rig" class="flex flex-col items-center justify-center text-center will-change-transform px-8">
+                            <div class="v4-h2 apple-display flex items-baseline justify-center gap-x-[0.26em] whitespace-nowrap">
+                                <span class="line-mask"><span id="v4-s2-w1" class="word-node" style="transform: translate3d(0, 105%, 0);">100</span></span>
+                                <span class="line-mask"><span id="v4-s2-w2" class="word-node" style="transform: translate3d(0, 105%, 0);">bodů</span></span>
+                                <span class="line-mask"><span id="v4-s2-w3" class="word-node" style="transform: translate3d(0, 105%, 0);">ve&nbsp;hře.</span></span>
+                            </div>
+                            <div class="v4-h2 apple-display flex items-center justify-center gap-x-[0.26em] whitespace-nowrap mt-[0.1em]">
+                                <span class="line-mask"><span id="v4-s2-w4" class="word-node" style="transform: translate3d(0, 105%, 0);">Dva</span></span>
+                                <span class="line-mask"><span id="v4-s2-w5" class="word-node" style="transform: translate3d(0, 105%, 0);">předměty,</span></span>
+                                <span class="inline-grid place-items-center align-middle relative">
+                                    <span id="v4-pill-base" class="col-start-1 row-start-1 inline-flex items-center justify-center px-[0.42em] pt-[0.12em] pb-[0.16em] leading-none rounded-full will-change-transform" style="transform: translate3d(0, 105%, 0);">jedna&nbsp;aplikace</span>
+                                    <span id="v4-pill-inv" class="col-start-1 row-start-1 inline-flex items-center justify-center px-[0.42em] pt-[0.12em] pb-[0.16em] leading-none rounded-full bg-black text-white pointer-events-none will-change-transform" style="clip-path: inset(0 100% 0 0 round 999px);">jedna&nbsp;aplikace</span>
+                                </span>
+                            </div>
+                            <div class="v4-h2 apple-display flex items-baseline justify-center gap-x-[0.26em] whitespace-nowrap mt-[0.1em]">
+                                <span class="line-mask"><span id="v4-s2-w6" class="word-node" style="transform: translate3d(0, 105%, 0);">bez</span></span>
+                                <span class="line-mask"><span id="v4-s2-w7" class="word-node" style="transform: translate3d(0, 105%, 0);">stresu.</span></span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (idx === 4) {
+                // VIDEO 05: Radial SVG Chrono Ring (70 min + 60 min) + Iris Expansion Wipe
+                stage.innerHTML = `
+                    <div id="v5-s1" class="full-bleed-scene flex items-center justify-center bg-black text-white">
+                        <div id="v5-rig" class="relative flex items-center justify-center will-change-transform">
+                            <svg class="w-[520px] h-[520px] -rotate-90" viewBox="0 0 200 200">
+                                <circle cx="100" cy="100" r="86" stroke="rgba(255,255,255,0.12)" stroke-width="5" fill="none"/>
+                                <circle id="v5-ring" cx="100" cy="100" r="86" stroke="#FFFFFF" stroke-width="5" fill="none" stroke-linecap="round" stroke-dasharray="540.35" stroke-dashoffset="540.35"/>
+                            </svg>
+                            <div class="absolute flex flex-col items-center justify-center text-center">
+                                <span class="font-mono-tech text-xs tracking-[0.3em] text-[#86868B] uppercase mb-2">OSTRÁ ČASOMÍRA</span>
+                                <div id="v5-time" class="font-mono-tech text-8xl font-bold text-white tracking-tight" style="font-variant-numeric: tabular-nums;">00:00</div>
+                                <div id="v5-label" class="apple-tagline text-2xl text-[#86868B] mt-2">reálný Cermat limit</div>
+                            </div>
+                            <div id="v5-iris" class="absolute rounded-full bg-white pointer-events-none will-change-transform" style="width: 120px; height: 120px; transform: scale(0);"></div>
+                        </div>
+                    </div>
+                    <div id="v5-s2" class="full-bleed-scene flex items-center justify-center bg-white text-black" style="opacity:0; visibility:hidden;">
+                        <div id="v5-s2-rig" class="flex flex-col items-center justify-center text-center will-change-transform px-8">
+                            <div id="v5-s2-l1" class="v5-h2 apple-display text-[#86868B] will-change-transform" style="opacity:0; transform: translate3d(0, 40px, 0);">70 minut matematika.</div>
+                            <div id="v5-s2-l2" class="v5-h2 apple-display text-[#86868B] mt-2 will-change-transform" style="opacity:0; transform: translate3d(0, 40px, 0);">60 minut čeština.</div>
+                            <div id="v5-s2-l3" class="v5-h2 apple-display text-black mt-6 px-10 py-3 rounded-full border-4 border-black will-change-transform" style="opacity:0; transform: scale(0.8);">Trénuj pod reálným tlakem.</div>
+                        </div>
+                    </div>
+                `;
+            } else if (idx === 5) {
+                // VIDEO 06: 4x4 Bento Matrix (16 Okruhů) + White Zoom Wipe
+                let cellsHtml = '';
+                const topics = [
+                    "Zlomky & Procenta", "Lineární rovnice", "Planimetrie", "Slovní úlohy",
+                    "Konstrukční úlohy", "Objemy a tělesa", "Číselné osy", "Úhly & Trojúhelníky",
+                    "Pravopis & Shoda", "Větný rozbor", "Tvarosloví & Pády", "Porozumění textu",
+                    "Přímá řeč & Sloh", "Literární druhy", "Chytáky Cermatu", "Práce s grafy"
+                ];
+                for (let i = 0; i < 16; i++) {
+                    cellsHtml += `
+                        <div id="v6-cell-${i}" class="v6-cell rounded-2xl border border-white/10 bg-[#121215] p-4 flex flex-col justify-between will-change-transform shadow-md" style="opacity:0;">
+                            <span class="font-mono-tech text-xs text-[#86868B] font-semibold">${String(i + 1).padStart(2, '0')}</span>
+                            <span class="font-bold text-[16px] text-white tracking-tight leading-snug">${topics[i]}</span>
+                        </div>
+                    `;
+                }
+                stage.innerHTML = `
+                    <div id="v6-s1" class="full-bleed-scene flex flex-col items-center justify-center bg-black text-white px-12">
+                        <div id="v6-grid" class="grid grid-cols-4 gap-4 w-full max-w-4xl h-[520px] will-change-transform">
+                            ${cellsHtml}
+                        </div>
+                        <div id="v6-curtain" class="absolute inset-0 bg-white pointer-events-none will-change-transform" style="opacity:0;"></div>
+                    </div>
+                    <div id="v6-s2" class="full-bleed-scene flex items-center justify-center bg-white text-black" style="opacity:0; visibility:hidden;">
+                        <div id="v6-s2-rig" class="flex flex-col items-center justify-center text-center will-change-transform px-8">
+                            <div id="v6-big" class="apple-display text-[140px] leading-none text-black will-change-transform" style="opacity:0; transform: scale(0.85);">16 okruhů.</div>
+                            <div id="v6-sub" class="apple-display text-5xl text-[#86868B] mt-6 will-change-transform" style="opacity:0; transform: translate3d(0, 35px, 0);">Veškerá látka na jednom místě.</div>
+                        </div>
+                    </div>
+                `;
+            } else if (idx === 6) {
+                // VIDEO 07: 3D Perspective Card Flip (Flashcards) + Card Zoom Wipe
+                stage.innerHTML = `
+                    <div id="v7-s1" class="full-bleed-scene flex items-center justify-center bg-black" style="perspective: 1800px;">
+                        <div id="v7-card" class="relative w-[780px] h-[450px] rounded-[36px] will-change-transform" style="transform-style: preserve-3d;">
+                            <div id="v7-front" class="absolute inset-0 rounded-[36px] bg-[#141416] border-2 border-white/20 p-12 flex flex-col justify-between text-white shadow-2xl" style="backface-visibility: hidden;">
+                                <div class="flex justify-between items-center font-mono-tech text-xs text-[#86868B] uppercase tracking-widest">
+                                    <span>FLASHCARD • ČESKÝ JAZYK</span>
+                                    <span>OTÁZKA 01/50</span>
+                                </div>
+                                <div class="apple-display text-5xl text-left leading-snug">Objekt vs. Subjekt ve větě?</div>
+                                <div class="font-mono-tech text-xs text-white/50 text-left">Kliknutím otočíš kartičku →</div>
+                            </div>
+                            <div id="v7-back" class="absolute inset-0 rounded-[36px] bg-white border-2 border-black/15 p-12 flex flex-col justify-between text-black shadow-2xl" style="backface-visibility: hidden; transform: rotateY(180deg);">
+                                <div class="flex justify-between items-center font-mono-tech text-xs text-[#86868B] uppercase tracking-widest">
+                                    <span>ODPOVĚĎ • PRAVIDLO</span>
+                                    <span class="text-black font-bold">✓ ZAPAMATOVÁNO</span>
+                                </div>
+                                <div class="apple-display text-5xl text-left leading-snug">Předmět (4. pád) vs. Podmět (1. pád).</div>
+                                <div class="font-mono-tech text-xs text-black/60 text-left">Chytré opakování do dlouhodobé paměti</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="v7-s2" class="full-bleed-scene flex items-center justify-center bg-white text-black" style="opacity:0; visibility:hidden;">
+                        <div id="v7-s2-rig" class="flex flex-col items-center justify-center text-center will-change-transform px-8">
+                            <div id="v7-title" class="v7-h2 apple-display text-black will-change-transform" style="opacity:0; transform: translate3d(0, 40px, 0);">Chytré flashcards.</div>
+                            <div id="v7-desc" class="v7-h2 apple-display text-[#86868B] mt-4 will-change-transform" style="opacity:0; transform: translate3d(0, 40px, 0);">Vzorce a pravidla nikdy nezapomeneš.</div>
+                        </div>
+                    </div>
+                `;
+            } else if (idx === 7) {
+                // VIDEO 08: Sequential Laser Strike-Through + Laser Shutter Wipe (Konec PDF)
+                stage.innerHTML = `
+                    <div id="v8-s1" class="full-bleed-scene flex flex-col items-center justify-center bg-black text-white">
+                        <div id="v8-list" class="relative flex flex-col items-center gap-7 will-change-transform">
+                            <div class="relative flex items-center justify-center">
+                                <div id="v8-item1" class="v8-h1 apple-display text-white relative will-change-transform" style="opacity:0; transform: translate3d(0, 28px, 0);">Tisknutí stohů PDF.</div>
+                                <div id="v8-strike1" class="absolute top-[52%] left-[-4%] right-[-4%] h-[5px] bg-[#FF3B30] rounded-full will-change-transform pointer-events-none" style="transform: scaleX(0); transform-origin: left center;"></div>
+                            </div>
+                            <div class="relative flex items-center justify-center">
+                                <div id="v8-item2" class="v8-h1 apple-display text-white relative will-change-transform" style="opacity:0; transform: translate3d(0, 28px, 0);">Hledání klíčů správných řešení.</div>
+                                <div id="v8-strike2" class="absolute top-[52%] left-[-4%] right-[-4%] h-[5px] bg-[#FF3B30] rounded-full will-change-transform pointer-events-none" style="transform: scaleX(0); transform-origin: left center;"></div>
+                            </div>
+                            <div class="relative flex items-center justify-center">
+                                <div id="v8-item3" class="v8-h1 apple-display text-white relative will-change-transform" style="opacity:0; transform: translate3d(0, 28px, 0);">500 Kč za hodinu doučování.</div>
+                                <div id="v8-strike3" class="absolute top-[52%] left-[-4%] right-[-4%] h-[5px] bg-[#FF3B30] rounded-full will-change-transform pointer-events-none" style="transform: scaleX(0); transform-origin: left center;"></div>
+                            </div>
+                        </div>
+                        <div id="v8-laser" class="absolute inset-x-0 bg-white will-change-transform pointer-events-none" style="height: 4px; top: 50%; transform: translateY(-50%) scaleX(0);"></div>
+                    </div>
+                    <div id="v8-s2" class="full-bleed-scene flex items-center justify-center bg-white text-black" style="opacity:0; visibility:hidden;">
+                        <div id="v8-s2-rig" class="flex flex-col items-center justify-center text-center will-change-transform px-8">
+                            <div id="v8-clean1" class="v8-h2 apple-display text-black will-change-transform" style="opacity:0; transform: translate3d(0, 35px, 0);">Zapomeň na papíry.</div>
+                            <div id="v8-clean2" class="v8-h2 apple-display mt-6 px-12 py-3.5 rounded-full bg-black text-white will-change-transform" style="opacity:0; transform: scale(0.8);">Všechno se opraví samo.</div>
+                        </div>
+                    </div>
+                `;
+            } else if (idx === 8) {
+                // VIDEO 09: Rising Full-Bleed Progress Bar (8% -> 100%) with Bulletproof Dual-Layer Clip Invert
+                stage.innerHTML = `
+                    <div id="v9-s1" class="full-bleed-scene flex items-center justify-center bg-black text-white">
+                        <div id="v9-fill" class="absolute inset-x-0 bottom-0 bg-white will-change-transform" style="height: 0%;"></div>
+                        <!-- White text layer (visible on top black portion) -->
+                        <div id="v9-layer-white" class="absolute inset-0 flex items-center justify-center pointer-events-none" style="clip-path: inset(0 0 0% 0);">
+                            <div id="v9-center-w" class="flex flex-col items-center justify-center text-center text-white will-change-transform">
+                                <span class="font-mono-tech text-xs tracking-[0.35em] text-[#86868B] uppercase mb-4">CELKOVÝ POKROK ŽÁKA</span>
+                                <div id="v9-pct-w" class="apple-display text-[190px] leading-none font-mono-tech font-bold text-white" style="font-variant-numeric: tabular-nums;">8%</div>
+                                <div class="apple-display text-5xl mt-4 text-white">Rosteš s každým testem.</div>
+                            </div>
+                        </div>
+                        <!-- Black text layer (visible on bottom rising white portion) -->
+                        <div id="v9-layer-black" class="absolute inset-0 flex items-center justify-center pointer-events-none" style="clip-path: inset(100% 0 0 0);">
+                            <div id="v9-center-b" class="flex flex-col items-center justify-center text-center text-black will-change-transform">
+                                <span class="font-mono-tech text-xs tracking-[0.35em] text-[#86868B] uppercase mb-4">CELKOVÝ POKROK ŽÁKA</span>
+                                <div id="v9-pct-b" class="apple-display text-[190px] leading-none font-mono-tech font-bold text-black" style="font-variant-numeric: tabular-nums;">8%</div>
+                                <div class="apple-display text-5xl mt-4 text-black">Rosteš s každým testem.</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (idx === 9) {
+                // VIDEO 10: High-Tempo Strobe Manifesto
+                stage.innerHTML = `
+                    <div id="v10-s1" class="full-bleed-scene flex items-center justify-center bg-black text-white">
+                        <div id="v10-word" class="apple-display text-center px-8 will-change-transform" style="font-size: 160px;">9. TŘÍDA.</div>
+                    </div>
+                `;
+            }
+
+            updateLayout();
+        }
+
+        // =====================================================================
+        // RESPONSIVE LAYOUT & SCALING (WITH 100VW x 100VH FULL-BLEED EXPANSION)
+        // =====================================================================
+        function updateLayout() {
+            const comp = document.getElementById('composition');
+            if (!comp) return;
+            const w = 1920;
+            const h = 1080;
+            comp.style.width = `${w}px`;
+            comp.style.height = `${h}px`;
+
+            const scaleX = window.innerWidth / w;
+            const scaleY = window.innerHeight / h;
+            const scale = Math.min(scaleX, scaleY) || 1;
+            comp.style.transform = `scale(${scale.toFixed(4)})`;
+
+            // Compute exact negative bleed offsets so .full-bleed-scene covers 100vw x 100vh on any aspect ratio
+            const bleedX = Math.ceil(Math.max(0, (window.innerWidth / scale - w) / 2)) + 4;
+            const bleedY = Math.ceil(Math.max(0, (window.innerHeight / scale - h) / 2)) + 4;
+            comp.style.setProperty('--bleed-x', `-${bleedX}px`);
+            comp.style.setProperty('--bleed-y', `-${bleedY}px`);
+
+            document.querySelectorAll('.v1-h1, .v3-row').forEach(el => el.style.fontSize = `112px`);
+            document.querySelectorAll('.v1-h2, .v3-h2, .v4-h2, .v5-h2, .v7-h2, .v8-h2').forEach(el => el.style.fontSize = `104px`);
+            document.querySelectorAll('.v2-h2').forEach(el => el.style.fontSize = `82px`);
+            document.querySelectorAll('.v4-h1, .v8-h1').forEach(el => el.style.fontSize = `96px`);
+
+            const v2Counter = document.getElementById('v2-counter');
+            if (v2Counter) v2Counter.style.fontSize = `250px`;
+            const v2Sub = document.getElementById('v2-sub');
+            if (v2Sub) v2Sub.style.fontSize = `78px`;
+
+            const s3IconWrap = document.getElementById('s3-icon-wrap');
+            if (s3IconWrap) {
+                s3IconWrap.style.width = `152px`;
+                s3IconWrap.style.height = `152px`;
+            }
+            const s3TextInner = document.getElementById('s3-text-inner');
+            if (s3TextInner) s3TextInner.style.fontSize = `144px`;
+            const s3Tagline = document.getElementById('s3-tagline');
+            if (s3Tagline) s3Tagline.style.fontSize = `44px`;
+
+            if (s3TextInner) {
+                const measuredWidth = s3TextInner.getBoundingClientRect().width / scale;
+                targetTextSlotWidth = Math.ceil((measuredWidth > 50 ? measuredWidth : s3TextInner.scrollWidth) + 16);
+            }
+        }
+
+        // =====================================================================
+        // TICK ENGINE: ANIMATES INTRO -> HOLDS AT FINAL RESOLVED STATE!
+        // =====================================================================
+        let isTransitioningSlide = false;
+
+        function tick(timestamp) {
+            if (!lastTimestamp) lastTimestamp = timestamp;
+            const deltaMs = timestamp - lastTimestamp;
+            lastTimestamp = timestamp;
+
+            if (isTransitioningSlide) {
+                requestAnimationFrame(tick);
+                return;
+            }
+
+            const slideDef = SLIDES[currentSlide];
+            const holdFrame = slideDef ? slideDef.holdFrame : 315;
+
+            // Advance frame ONLY until it reaches the hold frame, then STOPS & HOLDS!
+            if (currentFrame < holdFrame) {
+                currentFrame = Math.min(holdFrame, currentFrame + (deltaMs / 1000) * FPS);
+            }
+
+            if (slideDef) {
+                renderKineticEngineFrame(slideDef.engineIdx, currentFrame);
+            }
+            requestAnimationFrame(tick);
+        }
+
+        // =====================================================================
+        // FULL-BLEED SEAMLESS THEME MANAGEMENT (ALL 4 CORNERS COVERED 100%)
+        // =====================================================================
+        let activeThemeColor = null;
+        function setFullBleedTheme(color) {
+            if (activeThemeColor === color) return;
+            activeThemeColor = color;
+            const pres = document.getElementById('presentation-screen');
+            const vp = document.getElementById('viewport');
+            const comp = document.getElementById('composition');
+            const canvas = document.getElementById('slide-canvas');
+            const stage = document.getElementById('custom-stage');
+
+            if (color.startsWith('linear-gradient')) {
+                document.documentElement.style.backgroundColor = '';
+                document.documentElement.style.background = color;
+                document.body.style.backgroundColor = '';
+                document.body.style.background = color;
+                if (pres) { pres.style.backgroundColor = ''; pres.style.background = color; }
+                if (vp) { vp.style.backgroundColor = ''; vp.style.background = color; }
+            } else {
+                document.documentElement.style.background = '';
+                document.documentElement.style.backgroundColor = color;
+                document.body.style.background = '';
+                document.body.style.backgroundColor = color;
+                if (pres) { pres.style.background = ''; pres.style.backgroundColor = color; }
+                if (vp) { vp.style.background = ''; vp.style.backgroundColor = color; }
+            }
+            if (comp) { comp.style.background = 'transparent'; comp.style.backgroundColor = 'transparent'; }
+            if (canvas) { canvas.style.background = 'transparent'; canvas.style.backgroundColor = 'transparent'; }
+            if (stage) { stage.style.background = 'transparent'; stage.style.backgroundColor = 'transparent'; }
+        }
+
+        // =====================================================================
+        // MASTER KINETIC RENDERER (ZERO SCENE OVERLAP, PHYSICAL FULL-BLEED WIPES)
+        // =====================================================================
+        function renderKineticEngineFrame(idx, f) {
+            if (idx === 10) {
+                setFullBleedTheme('#FFFFFF');
+                renderOfficialLogoFinale(f);
+                return;
+            }
+
+            // -----------------------------------------------------------------
+            // ENGINE 01 (SLIDE 0): INLINE CAPSULE ZOOM + INVERTED PILL WIPE
+            // -----------------------------------------------------------------
+            if (idx === 0) {
+                const s1 = document.getElementById('v1-s1');
+                const s2 = document.getElementById('v1-s2');
+                if (!s1 || !s2) return;
+
+                if (f < 176) {
+                    setFullBleedTheme('#000000');
+                    s1.style.opacity = '1'; s1.style.visibility = 'visible';
+                    s2.style.opacity = '0'; s2.style.visibility = 'hidden';
+
+                    const lensEmergence = easeOutQuart(progress(f, 0, 45));
+                    const baseScale = lerp(0.95, 1.0, lensEmergence) + lerp(0, 0.015, progress(f, 45, 155));
+                    const s1Rig = document.getElementById('v1-s1-rig');
+                    if (s1Rig) s1Rig.style.transform = `scale(${baseScale.toFixed(4)})`;
+
+                    const words = [
+                        { id: 'v1-w1', ms: 15, me: 52, is: 24, ie: 64 },
+                        { id: 'v1-w2', ms: 24, me: 62, is: 38, ie: 78 },
+                        { id: 'v1-w3', ms: 36, me: 74, is: 54, ie: 90 },
+                        { id: 'v1-w4', ms: 42, me: 80, is: 60, ie: 95 }
+                    ];
+                    words.forEach(w => {
+                        const el = document.getElementById(w.id);
+                        if (!el) return;
+                        const mEase = easeOutQuart(progress(f, w.ms, w.me));
+                        const iEase = easeOutQuart(progress(f, w.is, w.ie));
+                        el.style.transform = `translate3d(0, ${lerp(115, 0, mEase).toFixed(2)}%, 0)`;
+                        el.style.filter = 'none';
+                        el.style.color = lerpRGB(36, 36, 38, 255, 255, 255, iEase);
+                    });
+
+                    const partEase = easeInOutCubic(progress(f, 90, 128));
+                    const slot = document.getElementById('v1-slot');
+                    if (slot) slot.style.width = `${lerp(28, 102, partEase).toFixed(2)}px`;
+
+                    const cap = document.getElementById('v1-capsule');
+                    const isl = document.getElementById('v1-island');
+                    if (cap && isl) {
+                        if (f < 92) {
+                            cap.style.opacity = '0';
+                        } else if (f <= 156) {
+                            const rev = easeOutQuart(progress(f, 94, 132));
+                            const wake = easeInOutCubic(progress(f, 138, 156));
+                            cap.style.opacity = easeOutQuart(progress(f, 94, 114)).toFixed(3);
+                            cap.style.backgroundColor = `rgba(255,255,255,${wake.toFixed(3)})`;
+                            cap.style.borderRadius = '12px';
+                            cap.style.transform = `translate3d(0, ${lerp(12, 0, rev).toFixed(2)}px, 0) scale(${lerp(0.84, 1.0, rev).toFixed(4)})`;
+                            isl.style.opacity = (1 - wake).toFixed(3);
+                        } else {
+                            // Capsule zooms to 120x, covering the entire full-bleed viewport in pure white
+                            const zoomProg = progress(f, 156, 176);
+                            const z = 1 + Math.pow(zoomProg, 2.8) * 125;
+                            cap.style.opacity = '1';
+                            cap.style.backgroundColor = '#FFFFFF';
+                            cap.style.borderRadius = `${lerp(12, 0, progress(f, 156, 170)).toFixed(1)}px`;
+                            cap.style.transform = `scale(${z.toFixed(2)})`;
+                            isl.style.opacity = '0';
+                        }
+                    }
+                } else {
+                    setFullBleedTheme('#FFFFFF');
+                    s1.style.opacity = '0'; s1.style.visibility = 'hidden';
+                    s2.style.opacity = '1'; s2.style.visibility = 'visible';
+
+                    const settleEase = easeOutQuart(progress(f, 176, 210));
+                    const s2Scale = lerp(0.95, 1.0, settleEase) + lerp(0, 0.015, progress(f, 210, 315));
+                    const s2Rig = document.getElementById('v1-s2-rig');
+                    if (s2Rig) s2Rig.style.transform = `scale(${s2Scale.toFixed(4)})`;
+
+                    const dimEase = easeOutQuart(progress(f, 255, 305));
+                    ['v1-s2-w1', 'v1-s2-w2', 'v1-s2-w3', 'v1-s2-w4', 'v1-s2-w5', 'v1-s2-w6'].forEach((id, i) => {
+                        const el = document.getElementById(id);
+                        if (!el) return;
+                        const eEase = easeOutQuart(progress(f, 178 + i * 4, 206 + i * 4));
+                        const sEase = easeOutQuart(progress(f, 186 + i * 8, 216 + i * 8));
+                        const cVal = Math.round(lerp(lerp(210, 0, sEase), 134, dimEase));
+                        el.style.transform = `translate3d(0, ${lerp(105, 0, eEase).toFixed(2)}%, 0)`;
+                        el.style.color = `rgb(${cVal}, ${cVal}, ${cVal})`;
+                    });
+
+                    const pillBase = document.getElementById('v1-pill-base');
+                    const pillInv = document.getElementById('v1-pill-inv');
+                    if (pillBase) {
+                        const pEnter = easeOutQuart(progress(f, 200, 228));
+                        pillBase.style.transform = `translate3d(0, ${lerp(105, 0, pEnter).toFixed(2)}%, 0)`;
+                    }
+                    if (pillInv) {
+                        const wipe = easeOutQuart(progress(f, 250, 302));
+                        pillInv.style.clipPath = `inset(0 ${lerp(100, 0, wipe).toFixed(2)}% 0 0 round 999px)`;
+                    }
+                }
+            }
+            // -----------------------------------------------------------------
+            // ENGINE 02 (SLIDE 3): KINETIC ODOMETER (000 -> 358) + RISING CURTAIN
+            // -----------------------------------------------------------------
+            else if (idx === 1) {
+                const s1 = document.getElementById('v2-s1');
+                const s2 = document.getElementById('v2-s2');
+                if (!s1 || !s2) return;
+
+                if (f < 155) {
+                    setFullBleedTheme('#000000');
+                    s1.style.opacity = '1'; s1.style.visibility = 'visible';
+                    s2.style.opacity = '0'; s2.style.visibility = 'hidden';
+
+                    const countP = easeOutQuart(progress(f, 10, 105));
+                    const val = Math.round(lerp(0, 358, countP));
+                    const counterEl = document.getElementById('v2-counter');
+                    if (counterEl) counterEl.textContent = String(val).padStart(3, '0');
+
+                    const subP = easeOutQuart(progress(f, 35, 75));
+                    const subEl = document.getElementById('v2-sub');
+                    if (subEl) subEl.style.transform = `translate3d(0, ${lerp(110, 0, subP).toFixed(2)}%, 0)`;
+
+                    // Rising white curtain from bottom (0% -> 100% of full-bleed scene)
+                    const curtainP = easeInOutQuint(progress(f, 125, 155));
+                    const curtainEl = document.getElementById('v2-curtain');
+                    if (curtainEl) curtainEl.style.height = `${(curtainP * 100).toFixed(2)}%`;
+                } else {
+                    setFullBleedTheme('#FFFFFF');
+                    s1.style.opacity = '0'; s1.style.visibility = 'hidden';
+                    s2.style.opacity = '1'; s2.style.visibility = 'visible';
+
+                    const r1 = easeOutQuart(progress(f, 158, 196));
+                    const r2 = easeOutQuart(progress(f, 182, 222));
+
+                    const row1 = document.getElementById('v2-row1');
+                    const row2 = document.getElementById('v2-row2');
+                    if (row1) {
+                        row1.style.transform = `translate3d(${lerp(-50, 0, r1).toFixed(2)}px, 0, 0)`;
+                        row1.style.opacity = r1.toFixed(3);
+                    }
+                    if (row2) {
+                        row2.style.transform = `translate3d(${lerp(-50, 0, r2).toFixed(2)}px, 0, 0)`;
+                        row2.style.opacity = r2.toFixed(3);
+                    }
+                }
+            }
+            // -----------------------------------------------------------------
+            // ENGINE 03 (SLIDE 8): 5-FEATURE VERTICAL DRUM + SQUIRCLE CONVERGENCE
+            // -----------------------------------------------------------------
+            else if (idx === 2) {
+                const s1 = document.getElementById('v3-s1');
+                const s2 = document.getElementById('v3-s2');
+                if (!s1 || !s2) return;
+
+                if (f < 336) {
+                    setFullBleedTheme('#000000');
+                    s1.style.opacity = '1'; s1.style.visibility = 'visible';
+                    s2.style.opacity = '0'; s2.style.visibility = 'hidden';
+
+                    const enterFrames = [8, 48, 88, 128, 168];
+                    let drumFocus = 0;
+                    for (let k = 1; k < 5; k++) {
+                        drumFocus += easeInOutCubic(progress(f, enterFrames[k], enterFrames[k] + 28));
+                    }
+                    const recenter = easeInOutCubic(progress(f, 204, 240));
+                    const centerIdx = lerp(drumFocus, 2.0, recenter);
+                    const collapseP = easeInOutQuint(progress(f, 252, 308));
+                    const exitFade = easeInQuart(progress(f, 282, 308));
+
+                    for (let i = 0; i < 5; i++) {
+                        const rowEl = document.getElementById(`v3-r${i}`);
+                        const w0 = document.getElementById(`v3-w${i}-0`);
+                        const w1 = document.getElementById(`v3-w${i}-1`);
+                        if (!rowEl) continue;
+                        const sf = enterFrames[i];
+                        if (f < sf) { rowEl.style.opacity = '0'; continue; }
+
+                        const r0 = easeOutQuart(progress(f, sf, sf + 28));
+                        const r1 = easeOutQuart(progress(f, sf + 6, sf + 34));
+                        w0.style.transform = `translate3d(0, ${lerp(115, 0, r0).toFixed(2)}%, 0)`;
+                        w1.style.transform = `translate3d(0, ${lerp(115, 0, r1).toFixed(2)}%, 0)`;
+
+                        const y = lerp((i - centerIdx) * 136, 0, collapseP);
+                        rowEl.style.opacity = (1 - exitFade).toFixed(3);
+                        rowEl.style.transform = `translate3d(0, ${y.toFixed(2)}px, 0)`;
+                    }
+
+                    const portal = document.getElementById('v3-portal');
+                    if (portal) {
+                        if (f < 280) {
+                            portal.style.opacity = '0';
+                            portal.style.transform = 'scale(0)';
+                        } else if (f <= 312) {
+                            const pop = springApple(progress(f, 280, 312));
+                            portal.style.opacity = easeOutQuart(progress(f, 280, 296)).toFixed(3);
+                            portal.style.borderRadius = '36px';
+                            portal.style.transform = `scale(${lerp(0.1, 1.0, pop).toFixed(4)})`;
+                        } else {
+                            const zoomP = progress(f, 312, 336);
+                            const z = 1 + Math.pow(zoomP, 2.8) * 65;
+                            portal.style.opacity = '1';
+                            portal.style.borderRadius = `${lerp(36, 0, progress(f, 312, 328)).toFixed(1)}px`;
+                            portal.style.transform = `scale(${z.toFixed(3)})`;
+                        }
+                    }
+                } else {
+                    setFullBleedTheme('#FFFFFF');
+                    s1.style.opacity = '0'; s1.style.visibility = 'hidden';
+                    s2.style.opacity = '1'; s2.style.visibility = 'visible';
+
+                    const settleEase = easeOutQuart(progress(f, 336, 368));
+                    const s2Scale = lerp(0.95, 1.0, settleEase) + lerp(0, 0.015, progress(f, 368, 425));
+                    const s2Rig = document.getElementById('v3-s2-rig');
+                    if (s2Rig) s2Rig.style.transform = `scale(${s2Scale.toFixed(4)})`;
+
+                    const dimEase = easeOutQuart(progress(f, 385, 420));
+                    ['v3-s2-w1', 'v3-s2-w2', 'v3-s2-w3', 'v3-s2-w4', 'v3-s2-w5', 'v3-s2-w6'].forEach((id, i) => {
+                        const el = document.getElementById(id);
+                        if (!el) return;
+                        const eEase = easeOutQuart(progress(f, 338 + i * 4, 364 + i * 4));
+                        const sEase = easeOutQuart(progress(f, 344 + i * 6, 372 + i * 6));
+                        const cVal = Math.round(lerp(lerp(210, 0, sEase), 134, dimEase));
+                        el.style.transform = `translate3d(0, ${lerp(105, 0, eEase).toFixed(2)}%, 0)`;
+                        el.style.color = `rgb(${cVal}, ${cVal}, ${cVal})`;
+                    });
+
+                    const pillBase = document.getElementById('v3-pill-base');
+                    const pillInv = document.getElementById('v3-pill-inv');
+                    if (pillBase) {
+                        const pEnter = easeOutQuart(progress(f, 354, 380));
+                        pillBase.style.transform = `translate3d(0, ${lerp(105, 0, pEnter).toFixed(2)}%, 0)`;
+                    }
+                    if (pillInv) {
+                        const wipe = easeOutQuart(progress(f, 380, 418));
+                        pillInv.style.clipPath = `inset(0 ${lerp(100, 0, wipe).toFixed(2)}% 0 0 round 999px)`;
+                    }
+                }
+            }
+            // -----------------------------------------------------------------
+            // ENGINE 04 (SLIDE 2): APPLE MINIMALIST SPLIT-SCREEN DUALITY
+            // -----------------------------------------------------------------
+            else if (idx === 3) {
+                const s1 = document.getElementById('v4-s1');
+                const s2 = document.getElementById('v4-s2');
+                if (!s1 || !s2) return;
+
+                if (f < 188) {
+                    setFullBleedTheme('linear-gradient(to right, #000000 50%, #FFFFFF 50%)');
+                    s1.style.opacity = '1'; s1.style.visibility = 'visible';
+                    s2.style.opacity = '0'; s2.style.visibility = 'hidden';
+
+                    const leftPanelEase = easeOutQuart(progress(f, 0, 48));
+                    const rightPanelEase = easeOutQuart(progress(f, 8, 56));
+                    const leftEl = document.getElementById('v4-left');
+                    const rightEl = document.getElementById('v4-right');
+                    const dividerEl = document.getElementById('v4-divider');
+
+                    if (leftEl) leftEl.style.transform = `translate3d(0, ${lerp(-100, 0, leftPanelEase).toFixed(2)}%, 0)`;
+                    if (rightEl) rightEl.style.transform = `translate3d(0, ${lerp(100, 0, rightPanelEase).toFixed(2)}%, 0)`;
+
+                    // Magnetic pull towards the central seam before portal expansion (142 - 174f)
+                    const mRig = document.getElementById('v4-m-rig');
+                    const cRig = document.getElementById('v4-c-rig');
+                    const pullX = lerp(0, 140, easeInQuart(progress(f, 142, 174)));
+                    const rigFadeOut = 1 - easeOutQuart(progress(f, 152, 172));
+
+                    if (mRig) {
+                        mRig.style.transform = `translate3d(${pullX.toFixed(2)}px, 0, 0) scale(${lerp(0.96, 1.0, leftPanelEase).toFixed(4)})`;
+                        mRig.style.opacity = rigFadeOut.toFixed(3);
+                    }
+                    if (cRig) {
+                        cRig.style.transform = `translate3d(${(-pullX).toFixed(2)}px, 0, 0) scale(${lerp(0.96, 1.0, rightPanelEase).toFixed(4)})`;
+                        cRig.style.opacity = rigFadeOut.toFixed(3);
+                    }
+
+                    // Left side: Matematika masked reveal & 0 -> 50 counter
+                    const mMetaEase = easeOutQuart(progress(f, 14, 46));
+                    const mMeta = document.getElementById('v4-m-meta');
+                    if (mMeta) {
+                        mMeta.style.opacity = mMetaEase.toFixed(3);
+                        mMeta.style.transform = `translate3d(0, ${lerp(14, 0, mMetaEase).toFixed(2)}px, 0)`;
+                    }
+                    const mTitleEase = easeOutQuart(progress(f, 20, 58));
+                    const mTitle = document.getElementById('v4-m-title');
+                    if (mTitle) mTitle.style.transform = `translate3d(0, ${lerp(115, 0, mTitleEase).toFixed(2)}%, 0)`;
+
+                    const mPtsEase = easeOutQuart(progress(f, 44, 80));
+                    const mPtsWrap = document.getElementById('v4-m-pts-wrap');
+                    if (mPtsWrap) mPtsWrap.style.transform = `translate3d(0, ${lerp(115, 0, mPtsEase).toFixed(2)}%, 0)`;
+                    const mNum = document.getElementById('v4-m-num');
+                    if (mNum) mNum.textContent = Math.round(lerp(0, 50, easeOutQuart(progress(f, 48, 108))));
+
+                    // Right side: Čeština masked reveal & 0 -> 50 counter
+                    const cMetaEase = easeOutQuart(progress(f, 24, 56));
+                    const cMeta = document.getElementById('v4-c-meta');
+                    if (cMeta) {
+                        cMeta.style.opacity = cMetaEase.toFixed(3);
+                        cMeta.style.transform = `translate3d(0, ${lerp(14, 0, cMetaEase).toFixed(2)}px, 0)`;
+                    }
+                    const cTitleEase = easeOutQuart(progress(f, 30, 68));
+                    const cTitle = document.getElementById('v4-c-title');
+                    if (cTitle) cTitle.style.transform = `translate3d(0, ${lerp(115, 0, cTitleEase).toFixed(2)}%, 0)`;
+
+                    const cPtsEase = easeOutQuart(progress(f, 54, 90));
+                    const cPtsWrap = document.getElementById('v4-c-pts-wrap');
+                    if (cPtsWrap) cPtsWrap.style.transform = `translate3d(0, ${lerp(115, 0, cPtsEase).toFixed(2)}%, 0)`;
+                    const cNum = document.getElementById('v4-c-num');
+                    if (cNum) cNum.textContent = Math.round(lerp(0, 50, easeOutQuart(progress(f, 58, 118))));
+
+                    // Central "+" Fusion Node & Portal Expansion (82 - 188f)
+                    const badge = document.getElementById('v4-plus-badge');
+                    const plusSym = document.getElementById('v4-plus-symbol');
+                    if (dividerEl) dividerEl.style.opacity = (easeOutQuart(progress(f, 20, 50)) * (1 - progress(f, 155, 175))).toFixed(3);
+
+                    if (badge) {
+                        if (f < 82) {
+                            badge.style.opacity = '0';
+                            badge.style.transform = 'translate(-50%, -50%) scale(0)';
+                        } else if (f <= 156) {
+                            const pop = springApple(progress(f, 82, 122));
+                            const rot = lerp(-90, 0, easeOutQuart(progress(f, 82, 120)));
+                            badge.style.opacity = easeOutQuart(progress(f, 82, 98)).toFixed(3);
+                            badge.style.transform = `translate(-50%, -50%) scale(${pop.toFixed(4)})`;
+                            if (plusSym) {
+                                plusSym.style.transform = `rotate(${rot.toFixed(1)}deg)`;
+                                plusSym.style.opacity = '1';
+                            }
+                        } else {
+                            const zoomP = progress(f, 156, 188);
+                            const zoomScale = 1 + Math.pow(zoomP, 2.8) * 85;
+                            badge.style.opacity = '1';
+                            badge.style.transform = `translate(-50%, -50%) scale(${zoomScale.toFixed(3)})`;
+                            if (plusSym) plusSym.style.opacity = (1 - easeOutQuart(progress(f, 156, 168))).toFixed(3);
+                        }
+                    }
+                } else {
+                    setFullBleedTheme('#FFFFFF');
+                    s1.style.opacity = '0'; s1.style.visibility = 'hidden';
+                    s2.style.opacity = '1'; s2.style.visibility = 'visible';
+
+                    const settleEase = easeOutQuart(progress(f, 188, 220));
+                    const s2Scale = lerp(0.95, 1.0, settleEase) + lerp(0, 0.015, progress(f, 220, 315));
+                    const s2Rig = document.getElementById('v4-s2-rig');
+                    if (s2Rig) s2Rig.style.transform = `scale(${s2Scale.toFixed(4)})`;
+
+                    const dimEase = easeOutQuart(progress(f, 260, 308));
+                    const s2Words = [
+                        { id: 'v4-s2-w1', e: 190, s: [194, 220] },
+                        { id: 'v4-s2-w2', e: 194, s: [200, 228] },
+                        { id: 'v4-s2-w3', e: 198, s: [208, 236] },
+                        { id: 'v4-s2-w4', e: 204, s: [216, 244] },
+                        { id: 'v4-s2-w5', e: 208, s: [224, 252] },
+                        { id: 'v4-s2-w6', e: 218, s: [242, 270] },
+                        { id: 'v4-s2-w7', e: 222, s: [248, 276] }
+                    ];
+
+                    s2Words.forEach(w => {
+                        const el = document.getElementById(w.id);
+                        if (!el) return;
+                        const enterEase = easeOutQuart(progress(f, w.e, w.e + 26));
+                        const scrubEase = easeOutQuart(progress(f, w.s[0], w.s[1]));
+                        const baseVal = lerp(210, 0, scrubEase);
+                        const cVal = Math.round(lerp(baseVal, 134, dimEase));
+                        el.style.transform = `translate3d(0, ${lerp(105, 0, enterEase).toFixed(2)}%, 0)`;
+                        el.style.color = `rgb(${cVal}, ${cVal}, ${cVal})`;
+                    });
+
+                    const pillBase = document.getElementById('v4-pill-base');
+                    const pillInv = document.getElementById('v4-pill-inv');
+                    if (pillBase) {
+                        const pillEnter = easeOutQuart(progress(f, 212, 238));
+                        pillBase.style.transform = `translate3d(0, ${lerp(105, 0, pillEnter).toFixed(2)}%, 0)`;
+                    }
+                    if (pillInv) {
+                        const wipeEase = easeOutQuart(progress(f, 256, 308));
+                        pillInv.style.clipPath = `inset(0 ${lerp(100, 0, wipeEase).toFixed(2)}% 0 0 round 999px)`;
+                    }
+                }
+            }
+            // -----------------------------------------------------------------
+            // ENGINE 05 (SLIDE 5): RADIAL SVG CHRONO DIAL + IRIS EXPANSION WIPE
+            // -----------------------------------------------------------------
+            else if (idx === 4) {
+                const s1 = document.getElementById('v5-s1');
+                const s2 = document.getElementById('v5-s2');
+                if (!s1 || !s2) return;
+
+                if (f < 162) {
+                    setFullBleedTheme('#000000');
+                    s1.style.opacity = '1'; s1.style.visibility = 'visible';
+                    s2.style.opacity = '0'; s2.style.visibility = 'hidden';
+
+                    const ringP = easeInOutCubic(progress(f, 10, 125));
+                    const ringEl = document.getElementById('v5-ring');
+                    if (ringEl) ringEl.style.strokeDashoffset = (540.35 * (1 - ringP)).toFixed(2);
+                    const mins = Math.round(lerp(0, 130, ringP));
+                    const timeEl = document.getElementById('v5-time');
+                    if (timeEl) timeEl.textContent = `${String(mins).padStart(2, '0')}:00`;
+
+                    // White iris expands from center to cover 100% of full-bleed viewport
+                    const irisP = Math.pow(progress(f, 132, 162), 2.8);
+                    const irisEl = document.getElementById('v5-iris');
+                    if (irisEl) irisEl.style.transform = `scale(${(irisP * 45).toFixed(2)})`;
+                } else {
+                    setFullBleedTheme('#FFFFFF');
+                    s1.style.opacity = '0'; s1.style.visibility = 'hidden';
+                    s2.style.opacity = '1'; s2.style.visibility = 'visible';
+
+                    const l1 = easeOutQuart(progress(f, 164, 198));
+                    const l2 = easeOutQuart(progress(f, 180, 214));
+                    const l3 = springPop(progress(f, 200, 245));
+
+                    const el1 = document.getElementById('v5-s2-l1');
+                    const el2 = document.getElementById('v5-s2-l2');
+                    const el3 = document.getElementById('v5-s2-l3');
+                    if (el1) {
+                        el1.style.transform = `translate3d(0, ${lerp(40, 0, l1).toFixed(2)}px, 0)`;
+                        el1.style.opacity = l1.toFixed(3);
+                    }
+                    if (el2) {
+                        el2.style.transform = `translate3d(0, ${lerp(40, 0, l2).toFixed(2)}px, 0)`;
+                        el2.style.opacity = l2.toFixed(3);
+                    }
+                    if (el3) {
+                        el3.style.transform = `scale(${lerp(0.8, 1.0, l3).toFixed(4)})`;
+                        el3.style.opacity = easeOutQuart(progress(f, 200, 218)).toFixed(3);
+                    }
+                }
+            }
+            // -----------------------------------------------------------------
+            // ENGINE 06 (SLIDE 4): 4x4 BENTO MATRIX (16 OKRUHŮ) + WHITE WIPE
+            // -----------------------------------------------------------------
+            else if (idx === 5) {
+                const s1 = document.getElementById('v6-s1');
+                const s2 = document.getElementById('v6-s2');
+                if (!s1 || !s2) return;
+
+                if (f < 168) {
+                    setFullBleedTheme('#000000');
+                    s1.style.opacity = '1'; s1.style.visibility = 'visible';
+                    s2.style.opacity = '0'; s2.style.visibility = 'hidden';
+
+                    for (let i = 0; i < 16; i++) {
+                        const cell = document.getElementById(`v6-cell-${i}`);
+                        if (!cell) continue;
+                        const start = 4 + i * 4.5;
+                        const p = easeApple(progress(f, start, start + 24));
+                        const fade = easeApple(progress(f, start, start + 14));
+
+                        cell.style.opacity = fade.toFixed(3);
+                        cell.style.transform = `translate3d(0, ${lerp(18, 0, p).toFixed(2)}px, 0)`;
+
+                        const flashP = easeInOutCubic(progress(f, 100 + i * 2, 120 + i * 2));
+                        if (flashP > 0.05 && flashP < 0.95) {
+                            cell.style.borderColor = 'rgba(255,255,255,0.45)';
+                        } else {
+                            cell.style.borderColor = 'rgba(255,255,255,0.1)';
+                        }
+                    }
+
+                    const zoomP = Math.pow(progress(f, 138, 168), 3);
+                    const gridEl = document.getElementById('v6-grid');
+                    if (gridEl) gridEl.style.transform = `scale(${(1 + zoomP * 5).toFixed(3)})`;
+                    const curtainEl = document.getElementById('v6-curtain');
+                    if (curtainEl) curtainEl.style.opacity = easeInOutCubic(progress(f, 142, 166)).toFixed(3);
+                } else {
+                    setFullBleedTheme('#FFFFFF');
+                    s1.style.opacity = '0'; s1.style.visibility = 'hidden';
+                    s2.style.opacity = '1'; s2.style.visibility = 'visible';
+
+                    const p1 = springPop(progress(f, 170, 212));
+                    const p1Fade = easeOutQuart(progress(f, 170, 190));
+                    const p2 = easeOutQuart(progress(f, 190, 230));
+
+                    const bigEl = document.getElementById('v6-big');
+                    const subEl = document.getElementById('v6-sub');
+                    if (bigEl) {
+                        bigEl.style.opacity = p1Fade.toFixed(3);
+                        bigEl.style.transform = `scale(${lerp(0.82, 1.0, p1).toFixed(4)})`;
+                    }
+                    if (subEl) {
+                        subEl.style.transform = `translate3d(0, ${lerp(35, 0, p2).toFixed(2)}px, 0)`;
+                        subEl.style.opacity = p2.toFixed(3);
+                    }
+                }
+            }
+            // -----------------------------------------------------------------
+            // ENGINE 07 (SLIDE 6): 3D PERSPECTIVE FLASHCARD + CARD ZOOM WIPE
+            // -----------------------------------------------------------------
+            else if (idx === 6) {
+                const s1 = document.getElementById('v7-s1');
+                const s2 = document.getElementById('v7-s2');
+                if (!s1 || !s2) return;
+
+                if (f < 164) {
+                    setFullBleedTheme('#000000');
+                    s1.style.opacity = '1'; s1.style.visibility = 'visible';
+                    s2.style.opacity = '0'; s2.style.visibility = 'hidden';
+
+                    const enterP = springPop(progress(f, 5, 48));
+                    const flipP = easeInOutCubic(progress(f, 65, 118));
+                    const rotY = lerp(0, 180, flipP);
+                    const zoomP = Math.pow(progress(f, 136, 164), 3);
+                    const sc = lerp(0.82, 1.0, enterP) + zoomP * 14;
+
+                    const cardEl = document.getElementById('v7-card');
+                    if (cardEl) cardEl.style.transform = `scale(${sc.toFixed(3)}) rotateY(${rotY.toFixed(2)}deg)`;
+                } else {
+                    setFullBleedTheme('#FFFFFF');
+                    s1.style.opacity = '0'; s1.style.visibility = 'hidden';
+                    s2.style.opacity = '1'; s2.style.visibility = 'visible';
+
+                    const p1 = easeOutQuart(progress(f, 166, 202));
+                    const p2 = easeOutQuart(progress(f, 184, 222));
+
+                    const titleEl = document.getElementById('v7-title');
+                    const descEl = document.getElementById('v7-desc');
+                    if (titleEl) {
+                        titleEl.style.transform = `translate3d(0, ${lerp(40, 0, p1).toFixed(2)}px, 0)`;
+                        titleEl.style.opacity = p1.toFixed(3);
+                    }
+                    if (descEl) {
+                        descEl.style.transform = `translate3d(0, ${lerp(40, 0, p2).toFixed(2)}px, 0)`;
+                        descEl.style.opacity = p2.toFixed(3);
+                    }
+                }
+            }
+            // -----------------------------------------------------------------
+            // ENGINE 08 (SLIDE 1): SEQUENTIAL LASER STRIKE + LASER SHUTTER WIPE
+            // -----------------------------------------------------------------
+            else if (idx === 7) {
+                const s1 = document.getElementById('v8-s1');
+                const s2 = document.getElementById('v8-s2');
+                if (!s1 || !s2) return;
+
+                if (f < 164) {
+                    setFullBleedTheme('#000000');
+                    s1.style.opacity = '1'; s1.style.visibility = 'visible';
+                    s2.style.opacity = '0'; s2.style.visibility = 'hidden';
+
+                    // Items entrance
+                    ['v8-item1', 'v8-item2', 'v8-item3'].forEach((id, itemIdx) => {
+                        const el = document.getElementById(id);
+                        if (!el) return;
+                        const p = easeOutQuart(progress(f, 6 + itemIdx * 12, 32 + itemIdx * 12));
+                        el.style.opacity = p.toFixed(3);
+                        el.style.transform = `translate3d(0, ${lerp(28, 0, p).toFixed(2)}px, 0)`;
+                    });
+
+                    // Sequential red strike-throughs
+                    const strikes = [
+                        { id: 'v8-strike1', item: 'v8-item1', start: 48, end: 65 },
+                        { id: 'v8-strike2', item: 'v8-item2', start: 68, end: 85 },
+                        { id: 'v8-strike3', item: 'v8-item3', start: 88, end: 105 }
+                    ];
+
+                    strikes.forEach(s => {
+                        const line = document.getElementById(s.id);
+                        const item = document.getElementById(s.item);
+                        if (!line || !item) return;
+
+                        const strikeP = easeOutQuart(progress(f, s.start, s.end));
+                        line.style.transform = `scaleX(${strikeP.toFixed(4)})`;
+
+                        if (f >= s.start + 5) {
+                            const dimP = easeOutQuart(progress(f, s.start + 5, s.end + 8));
+                            item.style.color = lerpRGB(255, 255, 255, 75, 75, 80, dimP);
+                        }
+                    });
+
+                    // White laser shutter opens vertically to cover 100% of full-bleed viewport
+                    const laser = document.getElementById('v8-laser');
+                    if (laser) {
+                        const sx = easeOutQuart(progress(f, 114, 134));
+                        const openP = easeInOutQuint(progress(f, 134, 164));
+                        laser.style.transform = `translateY(-50%) scaleX(${sx.toFixed(3)})`;
+                        laser.style.height = `${lerp(4, 2800, openP).toFixed(1)}px`;
+                    }
+                } else {
+                    setFullBleedTheme('#FFFFFF');
+                    s1.style.opacity = '0'; s1.style.visibility = 'hidden';
+                    s2.style.opacity = '1'; s2.style.visibility = 'visible';
+
+                    const p1 = easeOutQuart(progress(f, 166, 202));
+                    const p2 = springPop(progress(f, 186, 232));
+
+                    const clean1 = document.getElementById('v8-clean1');
+                    const clean2 = document.getElementById('v8-clean2');
+                    if (clean1) {
+                        clean1.style.transform = `translate3d(0, ${lerp(35, 0, p1).toFixed(2)}px, 0)`;
+                        clean1.style.opacity = p1.toFixed(3);
+                    }
+                    if (clean2) {
+                        clean2.style.transform = `scale(${lerp(0.8, 1.0, p2).toFixed(4)})`;
+                        clean2.style.opacity = easeOutQuart(progress(f, 186, 204)).toFixed(3);
+                    }
+                }
+            }
+            // -----------------------------------------------------------------
+            // ENGINE 09 (SLIDE 7): RISING LIQUID PROGRESS FLOOD (8% -> 100%)
+            // -----------------------------------------------------------------
+            else if (idx === 8) {
+                const floodP = easeInOutQuint(progress(f, 25, 205));
+                if (floodP >= 0.995) {
+                    setFullBleedTheme('#FFFFFF');
+                } else {
+                    setFullBleedTheme('#000000');
+                }
+
+                const pct = (floodP * 100).toFixed(2);
+                const invPct = (100 - floodP * 100).toFixed(2);
+
+                const fillEl = document.getElementById('v9-fill');
+                if (fillEl) fillEl.style.height = `${pct}%`;
+
+                const layerW = document.getElementById('v9-layer-white');
+                const layerB = document.getElementById('v9-layer-black');
+                if (layerW) layerW.style.clipPath = `inset(0 0 ${pct}% 0)`;
+                if (layerB) layerB.style.clipPath = `inset(${invPct}% 0 0 0)`;
+
+                const countVal = Math.round(lerp(8, 100, floodP));
+                const pctW = document.getElementById('v9-pct-w');
+                const pctB = document.getElementById('v9-pct-b');
+                if (pctW) pctW.textContent = `${countVal}%`;
+                if (pctB) pctB.textContent = `${countVal}%`;
+
+                const sc = lerp(0.95, 1.02, floodP).toFixed(4);
+                const cw = document.getElementById('v9-center-w');
+                const cb = document.getElementById('v9-center-b');
+                if (cw) cw.style.transform = `scale(${sc})`;
+                if (cb) cb.style.transform = `scale(${sc})`;
+            }
+            // -----------------------------------------------------------------
+            // ENGINE 10 (SLIDE 9): STROBE RAPID-CUT MANIFESTO
+            // -----------------------------------------------------------------
+            else if (idx === 9) {
+                const container = document.getElementById('v10-s1');
+                const wordEl = document.getElementById('v10-word');
+                if (!container || !wordEl) return;
+
+                const beats = [
+                    { end: 38,  bg: '#000000', fg: '#FFFFFF', text: '9. TŘÍDA.' },
+                    { end: 76,  bg: '#FFFFFF', fg: '#000000', text: 'CERMAT.' },
+                    { end: 114, bg: '#000000', fg: '#FFFFFF', text: '26 TESTŮ.' },
+                    { end: 152, bg: '#FFFFFF', fg: '#000000', text: '358 OTÁZEK.' },
+                    { end: 195, bg: '#000000', fg: '#FFFFFF', text: 'BEZ STRESU.' },
+                    { end: 999, bg: '#FFFFFF', fg: '#000000', text: 'PŘIJAT.' }
+                ];
+
+                const beatIdx = beats.findIndex(b => f < b.end);
+                const activeBeat = beatIdx !== -1 ? beats[beatIdx] : beats[beats.length - 1];
+                const prevEnd = beatIdx > 0 ? beats[beatIdx - 1].end : 0;
+
+                setFullBleedTheme(activeBeat.bg);
+                container.style.backgroundColor = activeBeat.bg;
+                wordEl.style.color = activeBeat.fg;
+                wordEl.textContent = activeBeat.text;
+                wordEl.style.opacity = '1';
+
+                const beatProg = progress(f, prevEnd, prevEnd + 14);
+                const punchScale = lerp(1.04, 1.0, easeApple(beatProg));
+                wordEl.style.transform = `scale(${punchScale.toFixed(4)})`;
+            }
+        }
+
+        // =====================================================================
+        // SLIDE 11: 100% CRISP OFFICIAL APPLE LOGO FINALE (ZERO BLUR, STOPS & HOLDS)
+        // =====================================================================
+        function renderOfficialLogoFinale(f) {
+            const s3Start = 0;
+            const holdDrift = lerp(1.0, 1.02, easeApple(progress(f, s3Start + 80, 130)));
+            document.getElementById('s3-rig').style.transform = `scale(${holdDrift.toFixed(4)})`;
+
+            const iconWrap = document.getElementById('s3-icon-wrap');
+            const svgD = document.getElementById('s3-svg-d');
+            const svgDot = document.getElementById('s3-svg-dot');
+
+            const iconSpring = springApple(progress(f, s3Start, s3Start + 42));
+            const iconFade = easeApple(progress(f, s3Start, s3Start + 16));
+            iconWrap.style.opacity = iconFade.toFixed(3);
+            iconWrap.style.transform = `scale(${lerp(0.65, 1.0, iconSpring).toFixed(4)})`;
+            iconWrap.style.filter = 'none';
+
+            const dSpring = springApple(progress(f, s3Start + 6, s3Start + 40));
+            svgD.style.opacity = easeApple(progress(f, s3Start + 6, s3Start + 22)).toFixed(3);
+            svgD.style.transform = `translate3d(0, ${lerp(8, 0, dSpring).toFixed(2)}px, 0) scale(${lerp(0.78, 1.0, dSpring).toFixed(4)})`;
+
+            if (f < s3Start + 22) {
+                svgDot.style.opacity = '0';
+                svgDot.style.transform = 'scale(0)';
+            } else {
+                svgDot.style.opacity = easeApple(progress(f, s3Start + 22, s3Start + 32)).toFixed(3);
+                svgDot.style.transform = `scale(${springDotPop(progress(f, s3Start + 22, s3Start + 56)).toFixed(4)})`;
+            }
+
+            const textSlot = document.getElementById('s3-text-slot');
+            const dotAppEl = document.getElementById('s3-dot-app');
+
+            if (f < s3Start + 38) {
+                textSlot.style.width = '0px';
+                textSlot.style.opacity = '0';
+            } else {
+                textSlot.style.width = `${lerp(0, targetTextSlotWidth, easeApple(progress(f, s3Start + 38, s3Start + 84))).toFixed(1)}px`;
+                textSlot.style.opacity = easeApple(progress(f, s3Start + 40, s3Start + 58)).toFixed(3);
+
+                wordmarkChars.forEach((chSpan, itemIdx) => {
+                    const charStart = s3Start + 40 + itemIdx * 2.0;
+                    const charEase = easeApple(progress(f, charStart, charStart + 32));
+                    chSpan.style.color = lerpRGB(140, 140, 145, 29, 29, 31, charEase);
+                    chSpan.style.transform = `translate3d(0, ${lerp(16, 0, charEase).toFixed(2)}%, 0)`;
+                    chSpan.style.filter = 'none';
+                });
+
+                const appEase = easeApple(progress(f, s3Start + 58, s3Start + 88));
+                dotAppEl.style.opacity = appEase.toFixed(3);
+                dotAppEl.style.transform = `translate3d(${lerp(20, 0, appEase).toFixed(2)}px, 0, 0)`;
+                dotAppEl.style.filter = 'none';
+            }
+
+            const tagEl = document.getElementById('s3-tagline');
+            if (f < s3Start + 80) {
+                tagEl.style.opacity = '0';
+                tagEl.style.transform = 'translate3d(0, 105%, 0)';
+            } else {
+                const tagEase = easeApple(progress(f, s3Start + 80, s3Start + 120));
+                tagEl.style.opacity = tagEase.toFixed(3);
+                tagEl.style.transform = `translate3d(0, ${lerp(105, 0, tagEase).toFixed(2)}%, 0)`;
+                tagEl.style.filter = 'none';
+            }
+        }
+
+        let slideTransitionTimer = null;
+
+        function applySlideInitialTheme(def) {
+            if (!def) return;
+            if (def.engineIdx === 10) {
+                setFullBleedTheme('#FFFFFF');
+            } else if (def.engineIdx === 3) {
+                setFullBleedTheme('linear-gradient(to right, #000000 50%, #FFFFFF 50%)');
+            } else {
+                setFullBleedTheme('#000000');
+            }
+        }
+
+        function setSlide(idx, broadcast = true) {
+            if (idx < 0 || idx >= SLIDES.length) return;
+
+            const prevIdx = currentSlide;
+            const isNewSlide = idx !== prevIdx;
+
+            if (broadcast) {
+                broadcastMessage({
+                    type: 'SLIDE_CHANGE',
+                    slide: idx,
+                    timestamp: Date.now()
+                });
+            }
+
+            // Pause tick() before updating currentSlide so tick() NEVER renders the new slide's engine on the old slide's DOM
+            isTransitioningSlide = true;
+            currentSlide = idx;
+            updateRemoteUI();
+
+            const canvas = document.getElementById('slide-canvas');
+
+            // Cancel any pending transition timer cleanly
+            if (slideTransitionTimer) {
+                clearTimeout(slideTransitionTimer);
+                slideTransitionTimer = null;
+            }
+
+            // If not a new slide, or if canvas isn't present, or in remote mode, instant reset
+            if (!isNewSlide || !canvas || isRemoteMode) {
+                currentFrame = 0;
+                lastTimestamp = 0;
+                buildSlideDOM(currentSlide);
+                updateLayout();
+                const def = SLIDES[currentSlide];
+                if (def) {
+                    applySlideInitialTheme(def);
+                    renderKineticEngineFrame(def.engineIdx, 0);
+                }
+                if (canvas) {
+                    canvas.style.transition = '';
+                    canvas.style.transform = 'translate3d(0, 0, 0)';
+                    canvas.style.opacity = '1';
+                    canvas.style.filter = 'none';
+                }
+                isTransitioningSlide = false;
+                return;
+            }
+
+            const exitMs = 130;
+            canvas.style.transition = `opacity ${exitMs}ms cubic-bezier(0.4, 0, 1, 1)`;
+            canvas.style.opacity = '0';
+
+            slideTransitionTimer = setTimeout(() => {
+                currentFrame = 0;
+                lastTimestamp = 0;
+                buildSlideDOM(currentSlide);
+                updateLayout();
+                const def = SLIDES[currentSlide];
+                if (def) {
+                    applySlideInitialTheme(def);
+                    renderKineticEngineFrame(def.engineIdx, 0);
+                }
+
+                // Make canvas immediately visible at frame 0 so the slide's own kinetic entrance animation plays with zero missing frames
+                canvas.style.transition = 'none';
+                canvas.style.opacity = '1';
+                void canvas.offsetWidth;
+                canvas.style.transition = '';
+
+                isTransitioningSlide = false;
+                slideTransitionTimer = null;
+            }, exitMs);
+        }
+
+        function nextSlide() {
+            if (currentSlide < SLIDES.length - 1) {
+                setSlide(currentSlide + 1);
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                setSlide(currentSlide - 1);
+            }
+        }
+
+        function restartCurrentSlide() {
+            currentFrame = 0;
+            lastTimestamp = 0;
+            buildSlideDOM(currentSlide);
+            updateLayout();
+            const def = SLIDES[currentSlide];
+            if (def) {
+                applySlideInitialTheme(def);
+                renderKineticEngineFrame(def.engineIdx, 0);
+            }
+        }
+
+        function setBlackout(state, broadcast = true) {
+            isBlackout = state;
+            const curtain = document.getElementById('blackout-curtain');
+            const remoteBtn = document.getElementById('btn-remote-blackout');
+            if (isBlackout) {
+                curtain.style.opacity = '1';
+                curtain.style.pointerEvents = 'auto';
+                if (remoteBtn) remoteBtn.classList.add('bg-white', 'text-black');
+            } else {
+                curtain.style.opacity = '0';
+                curtain.style.pointerEvents = 'none';
+                if (remoteBtn) remoteBtn.classList.remove('bg-white', 'text-black');
+            }
+
+            if (broadcast) {
+                broadcastMessage({
+                    type: 'BLACKOUT',
+                    state: isBlackout,
+                    timestamp: Date.now()
+                });
+            }
+        }
+
+        function toggleBlackout() {
+            setBlackout(!isBlackout);
+        }
+
+        // =====================================================================
+        // REMOTE CONTROLLER VIEW
+        // =====================================================================
+        function buildRemoteSlideList() {
+            const listEl = document.getElementById('remote-slide-list');
+            if (!listEl) return;
+            listEl.innerHTML = '';
+
+            const totalCountEl = document.getElementById('remote-total-count');
+            if (totalCountEl) totalCountEl.textContent = `${String(SLIDES.length).padStart(2, '0')} CELKEM`;
+
+            SLIDES.forEach((s, idx) => {
+                const btn = document.createElement('button');
+                btn.id = `remote-card-${idx}`;
+                btn.className = `w-full p-3 rounded-xl border text-left flex items-center justify-between transition-all ${
+                    idx === currentSlide 
+                        ? 'bg-white text-black border-white shadow-lg' 
+                        : 'bg-[#141418] text-white/90 border-white/10 active:bg-white/10'
+                }`;
+                btn.onclick = () => jumpToSlide(idx);
+                btn.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <span class="font-mono-tech text-xs font-bold ${idx === currentSlide ? 'text-black' : 'text-[#86868B]'}">
+                            ${String(idx + 1).padStart(2, '0')}
+                        </span>
+                        <div>
+                            <div class="text-xs font-bold leading-tight">${s.title}</div>
+                            <div class="text-[10px] ${idx === currentSlide ? 'text-black/70' : 'text-[#86868B]'}">${s.tag}</div>
+                        </div>
+                    </div>
+                    <span class="text-xs font-mono-tech ${idx === currentSlide ? 'text-black font-bold' : 'text-white/30'}">→</span>
+                `;
+                listEl.appendChild(btn);
+            });
+        }
+
+        function updateRemoteUI() {
+            const s = SLIDES[currentSlide];
+            const numEl = document.getElementById('remote-slide-num');
+            if (numEl) numEl.textContent = `${String(currentSlide + 1).padStart(2, '0')} / ${String(SLIDES.length).padStart(2, '0')}`;
+            const tagEl = document.getElementById('remote-card-tag');
+            if (tagEl) tagEl.textContent = s.tag;
+            const titleEl = document.getElementById('remote-card-title');
+            if (titleEl) titleEl.textContent = s.title;
+            const notesEl = document.getElementById('remote-speaker-notes');
+            if (notesEl) notesEl.textContent = s.notes;
+
+            SLIDES.forEach((_, idx) => {
+                const card = document.getElementById(`remote-card-${idx}`);
+                if (!card) return;
+                if (idx === currentSlide) {
+                    card.className = 'w-full p-3 rounded-xl border text-left flex items-center justify-between transition-all bg-white text-black border-white shadow-lg';
+                    card.querySelector('.font-mono-tech').className = 'font-mono-tech text-xs font-bold text-black';
+                } else {
+                    card.className = 'w-full p-3 rounded-xl border text-left flex items-center justify-between transition-all bg-[#141418] text-white/90 border-white/10 active:bg-white/10';
+                    card.querySelector('.font-mono-tech').className = 'font-mono-tech text-xs font-bold text-[#86868B]';
+                }
+            });
+        }
+
+        function remoteNext() {
+            triggerHaptic();
+            nextSlide();
+        }
+
+        function remotePrev() {
+            triggerHaptic();
+            prevSlide();
+        }
+
+        function jumpToSlide(idx) {
+            triggerHaptic();
+            setSlide(idx);
+        }
+
+        function toggleBlackoutRemote() {
+            triggerHaptic();
+            toggleBlackout();
+        }
+
+        function triggerHaptic() {
+            if ('vibrate' in navigator) {
+                try { navigator.vibrate(24); } catch (e) {}
+            }
+        }
+
+        function togglePresentationTimer() {
+            isPresenterTimerRunning = !isPresenterTimerRunning;
+            const timerBtn = document.getElementById('btn-remote-timer');
+            if (isPresenterTimerRunning) {
+                timerBtn.classList.add('border-emerald-500/50', 'bg-emerald-500/10');
+                if (!timerInterval) {
+                    timerInterval = setInterval(() => {
+                        presenterTimerSeconds++;
+                        const m = String(Math.floor(presenterTimerSeconds / 60)).padStart(2, '0');
+                        const s = String(presenterTimerSeconds % 60).padStart(2, '0');
+                        const valEl = document.getElementById('remote-timer-val');
+                        if (valEl) valEl.textContent = `${m}:${s}`;
+                    }, 1000);
+                }
+            } else {
+                timerBtn.classList.remove('border-emerald-500/50', 'bg-emerald-500/10');
+            }
+        }
+
+        // =====================================================================
+        // VIEW DETECTION: LANDSCAPE = MONITOR | PORTRAIT = REMOTE
+        // =====================================================================
+        let isRemoteMode = false;
+
+        function applyViewMode() {
+            const mode = urlParams.get('mode');
+            if (mode === 'remote' || mode === 'controller') {
+                isRemoteMode = true;
+            } else if (mode === 'screen' || mode === 'presentation') {
+                isRemoteMode = false;
+            } else {
+                isRemoteMode = window.innerWidth <= window.innerHeight || window.innerWidth < 768;
+            }
+
+            const screenEl = document.getElementById('presentation-screen');
+            const remoteEl = document.getElementById('remote-controller');
+
+            if (isRemoteMode) {
+                document.body.classList.remove('monitor-mode');
+                screenEl.classList.add('hidden');
+                remoteEl.classList.remove('hidden');
+                buildRemoteSlideList();
+                updateRemoteUI();
+            } else {
+                document.body.classList.add('monitor-mode');
+                screenEl.classList.remove('hidden');
+                remoteEl.classList.add('hidden');
+                updateLayout();
+            }
+        }
+
+        function toggleForceView() {
+            isRemoteMode = !isRemoteMode;
+            urlParams.set('mode', isRemoteMode ? 'remote' : 'screen');
+            applyViewMode();
+        }
+
+        // =====================================================================
+        // REAL-TIME SYNC (MQTT & BROADCASTCHANNEL)
+        // =====================================================================
+        function initRealtimeSync() {
+            if (localChannel) {
+                localChannel.onmessage = (e) => handleSyncMessage(e.data);
+            }
+
+            window.addEventListener('storage', (e) => {
+                if (e.key === `didak_sync_${ROOM_ID}` && e.newValue) {
+                    try { handleSyncMessage(JSON.parse(e.newValue)); } catch (err) {}
+                }
+            });
+
+            if (window.mqtt) {
+                try {
+                    const clientId = 'didak_' + Math.random().toString(16).substr(2, 8);
+                    mqttClient = mqtt.connect(MQTT_BROKER, {
+                        clientId: clientId,
+                        clean: true,
+                        connectTimeout: 4000,
+                        reconnectPeriod: 2000
+                    });
+
+                    mqttClient.on('connect', () => {
+                        mqttClient.subscribe(MQTT_TOPIC);
+                        updateSyncStatusUI(true);
+                    });
+
+                    mqttClient.on('message', (topic, message) => {
+                        if (topic === MQTT_TOPIC) {
+                            try { handleSyncMessage(JSON.parse(message.toString())); } catch (e) {}
+                        }
+                    });
+
+                    mqttClient.on('close', () => updateSyncStatusUI(false));
+                } catch (e) {}
+            }
+        }
+
+        function broadcastMessage(payload) {
+            const jsonStr = JSON.stringify(payload);
+            if (localChannel) {
+                try { localChannel.postMessage(payload); } catch (e) {}
+            }
+            try { localStorage.setItem(`didak_sync_${ROOM_ID}`, jsonStr); } catch (e) {}
+            if (mqttClient && mqttClient.connected) {
+                try { mqttClient.publish(MQTT_TOPIC, jsonStr); } catch (e) {}
+            }
+        }
+
+        function handleSyncMessage(msg) {
+            if (!msg || typeof msg !== 'object') return;
+            if (msg.type === 'SLIDE_CHANGE') {
+                if (msg.slide !== currentSlide) {
+                    setSlide(msg.slide, false);
+                }
+            } else if (msg.type === 'BLACKOUT') {
+                setBlackout(msg.state, false);
+            }
+        }
+
+        function updateSyncStatusUI(connected) {
+            const remoteDot = document.getElementById('remote-status-dot');
+            const remoteText = document.getElementById('remote-status-text');
+            if (remoteDot && remoteText) {
+                if (connected) {
+                    remoteDot.className = 'w-1.5 h-1.5 rounded-full bg-emerald-400';
+                    remoteText.textContent = `Monitor připojen (${ROOM_ID})`;
+                } else {
+                    remoteDot.className = 'w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse';
+                    remoteText.textContent = 'Připojování...';
+                }
+            }
+        }
+
+        // =====================================================================
+        // KEYBOARD HOTKEYS (FOR MONITOR)
+        // =====================================================================
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' || e.code === 'ArrowRight' || e.code === 'PageDown') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.code === 'ArrowLeft' || e.code === 'PageUp') {
+                e.preventDefault();
+                prevSlide();
+            } else if (e.code === 'KeyR') {
+                e.preventDefault();
+                restartCurrentSlide();
+            } else if (e.code === 'KeyB') {
+                e.preventDefault();
+                toggleBlackout();
+            } else if (e.code === 'KeyF') {
+                e.preventDefault();
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen().catch(() => {});
+                } else {
+                    if (document.exitFullscreen) document.exitFullscreen();
+                }
+            } else if (e.key >= '1' && e.key <= '9') {
+                const target = parseInt(e.key, 10) - 1;
+                if (target < SLIDES.length) {
+                    setSlide(target);
+                }
+            } else if (e.key === '0') {
+                setSlide(SLIDES.length - 1);
+            }
+        });
+
+        // Swipe support
+        let touchStartX = 0;
+        let touchEndX = 0;
+        window.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
+        window.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            const diff = touchEndX - touchStartX;
+            if (Math.abs(diff) > 50) {
+                if (diff < 0) nextSlide(); else prevSlide();
+            }
+        }, { passive: true });
+
+        // =====================================================================
+        // INITIALIZATION
+        // =====================================================================
+        window.addEventListener('resize', () => {
+            applyViewMode();
+            updateLayout();
+        });
+
+        window.addEventListener('orientationchange', () => {
+            setTimeout(() => { applyViewMode(); updateLayout(); }, 150);
+        });
+
+        window.addEventListener('DOMContentLoaded', () => {
+            applyViewMode();
+            buildSlideDOM(0);
+            initRealtimeSync();
+
+            if (document.fonts && document.fonts.ready) {
+                document.fonts.ready.then(() => {
+                    updateLayout();
+                });
+            }
+
+            requestAnimationFrame(tick);
+        });
+    </script>
+</body>
+</html>
