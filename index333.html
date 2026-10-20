@@ -578,27 +578,27 @@
                 stage.innerHTML = `
                     <div id="v4-s1" class="full-bleed-scene relative flex flex-col items-center justify-center bg-black overflow-hidden select-none">
                         <!-- Ambient Studio Background Glow (Centered with Mockups) -->
-                        <div id="v4-ambient-glow" class="absolute w-[1100px] h-[800px] rounded-full pointer-events-none will-change-transform" style="background: radial-gradient(ellipse at center, rgba(59,130,246,0.18) 0%, rgba(147,51,234,0.08) 45%, rgba(0,0,0,0) 70%); opacity: 0; filter: blur(75px); transform: translate3d(15px, -32px, 0);"></div>
+                        <div id="v4-ambient-glow" class="absolute w-[1200px] h-[800px] rounded-full pointer-events-none will-change-transform" style="background: radial-gradient(ellipse at center, rgba(59,130,246,0.18) 0%, rgba(147,51,234,0.08) 45%, rgba(0,0,0,0) 70%); opacity: 0; filter: blur(80px); transform: translate3d(16px, 80px, 0);"></div>
 
                         <!-- Top Header Typography -->
-                        <div id="v4-header" class="absolute top-[32px] left-0 right-0 flex flex-col items-center text-center z-30 pointer-events-none px-6">
-                            <span id="v4-tag" class="font-mono-tech text-xs tracking-[0.35em] text-[#86868B] uppercase mb-2.5 will-change-transform" style="opacity:0; transform: translate3d(0, 14px, 0);">APLIKACE V PRAXI</span>
+                        <div id="v4-header" class="absolute top-[44px] left-0 right-0 flex flex-col items-center text-center z-30 pointer-events-none px-6">
+                            <span id="v4-tag" class="font-mono-tech text-xs tracking-[0.35em] text-[#86868B] uppercase mb-2 will-change-transform" style="opacity:0; transform: translate3d(0, 14px, 0);">APLIKACE V PRAXI</span>
                             <div class="line-mask overflow-hidden">
-                                <h2 id="v4-title" class="apple-display text-6xl font-bold tracking-tight text-white will-change-transform" style="transform: translate3d(0, 115%, 0);">Vše v jedné kapse.</h2>
+                                <h2 id="v4-title" class="apple-display text-5xl font-bold tracking-tight text-white will-change-transform" style="transform: translate3d(0, 115%, 0);">Vše v jedné kapse.</h2>
                             </div>
-                            <div class="line-mask overflow-hidden mt-2">
-                                <p id="v4-sub" class="apple-tagline text-2xl text-[#86868B] will-change-transform" style="transform: translate3d(0, 115%, 0);">Přehledné, moderní prostředí pro okamžité procvičování bez papírů.</p>
+                            <div class="line-mask overflow-hidden mt-1.5">
+                                <p id="v4-sub" class="apple-tagline text-xl text-[#86868B] will-change-transform" style="transform: translate3d(0, 115%, 0);">Přehledné, moderní prostředí pro okamžité procvičování bez papírů.</p>
                             </div>
                         </div>
 
-                        <!-- 3D Mockup Container (1280x960, Mathematical Zero-Error Dead Center X & Y) -->
-                        <div id="v4-stage-wrap" class="relative w-[1280px] h-[960px] pointer-events-none flex items-center justify-center" style="transform: translate3d(15px, -32px, 0);">
+                        <!-- 3D Mockup Container (1360x1020, Perfectly Centered on iPad & Monitors) -->
+                        <div id="v4-stage-wrap" class="relative w-[1360px] h-[1020px] pointer-events-none flex items-center justify-center" style="transform: translate3d(16px, 80px, 0);">
                             <!-- Left Phone (001.png) -->
-                            <img id="v4-img-left" src="001.png" alt="Mockup Left" class="absolute inset-0 w-full h-full object-contain pointer-events-none will-change-transform z-10" style="opacity: 0;">
+                            <img id="v4-img-left" src="001.png" alt="Mockup Left" class="absolute inset-0 w-full h-full object-contain pointer-events-none will-change-transform z-10">
                             <!-- Center Hero Phone (002.png) -->
-                            <img id="v4-img-center" src="002.png" alt="Mockup Center" class="absolute inset-0 w-full h-full object-contain pointer-events-none will-change-transform z-20" style="opacity: 0;">
+                            <img id="v4-img-center" src="002.png" alt="Mockup Center" class="absolute inset-0 w-full h-full object-contain pointer-events-none will-change-transform z-20">
                             <!-- Right Phone (003.png) -->
-                            <img id="v4-img-right" src="003.png" alt="Mockup Right" class="absolute inset-0 w-full h-full object-contain pointer-events-none will-change-transform z-10" style="opacity: 0;">
+                            <img id="v4-img-right" src="003.png" alt="Mockup Right" class="absolute inset-0 w-full h-full object-contain pointer-events-none will-change-transform z-10">
                         </div>
                     </div>
                 `;
@@ -1143,16 +1143,16 @@
                 s1.style.opacity = '1';
                 s1.style.visibility = 'visible';
 
-                // --- Header Typography & Ambient Glow (0 - 50f) ---
+                // --- Header Typography & Ambient Glow (0 - 45f) ---
                 const tagEl = document.getElementById('v4-tag');
                 const titleEl = document.getElementById('v4-title');
                 const subEl = document.getElementById('v4-sub');
                 const glowEl = document.getElementById('v4-ambient-glow');
 
-                const tagEase = easeOutQuart(progress(f, 4, 30));
-                const titleEase = easeOutQuart(progress(f, 8, 38));
-                const subEase = easeOutQuart(progress(f, 14, 44));
-                const glowEase = easeOutQuart(progress(f, 4, 48));
+                const tagEase = easeOutQuart(progress(f, 0, 26));
+                const titleEase = easeOutQuart(progress(f, 4, 34));
+                const subEase = easeOutQuart(progress(f, 10, 40));
+                const glowEase = easeOutQuart(progress(f, 0, 45));
 
                 if (tagEl) {
                     tagEl.style.opacity = tagEase.toFixed(3);
@@ -1166,43 +1166,59 @@
                 }
                 if (glowEl) {
                     glowEl.style.opacity = (glowEase * 0.9).toFixed(3);
-                    glowEl.style.transform = `translate3d(15px, -32px, 0) scale(${lerp(0.85, 1.2, glowEase).toFixed(4)})`;
+                    glowEl.style.transform = `translate3d(16px, 80px, 0) scale(${lerp(0.85, 1.2, glowEase).toFixed(4)})`;
                 }
 
-                // --- All 3 Mockup Phones Fly In Together (0 - 54f) ---
+                // --- All 3 Mockup Phones Fly In Together (0 - 45f) ---
                 const imgCenter = document.getElementById('v4-img-center');
                 const imgLeft = document.getElementById('v4-img-left');
                 const imgRight = document.getElementById('v4-img-right');
 
-                const enterP = springApple(progress(f, 4, 52));
-                const fadeP = easeApple(progress(f, 4, 24));
+                if (f >= 45) {
+                    // Holding state: 100% visible, zero transform offset, pixel-perfect dock
+                    if (imgCenter) {
+                        imgCenter.style.opacity = '1';
+                        imgCenter.style.transform = 'translate3d(0, 0, 0) scale(1)';
+                    }
+                    if (imgLeft) {
+                        imgLeft.style.opacity = '1';
+                        imgLeft.style.transform = 'translate3d(0, 0, 0) scale(1) rotate(0deg)';
+                    }
+                    if (imgRight) {
+                        imgRight.style.opacity = '1';
+                        imgRight.style.transform = 'translate3d(0, 0, 0) scale(1) rotate(0deg)';
+                    }
+                } else {
+                    const enterP = springApple(progress(f, 0, 44));
+                    const fadeP = easeApple(progress(f, 0, 20));
 
-                // Center Phone (002.png): Emerges upward with spring scale
-                if (imgCenter) {
-                    const yCenter = lerp(48, 0, enterP);
-                    const scCenter = lerp(0.86, 1.0, enterP);
-                    imgCenter.style.opacity = fadeP.toFixed(3);
-                    imgCenter.style.transform = `translate3d(0, ${yCenter.toFixed(2)}px, 0) scale(${scCenter.toFixed(4)})`;
-                }
+                    // Center Phone (002.png): Emerges upward with spring scale
+                    if (imgCenter) {
+                        const yCenter = lerp(45, 0, enterP);
+                        const scCenter = lerp(0.86, 1.0, enterP);
+                        imgCenter.style.opacity = fadeP.toFixed(3);
+                        imgCenter.style.transform = `translate3d(0, ${yCenter.toFixed(2)}px, 0) scale(${scCenter.toFixed(4)})`;
+                    }
 
-                // Left Phone (001.png): Sweeps in from left with natural 3D tilt
-                if (imgLeft) {
-                    const xLeft = lerp(-220, 0, enterP);
-                    const yLeft = lerp(36, 0, enterP);
-                    const scLeft = lerp(0.88, 1.0, enterP);
-                    const rotLeft = lerp(-4.2, 0, enterP);
-                    imgLeft.style.opacity = fadeP.toFixed(3);
-                    imgLeft.style.transform = `translate3d(${xLeft.toFixed(2)}px, ${yLeft.toFixed(2)}px, 0) scale(${scLeft.toFixed(4)}) rotate(${rotLeft.toFixed(2)}deg)`;
-                }
+                    // Left Phone (001.png): Sweeps in from left with natural 3D tilt
+                    if (imgLeft) {
+                        const xLeft = lerp(-200, 0, enterP);
+                        const yLeft = lerp(32, 0, enterP);
+                        const scLeft = lerp(0.88, 1.0, enterP);
+                        const rotLeft = lerp(-4, 0, enterP);
+                        imgLeft.style.opacity = fadeP.toFixed(3);
+                        imgLeft.style.transform = `translate3d(${xLeft.toFixed(2)}px, ${yLeft.toFixed(2)}px, 0) scale(${scLeft.toFixed(4)}) rotate(${rotLeft.toFixed(2)}deg)`;
+                    }
 
-                // Right Phone (003.png): Sweeps in from right with natural 3D tilt
-                if (imgRight) {
-                    const xRight = lerp(220, 0, enterP);
-                    const yRight = lerp(36, 0, enterP);
-                    const scRight = lerp(0.88, 1.0, enterP);
-                    const rotRight = lerp(4.2, 0, enterP);
-                    imgRight.style.opacity = fadeP.toFixed(3);
-                    imgRight.style.transform = `translate3d(${xRight.toFixed(2)}px, ${yRight.toFixed(2)}px, 0) scale(${scRight.toFixed(4)}) rotate(${rotRight.toFixed(2)}deg)`;
+                    // Right Phone (003.png): Sweeps in from right with natural 3D tilt
+                    if (imgRight) {
+                        const xRight = lerp(200, 0, enterP);
+                        const yRight = lerp(32, 0, enterP);
+                        const scRight = lerp(0.88, 1.0, enterP);
+                        const rotRight = lerp(4, 0, enterP);
+                        imgRight.style.opacity = fadeP.toFixed(3);
+                        imgRight.style.transform = `translate3d(${xRight.toFixed(2)}px, ${yRight.toFixed(2)}px, 0) scale(${scRight.toFixed(4)}) rotate(${rotRight.toFixed(2)}deg)`;
+                    }
                 }
             }
             // -----------------------------------------------------------------
@@ -2163,8 +2179,13 @@
         });
 
         window.addEventListener('DOMContentLoaded', () => {
+            const initSlideParam = parseInt(urlParams.get('slide') || '0', 10);
+            if (!isNaN(initSlideParam) && initSlideParam >= 0 && initSlideParam < SLIDES.length) {
+                currentSlide = initSlideParam;
+            }
             applyViewMode();
-            buildSlideDOM(0);
+            buildSlideDOM(currentSlide);
+            if (SLIDES[currentSlide]) applySlideInitialTheme(SLIDES[currentSlide]);
             initRealtimeSync();
 
             if (document.fonts && document.fonts.ready) {
