@@ -241,7 +241,7 @@
                 </button>
                 <button onclick="remoteNext()" class="h-28 rounded-2xl bg-white text-black active:bg-white/90 flex flex-col items-center justify-center gap-2 active:scale-[0.98] transition-all shadow-2xl font-bold">
                     <svg class="w-8 h-8 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
-                    <span class="font-mono-tech text-xs tracking-wider">DALŠÍ SLIDE</span>
+                    <span id="remote-btn-next-label" class="font-mono-tech text-xs tracking-wider">DALŠÍ KROK →</span>
                 </button>
             </div>
 
@@ -258,8 +258,8 @@
                     <span>🏁</span>
                     <span>Logo finále</span>
                 </button>
-                <button onclick="restartCurrentSlide()" class="p-2.5 rounded-xl bg-[#141418] border border-white/10 flex flex-col items-center justify-center gap-1 text-[10px] font-mono-tech text-white/80 active:scale-95">
-                    <span>🔄</span>
+                <button onclick="remoteReplay()" id="btn-remote-replay" class="p-2.5 rounded-xl bg-[#141418] border border-white/10 flex flex-col items-center justify-center gap-1 text-[10px] font-mono-tech text-white/80 active:scale-95 transition-all">
+                    <span id="remote-replay-icon">🔄</span>
                     <span>Replay</span>
                 </button>
             </div>
@@ -282,74 +282,84 @@
         const FPS = 60;
 
         // SLIDES DEFINITIONS: Maps to the bespoke masterpiece engines + Logo Finale
-        // holdFrame is set exactly at the fully resolved peak of Act 2!
+        // steps: hold checkpoints after each key text beat for professional keynote presenting!
         const SLIDES = [
             {
                 engineIdx: 0,
-                holdFrame: 315, // Act 1 + Act 2 inverted pill wipe fully resolved & holds
+                steps: [130, 315],
+                holdFrame: 315, // Act 1 ("Celé přijímačky v kapse.") -> Act 2 ("Příprava za cenu jedné hodiny")
                 tag: "01 Vize & Kapsa",
                 title: "Celé přijímačky v kapse.",
                 notes: "Představit vizi: Studenti dnes žijí v mobilech. Didakťáky jim přináší celou přípravu na přijímačky do kapsy za cenu jedné hodiny doučování."
             },
             {
                 engineIdx: 7, // Konec PDF
-                holdFrame: 270, // Sequential laser strike on 3 pain points -> "Zapomeň na papíry" holds
+                steps: [108, 270],
+                holdFrame: 270, // 3 přeškrtnuté bolesti -> "Zapomeň na papíry. Všechno se opraví samo."
                 tag: "02 Problém",
                 title: "Konec papírům a stohům PDF.",
                 notes: "Pojmenovat staré bolesti: Tisknutí stohů zmatených PDF, ztracené klíče správných řešení a 500 Kč za jedinou hodinu doučování."
             },
             {
                 engineIdx: 3, // Matika × Čeština
-                holdFrame: 315, // 50 pts split screen merges into + portal -> 100 bodů ve hře pill wipe holds
+                steps: [145, 315],
+                holdFrame: 315, // Matematika 50b + Čeština 50b -> 100 bodů ve hře bez stresu
                 tag: "03 Dva předměty",
                 title: "Matematika + Čeština = 100 bodů.",
                 notes: "Zdůraznit: 100 bodů ve hře. Žádné střídání aplikací, oba přijímací předměty v jednotném, krásném a přehledném systému."
             },
             {
                 engineIdx: 1, // 358 Úloh
-                holdFrame: 260, // Odometer 000->358 -> 26 ostrých testů holds
+                steps: [120, 260],
+                holdFrame: 260, // 358 řešených otázek -> 26 ostrých testů & postupy krok za krokem
                 tag: "04 Obsah v číslech",
                 title: "358 úloh & 26 ostrých testů.",
                 notes: "Masivní databáze: 358 otázek, 26 reálných Cermat testů s podrobnými postupy krok za krokem a okamžitým vyhodnocením."
             },
             {
                 engineIdx: 5, // 16 Okruhů Bento
-                holdFrame: 270, // 16 bento tiles -> massive 16 okruhů holds
+                steps: [125, 270],
+                holdFrame: 270, // 16 bento tiles -> 16 tematických okruhů
                 tag: "05 Okruhy látky",
                 title: "16 tematických okruhů.",
                 notes: "Bento matice: Od zlomků a lineárních rovnic po větný rozbor a chytáky. Žák procvičuje cíleně to, kde má slabiny."
             },
             {
                 engineIdx: 4, // Časomíra
-                holdFrame: 270, // Radial ring to 130m -> 70m/60m reálný tlak holds
+                steps: [125, 270],
+                holdFrame: 270, // Časomíra 130 min -> 70m matika / 60m čeština pod reálným tlakem
                 tag: "06 Psychologie",
                 title: "Ostrá časomíra pod tlakem.",
                 notes: "Reálný stres: 70 minut matematika, 60 minut čeština. Žáci se naučí hospodařit s časem, aby je u ostrého testu nic nepřekvapilo."
             },
             {
                 engineIdx: 6, // 3D Flashcards
-                holdFrame: 260, // 3D card flip -> Chytré flashcards holds
+                steps: [55, 125, 260],
+                holdFrame: 260, // Otázka na kartičce -> Otočení na odpověď -> Chytré flashcards
                 tag: "07 Paměť",
                 title: "Chytré 3D Flashcards.",
                 notes: "Efektivita: Vzorce, mnemotechnické pomůcky a pravidla pravopisu (mě vs mně) pomocí spaced repetition do dlouhodobé paměti."
             },
             {
                 engineIdx: 8, // Růst pokroku
-                holdFrame: 240, // Liquid progress flood 8% -> 100% full hold
+                steps: [240],
+                holdFrame: 240, // Liquid progress 8% -> 100%
                 tag: "08 Analytika",
                 title: "Měření pokroku (8% → 100%).",
                 notes: "Výsledky: Růst s každým vyřešeným testem, odhalení slabých míst a týdenní reporty pro studenta i rodiče."
             },
             {
                 engineIdx: 2, // 5 Funkcí Buben & Spojení
-                holdFrame: 425, // 5 features stack vertically -> merge into center squircle -> "5 funkcí v jedné aplikaci" holds
+                steps: [180, 425],
+                holdFrame: 425, // 5 funkcí buben -> 5 funkcí v jedné aplikaci
                 tag: "09 Ekosystém",
                 title: "5 funkcí v jedné aplikaci.",
                 notes: "Shrnutí výhod: Diagnostické testy, přijímačky nanečisto, 16 okruhů, chytré flashcards a týdenní reporty spojené do jediné aplikace."
             },
             {
                 engineIdx: 10, // LOGO FINALE
-                holdFrame: 130, // Official Apple squircle + bouncing dot + .app + tagline
+                steps: [84, 130],
+                holdFrame: 130, // Logo squircle + Didakťáky.app -> Slogan "Cermat nanečisto. V tvém mobilu."
                 tag: "10 Logo finále",
                 title: "Didakťáky.app — Závěr.",
                 notes: "Ikonické finále: Oficiální představení brandu Didakťáky.app. Cermat nanečisto v tvém mobilu. Výzva k vyzkoušení a prostor pro dotazy."
@@ -357,6 +367,7 @@
         ];
 
         let currentSlide = 0;
+        let currentStep = 0;
         let currentFrame = 0;
         let isBlackout = false;
         let isPresenterTimerRunning = false;
@@ -835,22 +846,32 @@
             const deltaMs = timestamp - lastTimestamp;
             lastTimestamp = timestamp;
 
+            // When blackout is active: completely freeze animation at exact current frame!
+            if (isBlackout) {
+                requestAnimationFrame(tick);
+                return;
+            }
+
             if (isTransitioningSlide) {
                 requestAnimationFrame(tick);
                 return;
             }
 
             const slideDef = SLIDES[currentSlide];
-            const holdFrame = slideDef ? slideDef.holdFrame : 315;
-
-            // Advance frame ONLY until it reaches the hold frame, then STOPS & HOLDS!
-            if (currentFrame < holdFrame) {
-                currentFrame = Math.min(holdFrame, currentFrame + (deltaMs / 1000) * FPS);
+            if (!slideDef) {
+                requestAnimationFrame(tick);
+                return;
             }
 
-            if (slideDef) {
-                renderKineticEngineFrame(slideDef.engineIdx, currentFrame);
+            const steps = slideDef.steps || [slideDef.holdFrame];
+            const targetHoldFrame = (steps[currentStep] !== undefined) ? steps[currentStep] : slideDef.holdFrame;
+
+            // Advance frame smoothly until it reaches the step's target hold frame, then STOPS & HOLDS!
+            if (currentFrame < targetHoldFrame) {
+                currentFrame = Math.min(targetHoldFrame, currentFrame + (deltaMs / 1000) * FPS);
             }
+
+            renderKineticEngineFrame(slideDef.engineIdx, currentFrame);
             requestAnimationFrame(tick);
         }
 
@@ -1636,16 +1657,23 @@
             }
         }
 
-        function setSlide(idx, broadcast = true) {
+        function setSlide(idx, broadcast = true, startAtEnd = false) {
             if (idx < 0 || idx >= SLIDES.length) return;
 
             const prevIdx = currentSlide;
             const isNewSlide = idx !== prevIdx;
 
+            const def = SLIDES[idx];
+            const steps = def && def.steps ? def.steps : [def ? def.holdFrame : 315];
+            currentStep = startAtEnd ? steps.length - 1 : 0;
+            const initialFrame = startAtEnd ? steps[currentStep] : 0;
+
             if (broadcast) {
                 broadcastMessage({
                     type: 'SLIDE_CHANGE',
                     slide: idx,
+                    step: currentStep,
+                    frame: initialFrame,
                     timestamp: Date.now()
                 });
             }
@@ -1665,14 +1693,13 @@
 
             // If not a new slide, or if canvas isn't present, or in remote mode, instant reset
             if (!isNewSlide || !canvas || isRemoteMode) {
-                currentFrame = 0;
+                currentFrame = initialFrame;
                 lastTimestamp = 0;
                 buildSlideDOM(currentSlide);
                 updateLayout();
-                const def = SLIDES[currentSlide];
                 if (def) {
                     applySlideInitialTheme(def);
-                    renderKineticEngineFrame(def.engineIdx, 0);
+                    renderKineticEngineFrame(def.engineIdx, currentFrame);
                 }
                 if (canvas) {
                     canvas.style.transition = '';
@@ -1689,17 +1716,16 @@
             canvas.style.opacity = '0';
 
             slideTransitionTimer = setTimeout(() => {
-                currentFrame = 0;
+                currentFrame = initialFrame;
                 lastTimestamp = 0;
                 buildSlideDOM(currentSlide);
                 updateLayout();
-                const def = SLIDES[currentSlide];
                 if (def) {
                     applySlideInitialTheme(def);
-                    renderKineticEngineFrame(def.engineIdx, 0);
+                    renderKineticEngineFrame(def.engineIdx, currentFrame);
                 }
 
-                // Make canvas immediately visible at frame 0 so the slide's own kinetic entrance animation plays with zero missing frames
+                // Make canvas immediately visible so the slide's entrance plays with zero missing frames
                 canvas.style.transition = 'none';
                 canvas.style.opacity = '1';
                 void canvas.offsetWidth;
@@ -1710,19 +1736,73 @@
             }, exitMs);
         }
 
+        function nextAction() {
+            const def = SLIDES[currentSlide];
+            if (!def) return;
+            const steps = def.steps || [def.holdFrame];
+            // If current slide has another text/act checkpoint, advance to it!
+            if (currentStep < steps.length - 1) {
+                currentStep++;
+                lastTimestamp = 0;
+                updateRemoteUI();
+                broadcastMessage({
+                    type: 'STEP_CHANGE',
+                    slide: currentSlide,
+                    step: currentStep,
+                    timestamp: Date.now()
+                });
+            } else {
+                // At final step of current slide -> advance to next slide
+                nextSlide();
+            }
+        }
+
+        function prevAction() {
+            const def = SLIDES[currentSlide];
+            if (!def) return;
+            const steps = def.steps || [def.holdFrame];
+            // If past step 0 on this slide, go back one text checkpoint
+            if (currentStep > 0) {
+                currentStep--;
+                currentFrame = currentStep === 0 ? 0 : steps[currentStep - 1];
+                lastTimestamp = 0;
+                renderKineticEngineFrame(def.engineIdx, currentFrame);
+                updateRemoteUI();
+                broadcastMessage({
+                    type: 'STEP_CHANGE',
+                    slide: currentSlide,
+                    step: currentStep,
+                    frame: currentFrame,
+                    timestamp: Date.now()
+                });
+            } else {
+                // At step 0 of current slide -> go back to previous slide at its resolved end
+                prevSlide(true);
+            }
+        }
+
         function nextSlide() {
             if (currentSlide < SLIDES.length - 1) {
-                setSlide(currentSlide + 1);
+                setSlide(currentSlide + 1, true, false);
             }
         }
 
-        function prevSlide() {
+        function prevSlide(startAtEnd = false) {
             if (currentSlide > 0) {
-                setSlide(currentSlide - 1);
+                setSlide(currentSlide - 1, true, startAtEnd);
             }
         }
 
-        function restartCurrentSlide() {
+        function restartCurrentSlide(broadcast = true) {
+            isTransitioningSlide = false;
+            if (slideTransitionTimer) {
+                clearTimeout(slideTransitionTimer);
+                slideTransitionTimer = null;
+            }
+            if (isBlackout) {
+                setBlackout(false, false);
+            }
+            currentStep = 0;
             currentFrame = 0;
             lastTimestamp = 0;
             buildSlideDOM(currentSlide);
@@ -1731,6 +1811,23 @@
             if (def) {
                 applySlideInitialTheme(def);
                 renderKineticEngineFrame(def.engineIdx, 0);
+            }
+            const canvas = document.getElementById('slide-canvas');
+            if (canvas) {
+                canvas.style.transition = 'none';
+                canvas.style.opacity = '1';
+                canvas.style.transform = 'translate3d(0, 0, 0)';
+                void canvas.offsetWidth;
+                canvas.style.transition = '';
+            }
+            updateRemoteUI();
+
+            if (broadcast) {
+                broadcastMessage({
+                    type: 'REPLAY',
+                    slide: currentSlide,
+                    timestamp: Date.now()
+                });
             }
         }
 
@@ -1816,14 +1913,28 @@
 
         function updateRemoteUI() {
             const s = SLIDES[currentSlide];
+            if (!s) return;
+            const stepsCount = s.steps ? s.steps.length : 1;
+            const stepDisplay = stepsCount > 1 ? ` • Krok ${currentStep + 1}/${stepsCount}` : '';
+
             const numEl = document.getElementById('remote-slide-num');
-            if (numEl) numEl.textContent = `${String(currentSlide + 1).padStart(2, '0')} / ${String(SLIDES.length).padStart(2, '0')}`;
+            if (numEl) numEl.textContent = `${String(currentSlide + 1).padStart(2, '0')} / ${String(SLIDES.length).padStart(2, '0')}${stepDisplay}`;
             const tagEl = document.getElementById('remote-card-tag');
             if (tagEl) tagEl.textContent = s.tag;
             const titleEl = document.getElementById('remote-card-title');
             if (titleEl) titleEl.textContent = s.title;
             const notesEl = document.getElementById('remote-speaker-notes');
             if (notesEl) notesEl.textContent = s.notes;
+
+            const nextBtnLabel = document.getElementById('remote-btn-next-label');
+            if (nextBtnLabel) {
+                const isLastStep = !s.steps || currentStep >= s.steps.length - 1;
+                if (isLastStep) {
+                    nextBtnLabel.textContent = currentSlide < SLIDES.length - 1 ? 'DALŠÍ SLIDE →' : 'KONEC PREZENTACE';
+                } else {
+                    nextBtnLabel.textContent = `DALŠÍ TEXT (${currentStep + 1}/${stepsCount}) →`;
+                }
+            }
 
             SLIDES.forEach((_, idx) => {
                 const card = document.getElementById(`remote-card-${idx}`);
@@ -1840,22 +1951,37 @@
 
         function remoteNext() {
             triggerHaptic();
-            nextSlide();
+            nextAction();
         }
 
         function remotePrev() {
             triggerHaptic();
-            prevSlide();
+            prevAction();
         }
 
         function jumpToSlide(idx) {
             triggerHaptic();
-            setSlide(idx);
+            setSlide(idx, true, false);
         }
 
         function toggleBlackoutRemote() {
             triggerHaptic();
             toggleBlackout();
+        }
+
+        function remoteReplay() {
+            triggerHaptic();
+            const btn = document.getElementById('btn-remote-replay');
+            const icon = document.getElementById('remote-replay-icon');
+            if (btn) {
+                btn.classList.add('border-white/50', 'bg-white/15');
+                if (icon) icon.classList.add('rotate-180', 'transition-transform', 'duration-300');
+                setTimeout(() => {
+                    btn.classList.remove('border-white/50', 'bg-white/15');
+                    if (icon) icon.classList.remove('rotate-180');
+                }, 350);
+            }
+            restartCurrentSlide(true);
         }
 
         function triggerHaptic() {
@@ -1976,10 +2102,33 @@
             if (!msg || typeof msg !== 'object') return;
             if (msg.type === 'SLIDE_CHANGE') {
                 if (msg.slide !== currentSlide) {
-                    setSlide(msg.slide, false);
+                    setSlide(msg.slide, false, false);
+                    if (typeof msg.step === 'number') currentStep = msg.step;
+                    if (typeof msg.frame === 'number') currentFrame = msg.frame;
+                } else {
+                    restartCurrentSlide(false);
                 }
+            } else if (msg.type === 'STEP_CHANGE') {
+                if (msg.slide !== currentSlide) {
+                    currentSlide = msg.slide;
+                    buildSlideDOM(currentSlide);
+                    updateLayout();
+                }
+                currentStep = typeof msg.step === 'number' ? msg.step : 0;
+                if (typeof msg.frame === 'number') {
+                    currentFrame = msg.frame;
+                    const def = SLIDES[currentSlide];
+                    if (def) renderKineticEngineFrame(def.engineIdx, currentFrame);
+                }
+                lastTimestamp = 0;
+                updateRemoteUI();
             } else if (msg.type === 'BLACKOUT') {
                 setBlackout(msg.state, false);
+            } else if (msg.type === 'REPLAY' || msg.type === 'RESTART') {
+                if (typeof msg.slide === 'number' && msg.slide >= 0 && msg.slide < SLIDES.length) {
+                    currentSlide = msg.slide;
+                }
+                restartCurrentSlide(false);
             }
         }
 
@@ -2032,13 +2181,13 @@
         window.addEventListener('keydown', (e) => {
             if (e.code === 'Space' || e.code === 'ArrowRight' || e.code === 'PageDown') {
                 e.preventDefault();
-                nextSlide();
+                nextAction();
             } else if (e.code === 'ArrowLeft' || e.code === 'PageUp') {
                 e.preventDefault();
-                prevSlide();
+                prevAction();
             } else if (e.code === 'KeyR') {
                 e.preventDefault();
-                restartCurrentSlide();
+                restartCurrentSlide(true);
             } else if (e.code === 'KeyB') {
                 e.preventDefault();
                 toggleBlackout();
@@ -2048,10 +2197,10 @@
             } else if (e.key >= '1' && e.key <= '9') {
                 const target = parseInt(e.key, 10) - 1;
                 if (target < SLIDES.length) {
-                    setSlide(target);
+                    setSlide(target, true, false);
                 }
             } else if (e.key === '0') {
-                setSlide(SLIDES.length - 1);
+                setSlide(SLIDES.length - 1, true, false);
             }
         });
 
@@ -2075,17 +2224,17 @@
 
             // Swipe detection
             if (Math.abs(diffX) > 60 && Math.abs(diffX) > Math.abs(diffY) * 1.5) {
-                if (diffX < 0) nextSlide(); else prevSlide();
+                if (diffX < 0) nextAction(); else prevAction();
                 return;
             }
 
-            // Tap detection on presentation screen (Left 25% = prev, Right 75% = next)
+            // Tap detection on presentation screen (Left 25% = prevAction, Right 75% = nextAction)
             if (Math.abs(diffX) < 15 && Math.abs(diffY) < 15 && elapsed < 400 && !isRemoteMode) {
                 const clientX = e.changedTouches[0].clientX;
                 if (clientX < window.innerWidth * 0.25) {
-                    prevSlide();
+                    prevAction();
                 } else {
-                    nextSlide();
+                    nextAction();
                 }
             }
         }, { passive: true });
