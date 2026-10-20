@@ -638,15 +638,18 @@
                 ];
                 for (let i = 0; i < 16; i++) {
                     cellsHtml += `
-                        <div id="v6-cell-${i}" class="v6-cell rounded-2xl border border-white/10 bg-[#121215] p-4 flex flex-col justify-between will-change-transform shadow-md" style="opacity:0;">
-                            <span class="font-mono-tech text-xs text-[#86868B] font-semibold">${String(i + 1).padStart(2, '0')}</span>
-                            <span class="font-bold text-[16px] text-white tracking-tight leading-snug">${topics[i]}</span>
+                        <div id="v6-cell-${i}" class="v6-cell rounded-2xl border border-white/10 bg-[#121215] p-6 flex flex-col justify-between will-change-transform shadow-lg" style="opacity:0;">
+                            <div class="flex items-center justify-between">
+                                <span class="font-mono-tech text-sm text-[#86868B] font-bold">${String(i + 1).padStart(2, '0')}</span>
+                                <span class="font-mono-tech text-[11px] ${i < 8 ? 'text-blue-400/80' : 'text-purple-400/80'} uppercase tracking-wider font-semibold">${i < 8 ? 'Matematika' : 'Český jazyk'}</span>
+                            </div>
+                            <span class="font-bold text-[22px] text-white tracking-tight leading-snug">${topics[i]}</span>
                         </div>
                     `;
                 }
                 stage.innerHTML = `
-                    <div id="v6-s1" class="full-bleed-scene flex flex-col items-center justify-center bg-black text-white px-12">
-                        <div id="v6-grid" class="grid grid-cols-4 gap-4 w-full max-w-4xl h-[520px] will-change-transform">
+                    <div id="v6-s1" class="full-bleed-scene flex flex-col items-center justify-center bg-black text-white px-8">
+                        <div id="v6-grid" class="grid grid-cols-4 gap-5 w-full max-w-[1580px] h-[780px] will-change-transform">
                             ${cellsHtml}
                         </div>
                         <div id="v6-curtain" class="absolute inset-0 bg-white pointer-events-none will-change-transform" style="opacity:0;"></div>
@@ -659,10 +662,10 @@
                     </div>
                 `;
             } else if (idx === 6) {
-                // VIDEO 07: 3D Perspective Card Flip (Flashcards) + Card Zoom Wipe
+                // VIDEO 07: 3D Perspective Card Flip (Flashcards) + Swipe-Up Shutter Transition
                 stage.innerHTML = `
-                    <div id="v7-s1" class="full-bleed-scene flex items-center justify-center bg-black" style="perspective: 1800px;">
-                        <div id="v7-card" class="relative w-[780px] h-[450px] rounded-[36px] will-change-transform" style="transform-style: preserve-3d;">
+                    <div id="v7-s1" class="full-bleed-scene flex items-center justify-center bg-black overflow-hidden" style="perspective: 1800px;">
+                        <div id="v7-card" class="relative w-[820px] h-[480px] rounded-[36px] will-change-transform" style="transform-style: preserve-3d;">
                             <div id="v7-front" class="absolute inset-0 rounded-[36px] bg-[#141416] border-2 border-white/20 p-12 flex flex-col justify-between text-white shadow-2xl" style="backface-visibility: hidden;">
                                 <div class="flex justify-between items-center font-mono-tech text-xs text-[#86868B] uppercase tracking-widest">
                                     <span>FLASHCARD • ČESKÝ JAZYK</span>
@@ -674,12 +677,13 @@
                             <div id="v7-back" class="absolute inset-0 rounded-[36px] bg-white border-2 border-black/15 p-12 flex flex-col justify-between text-black shadow-2xl" style="backface-visibility: hidden; transform: rotateY(180deg);">
                                 <div class="flex justify-between items-center font-mono-tech text-xs text-[#86868B] uppercase tracking-widest">
                                     <span>ODPOVĚĎ • PRAVIDLO</span>
-                                    <span class="text-black font-bold">✓ ZAPAMATOVÁNO</span>
+                                    <span class="text-emerald-600 font-bold px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200">✓ ZAPAMATOVÁNO</span>
                                 </div>
                                 <div class="apple-display text-5xl text-left leading-snug">Předmět (4. pád) vs. Podmět (1. pád).</div>
                                 <div class="font-mono-tech text-xs text-black/60 text-left">Chytré opakování do dlouhodobé paměti</div>
                             </div>
                         </div>
+                        <div id="v7-curtain" class="absolute inset-0 bg-white pointer-events-none will-change-transform" style="transform: translate3d(0, 100%, 0);"></div>
                     </div>
                     <div id="v7-s2" class="full-bleed-scene flex items-center justify-center bg-white text-black" style="opacity:0; visibility:hidden;">
                         <div id="v7-s2-rig" class="flex flex-col items-center justify-center text-center will-change-transform px-8 max-w-[1760px] mx-auto">
@@ -1292,19 +1296,21 @@
                         const fade = easeApple(progress(f, start, start + 12));
 
                         cell.style.opacity = fade.toFixed(3);
-                        cell.style.transform = `translate3d(0, ${lerp(18, 0, p).toFixed(2)}px, 0)`;
+                        cell.style.transform = `translate3d(0, ${lerp(20, 0, p).toFixed(2)}px, 0)`;
 
                         const flashP = easeInOutCubic(progress(f, 74 + i * 2, 90 + i * 2));
                         if (flashP > 0.05 && flashP < 0.95) {
                             cell.style.borderColor = 'rgba(255,255,255,0.45)';
+                            cell.style.backgroundColor = '#1C1C22';
                         } else {
                             cell.style.borderColor = 'rgba(255,255,255,0.1)';
+                            cell.style.backgroundColor = '#121215';
                         }
                     }
 
                     const zoomP = Math.pow(progress(f, 140, 170), 3);
                     const gridEl = document.getElementById('v6-grid');
-                    if (gridEl) gridEl.style.transform = `scale(${(1 + zoomP * 5).toFixed(3)})`;
+                    if (gridEl) gridEl.style.transform = `scale(${(1 + zoomP * 2.8).toFixed(3)})`;
                     const curtainEl = document.getElementById('v6-curtain');
                     if (curtainEl) curtainEl.style.opacity = easeInOutCubic(progress(f, 144, 168)).toFixed(3);
                 } else {
@@ -1329,12 +1335,15 @@
                 }
             }
             // -----------------------------------------------------------------
-            // ENGINE 07 (SLIDE 6): 3D PERSPECTIVE FLASHCARD + CARD ZOOM WIPE
+            // ENGINE 07 (SLIDE 6): 3D PERSPECTIVE FLASHCARD + SWIPE-UP REVEAL
             // -----------------------------------------------------------------
             else if (idx === 6) {
                 const s1 = document.getElementById('v7-s1');
                 const s2 = document.getElementById('v7-s2');
                 if (!s1 || !s2) return;
+
+                const cardEl = document.getElementById('v7-card');
+                const curtainEl = document.getElementById('v7-curtain');
 
                 if (f < 164) {
                     setFullBleedTheme('#000000');
@@ -1344,12 +1353,32 @@
                     const enterP = springPop(progress(f, 5, 48));
                     const flipP = easeInOutCubic(progress(f, 65, 118));
                     const rotY = lerp(0, 180, flipP);
-                    const zoomP = Math.pow(progress(f, 136, 164), 3);
-                    const sc = lerp(0.82, 1.0, enterP) + zoomP * 14;
 
-                    const cardEl = document.getElementById('v7-card');
-                    if (cardEl) cardEl.style.transform = `scale(${sc.toFixed(3)}) rotateY(${rotY.toFixed(2)}deg)`;
+                    if (f < 128) {
+                        // Phase 1: Card entrance and clean 180° flip
+                        if (cardEl) {
+                            cardEl.style.transform = `scale(${lerp(0.82, 1.0, enterP).toFixed(4)}) rotateY(${rotY.toFixed(2)}deg)`;
+                            cardEl.style.opacity = '1';
+                        }
+                        if (curtainEl) curtainEl.style.transform = 'translate3d(0, 100%, 0)';
+                    } else {
+                        // Phase 2: Natural swipe-up dismissal ("✓ Zapamatováno") + Rising white curtain
+                        const swipeP = easeInOutCubic(progress(f, 128, 158));
+                        const cardY = lerp(0, -440, swipeP);
+                        const cardScale = lerp(1.0, 0.92, swipeP);
+                        const cardRotZ = lerp(0, -3.5, swipeP);
+                        const cardFade = 1 - easeInQuart(progress(f, 136, 158));
+
+                        if (cardEl) {
+                            cardEl.style.transform = `translate3d(0, ${cardY.toFixed(2)}px, 0) scale(${cardScale.toFixed(4)}) rotateY(180deg) rotateZ(${cardRotZ.toFixed(2)}deg)`;
+                            cardEl.style.opacity = cardFade.toFixed(3);
+                        }
+
+                        const curtainP = easeInOutQuint(progress(f, 134, 164));
+                        if (curtainEl) curtainEl.style.transform = `translate3d(0, ${lerp(100, 0, curtainP).toFixed(2)}%, 0)`;
+                    }
                 } else {
+                    // Phase 3: Act 2 typography on pristine white
                     setFullBleedTheme('#FFFFFF');
                     s1.style.opacity = '0'; s1.style.visibility = 'hidden';
                     s2.style.opacity = '1'; s2.style.visibility = 'visible';
