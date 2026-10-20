@@ -306,12 +306,12 @@
                 notes: "Pojmenovat staré bolesti: Tisknutí stohů zmatených PDF, ztracené klíče správných řešení a 500 Kč za jedinou hodinu doučování."
             },
             {
-                engineIdx: 3, // 3D Mockup Showcase (002 Hero Center -> 001 & 003 Wings Fly-in)
-                steps: [55, 140],
-                holdFrame: 140, // Mockup 2 v centru -> Přílet křídel 001 a 003 do plného 3D triptychu
+                engineIdx: 3, // 3D Mockup Showcase (001, 002, 003 Synchronized Fly-in)
+                steps: [100],
+                holdFrame: 100, // Všechny 3 mockupy přilétají naráz v synchronizované 3D kompozici
                 tag: "03 Showcase aplikace",
                 title: "Didakťáky v kapse. Vše v jednom.",
-                notes: "Představit reálnou aplikaci: Nejprve hlavní rozhraní (čistý, moderní design), následně kompletní ekosystém (přijímačky nanečisto, témata, statistiky)."
+                notes: "Představit reálnou aplikaci: Všechny 3 obrazovky přilétají naráz v synchronizované 3D kompozici. Ukázat čistý design, přehlednost a rychlost procvičování."
             },
             {
                 engineIdx: 1, // 358 Úloh
@@ -574,14 +574,14 @@
                     </div>
                 `;
             } else if (idx === 3) {
-                // VIDEO 04 -> SLIDE 03: 3D Mockup Ecosystem (002 Hero Center -> 001 & 003 Wings Fly-in)
+                // VIDEO 04 -> SLIDE 03: 3D Mockup Ecosystem (001, 002, 003 Synchronized Entrance)
                 stage.innerHTML = `
                     <div id="v4-s1" class="full-bleed-scene relative flex flex-col items-center justify-center bg-black overflow-hidden select-none">
-                        <!-- Ambient Studio Background Glow -->
-                        <div id="v4-ambient-glow" class="absolute w-[1000px] h-[1000px] rounded-full pointer-events-none will-change-transform" style="background: radial-gradient(circle, rgba(59,130,246,0.16) 0%, rgba(147,51,234,0.08) 40%, rgba(0,0,0,0) 70%); opacity: 0; filter: blur(70px); transform: translate3d(0, 40px, 0);"></div>
+                        <!-- Ambient Studio Background Glow (Centered with Mockups) -->
+                        <div id="v4-ambient-glow" class="absolute w-[1100px] h-[800px] rounded-full pointer-events-none will-change-transform" style="background: radial-gradient(ellipse at center, rgba(59,130,246,0.18) 0%, rgba(147,51,234,0.08) 45%, rgba(0,0,0,0) 70%); opacity: 0; filter: blur(75px); transform: translate3d(15px, -32px, 0);"></div>
 
                         <!-- Top Header Typography -->
-                        <div id="v4-header" class="absolute top-[40px] left-0 right-0 flex flex-col items-center text-center z-30 pointer-events-none px-6">
+                        <div id="v4-header" class="absolute top-[32px] left-0 right-0 flex flex-col items-center text-center z-30 pointer-events-none px-6">
                             <span id="v4-tag" class="font-mono-tech text-xs tracking-[0.35em] text-[#86868B] uppercase mb-2.5 will-change-transform" style="opacity:0; transform: translate3d(0, 14px, 0);">APLIKACE V PRAXI</span>
                             <div class="line-mask overflow-hidden">
                                 <h2 id="v4-title" class="apple-display text-6xl font-bold tracking-tight text-white will-change-transform" style="transform: translate3d(0, 115%, 0);">Vše v jedné kapse.</h2>
@@ -591,8 +591,8 @@
                             </div>
                         </div>
 
-                        <!-- 3D Mockup Container (1280x960 preserves exact 4:3 6000x4500 aspect ratio) -->
-                        <div id="v4-stage-wrap" class="relative w-[1280px] h-[960px] pointer-events-none flex items-center justify-center translate-y-[24px]">
+                        <!-- 3D Mockup Container (1280x960, Mathematical Zero-Error Dead Center X & Y) -->
+                        <div id="v4-stage-wrap" class="relative w-[1280px] h-[960px] pointer-events-none flex items-center justify-center" style="transform: translate3d(15px, -32px, 0);">
                             <!-- Left Phone (001.png) -->
                             <img id="v4-img-left" src="001.png" alt="Mockup Left" class="absolute inset-0 w-full h-full object-contain pointer-events-none will-change-transform z-10" style="opacity: 0;">
                             <!-- Center Hero Phone (002.png) -->
@@ -1134,7 +1134,7 @@
                 }
             }
             // -----------------------------------------------------------------
-            // ENGINE 04 (SLIDE 3): 3D MOCKUP SHOWCASE (HERO 002 -> WINGS 001 & 003)
+            // ENGINE 04 (SLIDE 3): 3D MOCKUP SHOWCASE (SYNCHRONIZED ENTRANCE)
             // -----------------------------------------------------------------
             else if (idx === 3) {
                 setFullBleedTheme('#000000');
@@ -1143,16 +1143,16 @@
                 s1.style.opacity = '1';
                 s1.style.visibility = 'visible';
 
-                // --- Header Typography & Ambient Glow (0 - 52f) ---
+                // --- Header Typography & Ambient Glow (0 - 50f) ---
                 const tagEl = document.getElementById('v4-tag');
                 const titleEl = document.getElementById('v4-title');
                 const subEl = document.getElementById('v4-sub');
                 const glowEl = document.getElementById('v4-ambient-glow');
 
                 const tagEase = easeOutQuart(progress(f, 4, 30));
-                const titleEase = easeOutQuart(progress(f, 10, 42));
-                const subEase = easeOutQuart(progress(f, 18, 48));
-                const glowEase = easeOutQuart(progress(f, 6, 50));
+                const titleEase = easeOutQuart(progress(f, 8, 38));
+                const subEase = easeOutQuart(progress(f, 14, 44));
+                const glowEase = easeOutQuart(progress(f, 4, 48));
 
                 if (tagEl) {
                     tagEl.style.opacity = tagEase.toFixed(3);
@@ -1165,58 +1165,44 @@
                     subEl.style.transform = `translate3d(0, ${lerp(115, 0, subEase).toFixed(2)}%, 0)`;
                 }
                 if (glowEl) {
-                    const extraGlow = easeOutQuart(progress(f, 55, 114));
-                    glowEl.style.opacity = lerp(glowEase * 0.7, 0.95, extraGlow).toFixed(3);
-                    glowEl.style.transform = `translate3d(0, 40px, 0) scale(${lerp(0.85, 1.25, extraGlow).toFixed(4)})`;
+                    glowEl.style.opacity = (glowEase * 0.9).toFixed(3);
+                    glowEl.style.transform = `translate3d(15px, -32px, 0) scale(${lerp(0.85, 1.2, glowEase).toFixed(4)})`;
                 }
 
-                // --- Phase 1: Center Hero Phone (002.png) Emergence (0 - 55f) ---
+                // --- All 3 Mockup Phones Fly In Together (0 - 54f) ---
                 const imgCenter = document.getElementById('v4-img-center');
-                if (imgCenter) {
-                    const enterP = springApple(progress(f, 4, 48));
-                    const fadeP = easeApple(progress(f, 4, 24));
-                    const sc = lerp(0.86, 1.0, enterP);
-                    const y = lerp(45, 0, enterP);
-
-                    // Subtle organic micro-elevation reaction while wings fly into place
-                    const pulse = Math.sin(progress(f, 58, 114) * Math.PI);
-                    const dynamicScale = sc + pulse * 0.015;
-
-                    imgCenter.style.opacity = fadeP.toFixed(3);
-                    imgCenter.style.transform = `translate3d(0, ${y.toFixed(2)}px, 0) scale(${dynamicScale.toFixed(4)})`;
-                }
-
-                // --- Phase 2: Left (001.png) & Right (003.png) Wings Fly-in (55 - 130f) ---
                 const imgLeft = document.getElementById('v4-img-left');
                 const imgRight = document.getElementById('v4-img-right');
 
-                if (f < 56) {
-                    if (imgLeft) imgLeft.style.opacity = '0';
-                    if (imgRight) imgRight.style.opacity = '0';
-                } else {
-                    // Left Phone (001) flies in from left with subtle 3D perspective tilt
-                    if (imgLeft) {
-                        const pLeft = springApple(progress(f, 56, 112));
-                        const fadeLeft = easeApple(progress(f, 56, 78));
-                        const xLeft = lerp(-260, 0, pLeft);
-                        const yLeft = lerp(35, 0, pLeft);
-                        const scLeft = lerp(0.88, 1.0, pLeft);
-                        const rotLeft = lerp(-4.5, 0, pLeft);
-                        imgLeft.style.opacity = fadeLeft.toFixed(3);
-                        imgLeft.style.transform = `translate3d(${xLeft.toFixed(2)}px, ${yLeft.toFixed(2)}px, 0) scale(${scLeft.toFixed(4)}) rotate(${rotLeft.toFixed(2)}deg)`;
-                    }
+                const enterP = springApple(progress(f, 4, 52));
+                const fadeP = easeApple(progress(f, 4, 24));
 
-                    // Right Phone (003) flies in from right with subtle 3D perspective tilt (staggered by 4 frames)
-                    if (imgRight) {
-                        const pRight = springApple(progress(f, 60, 116));
-                        const fadeRight = easeApple(progress(f, 60, 82));
-                        const xRight = lerp(260, 0, pRight);
-                        const yRight = lerp(35, 0, pRight);
-                        const scRight = lerp(0.88, 1.0, pRight);
-                        const rotRight = lerp(4.5, 0, pRight);
-                        imgRight.style.opacity = fadeRight.toFixed(3);
-                        imgRight.style.transform = `translate3d(${xRight.toFixed(2)}px, ${yRight.toFixed(2)}px, 0) scale(${scRight.toFixed(4)}) rotate(${rotRight.toFixed(2)}deg)`;
-                    }
+                // Center Phone (002.png): Emerges upward with spring scale
+                if (imgCenter) {
+                    const yCenter = lerp(48, 0, enterP);
+                    const scCenter = lerp(0.86, 1.0, enterP);
+                    imgCenter.style.opacity = fadeP.toFixed(3);
+                    imgCenter.style.transform = `translate3d(0, ${yCenter.toFixed(2)}px, 0) scale(${scCenter.toFixed(4)})`;
+                }
+
+                // Left Phone (001.png): Sweeps in from left with natural 3D tilt
+                if (imgLeft) {
+                    const xLeft = lerp(-220, 0, enterP);
+                    const yLeft = lerp(36, 0, enterP);
+                    const scLeft = lerp(0.88, 1.0, enterP);
+                    const rotLeft = lerp(-4.2, 0, enterP);
+                    imgLeft.style.opacity = fadeP.toFixed(3);
+                    imgLeft.style.transform = `translate3d(${xLeft.toFixed(2)}px, ${yLeft.toFixed(2)}px, 0) scale(${scLeft.toFixed(4)}) rotate(${rotLeft.toFixed(2)}deg)`;
+                }
+
+                // Right Phone (003.png): Sweeps in from right with natural 3D tilt
+                if (imgRight) {
+                    const xRight = lerp(220, 0, enterP);
+                    const yRight = lerp(36, 0, enterP);
+                    const scRight = lerp(0.88, 1.0, enterP);
+                    const rotRight = lerp(4.2, 0, enterP);
+                    imgRight.style.opacity = fadeP.toFixed(3);
+                    imgRight.style.transform = `translate3d(${xRight.toFixed(2)}px, ${yRight.toFixed(2)}px, 0) scale(${scRight.toFixed(4)}) rotate(${rotRight.toFixed(2)}deg)`;
                 }
             }
             // -----------------------------------------------------------------
